@@ -1,2 +1,4 @@
-# BossCraft
-BossCraft is a powerful Spigot plugin framework that simplifies the process of plugin creation and supercharges your plugins
+# base-api
+![Build](https://github.com/plytki/base-api/actions/workflows/maven.yml/badge.svg)
+
+Allows easier creation of Minecraft plugins.
