@@ -32,6 +32,10 @@ public abstract class BossPlugin extends JavaPlugin {
 
     public BossPlugin(){
         BossAPI api = getAPI();
+        if(api==null){
+            api = loadAPI();
+            BossAPI.Instance.set(api);
+        }
         logger = api.createLogger(this);
 
         getLogger().info("Initializing "  + this.getName());
@@ -388,7 +392,16 @@ public abstract class BossPlugin extends JavaPlugin {
         return (ConfigSettings) configYml;
     }
 
-
+    /**
+     * Load an API. Use it if you want to implement
+     * your own BossAPI class.
+     * <p></p>
+     *
+     * @return BossAPI
+     */
+    protected BossAPI loadAPI(){
+        return BossAPI.getInstance();
+    }
 
     /**
      * Get BossAPI instance
