@@ -1,3 +1,4 @@
 include 'bosscraft-api'
 include 'bosscraft-core'
+include 'bosscraft-test'
 

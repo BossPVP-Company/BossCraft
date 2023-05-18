@@ -1,0 +1,7 @@
+name: TestPlugin
+version: ${projectVersion}
+main: com.bosspvp.test.TestPlugin
+api-version: 1.17
+commands:
+  test:
+    usage: /test help

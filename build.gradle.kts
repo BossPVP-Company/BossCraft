@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation(project("bosscraft-api"))
     implementation(project("bosscraft-core"))
+    implementation(project("bosscraft-test"))
 }
 
 allprojects{
