@@ -120,6 +120,19 @@ public abstract class BossCommand implements CommandBase, CommandExecutor, TabCo
             }
         });
     }
+    /**
+     * Executes help command
+     *
+     * @param sender  The executor of the command.
+     * @param args arguments
+     */
+    protected void executeHelp(@NotNull final CommandSender sender,
+                               @NotNull final List<String> args) throws NotificationException {
+
+            CommandBase help = subcommands.get("help");
+            notifyNull(help,"&cHelp command not found");
+            help.handleCommand(sender, args.toArray(new String[0]));
+    }
 
 
     /**
