@@ -1,6 +1,7 @@
 package com.bosspvp.api.commands;
 
 import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.config.LangSettings;
 import com.bosspvp.api.exceptions.NotificationException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
@@ -113,19 +114,20 @@ public interface CommandBase {
     default boolean canExecute(CommandSender sender, boolean notifyOnFalse){
 
         boolean isPlayer=isPlayer(sender);
+        LangSettings langSettings = getPlugin().getLangSettings();
         //console
         if (!isPlayer && !isConsoleAllowed()) {
-            if(notifyOnFalse) sender.sendMessage(getPlugin().getCorePlugin().getLangYml().getMessage("players-only"));
+            if(notifyOnFalse) sender.sendMessage(langSettings.getPrefix()+ langSettings.getPlayersOnly());
             return false;
         }
         if(!isPlayer) return true;
         //player
         if (!isPlayersAllowed()) {
-            if(notifyOnFalse) sender.sendMessage(getPlugin().getCorePlugin().getLangYml().getMessage("console-only"));
+            if(notifyOnFalse) sender.sendMessage(langSettings.getPrefix()+ langSettings.getConsoleOnly());
             return false;
         }
         if (getRequiredPermission()!=null&&!sender.hasPermission(getRequiredPermission())) {
-            if(notifyOnFalse) sender.sendMessage(getPlugin().getCorePlugin().getLangYml().getMessage("no-permission"));
+            if(notifyOnFalse) sender.sendMessage(langSettings.getPrefix()+ langSettings.getNoPermission());
             return false;
         }
 
@@ -135,25 +137,21 @@ public interface CommandBase {
     /**
      * Basic notification method, that throws NotificationException
      * @param msg The msg to send
-     * @param asLangKey if true -> msg is a key of a plugin's lang file message
      */
-    default void notify(@NotNull String msg,
-                        boolean asLangKey) throws NotificationException {
+    default void notify(@NotNull String msg) throws NotificationException {
 
-        throw new NotificationException(msg,asLangKey);
+        throw new NotificationException(msg);
     }
     /**
      * throws NotificationException when obj is null
      * @param obj an object to check
      * @param msg The msg to send
-     * @param asLangKey if true -> msg is a key of a plugin's lang file message
      */
     default @NotNull <T> T notifyNull(@Nullable T obj,
-                                      @NotNull String msg,
-                                      boolean asLangKey)
+                                      @NotNull String msg)
             throws NotificationException {
 
-        if (obj==null) notify(msg,asLangKey);
+        if (obj==null) notify(msg);
 
 
         assert obj != null;
@@ -164,26 +162,22 @@ public interface CommandBase {
      * @param obj an object to check
      * @param predicate the condition to test on the received object
      * @param msg The msg to send
-     * @param asLangKey if true -> msg is a key of a plugin's lang file message
      */
     default @NotNull <T> T notifyFalse(@NotNull T obj,
                                        @NotNull Predicate<T> predicate,
-                                       @NotNull String msg,
-                                       boolean asLangKey) throws NotificationException {
-        notifyFalse(predicate.test(obj), msg,asLangKey);
+                                       @NotNull String msg) throws NotificationException {
+        notifyFalse(predicate.test(obj), msg);
         return obj;
     }
     /**
      * throws NotificationException when condition is false
      * @param condition boolean value
      * @param msg The msg to send
-     * @param asLangKey if true -> msg is a key of a plugin's lang file message
      */
     default boolean notifyFalse(boolean condition,
-                                @NotNull String msg,
-                                boolean asLangKey) throws NotificationException {
+                                @NotNull String msg) throws NotificationException {
 
-        if (!condition) notify(msg,asLangKey);
+        if (!condition) notify(msg);
 
         return true;
     }

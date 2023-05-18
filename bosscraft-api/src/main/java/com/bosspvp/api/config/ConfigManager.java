@@ -1,6 +1,8 @@
 package com.bosspvp.api.config;
 
 import com.bosspvp.api.BossPlugin;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.OkaeriConfigInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,9 +15,9 @@ public interface ConfigManager {
     /**
      * load the specified config from disk
      *
-     * @param name the name of a config
+     * @param id the name of a config
      */
-    void reloadConfig(@NotNull String name);
+    void reloadConfig(@NotNull String id);
 
     /**
      * Save all configs.
@@ -25,25 +27,28 @@ public interface ConfigManager {
     /**
      * Save the specified config
      *
-     * @param name the name of a config
+     * @param id the name of a config
      */
-    void saveConfig(@NotNull String name);
+    void saveConfig(@NotNull String id);
 
     /**
      * get config added to the manager
      * or null if not found
-     * @param name The name of a config
+     * @param id The name of a config
      * @return this
      */
     @Nullable
-    LoadableConfig getConfig(@NotNull String name);
+    OkaeriConfig getConfig(@NotNull String id);
+
     /**
      * Add new config to the handler
      *
      * @param config The loadable config
-     * @return this
+     * @return created config
      */
-    ConfigManager addConfig(@NotNull LoadableConfig config);
+    OkaeriConfig addConfig(@NotNull String id,
+                           @NotNull Class<? extends OkaeriConfig> config,
+                           @NotNull OkaeriConfigInitializer initializer);
 
 
     /**

@@ -1,12 +1,22 @@
 package com.bosspvp.api;
 
 import com.bosspvp.api.commands.BossCommand;
+import com.bosspvp.api.config.ConfigManager;
+import com.bosspvp.api.config.ConfigSettings;
+import com.bosspvp.api.config.LangSettings;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.schedule.Scheduler;
+import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
+import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
+import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,6 +25,10 @@ public abstract class BossPlugin extends JavaPlugin {
     private final Logger logger;
     private final EventManager eventManager;
     private final Scheduler scheduler;
+    private final ConfigManager configManager;
+
+    private final OkaeriConfig configYml;
+    private final OkaeriConfig langYml;
 
     public BossPlugin(){
         BossAPI api = getAPI();
@@ -24,6 +38,10 @@ public abstract class BossPlugin extends JavaPlugin {
 
         eventManager = api.createEventManager(this);
         scheduler = api.createScheduler(this);
+        configManager = api.createConfigManager(this);
+
+        configYml = createConfig();
+        langYml = createLang();
     }
 
 
@@ -55,7 +73,6 @@ public abstract class BossPlugin extends JavaPlugin {
         this.handleDisable();
 
         this.getLogger().info("Cleaning up...");
-
     }
 
 
@@ -167,6 +184,16 @@ public abstract class BossPlugin extends JavaPlugin {
 
 
     /**
+     * Get plugin logger
+     *
+     * @return plugin logger
+     */
+    @NotNull @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
+    /**
      * Get Scheduler
      * <p></p>
      * Works via Bukkit#getScheduler
@@ -188,16 +215,178 @@ public abstract class BossPlugin extends JavaPlugin {
     }
 
     /**
-     * Get plugin logger
+     * Get config manager
      *
-     * @return plugin logger
+     * @return config manager
      */
-    @NotNull @Override
-    public Logger getLogger() {
-        return logger;
+    @NotNull
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
 
+
+    /**
+     * Creates LangYml
+     * <p>
+     * Override if needed.
+     *
+     * @return lang.yml.
+     */
+    protected OkaeriConfig createLang() {
+
+        return  configManager.addConfig(
+                "lang",
+                LangSettings.class,
+                (it)->{
+                    it.withConfigurer(new OkaeriValidator(new YamlBukkitConfigurer(), true), new SerdesBukkit());
+                    it.withBindFile(new File(getDataFolder(),"lang.yml"));
+                    it.saveDefaults();
+                    it.load(true);
+                });
+    }
+
+    /**
+     * Creates ConfigYml
+     * <p>
+     * Override if needed
+     *
+     * @return config.yml.
+     */
+    protected OkaeriConfig createConfig() {
+        return  configManager.addConfig(
+                "config",
+                ConfigSettings.class,
+                (it)->{
+                    it.withConfigurer(new OkaeriValidator(new YamlBukkitConfigurer(), true), new SerdesBukkit());
+                    it.withBindFile(new File(getDataFolder(),"config.yml"));
+                    it.saveDefaults();
+                    it.load(true);
+                });
+    }
+
+    /**
+     * The {@link JavaPlugin} method
+     * <p></p>
+     * The BossPlugin doesn't support it.
+     *
+     * @deprecated Use the Boss config system.
+     * @see BossPlugin#getConfigManager()
+     */
+    @NotNull
+    @Override
+    @Deprecated
+    public final FileConfiguration getConfig() {
+        this.getLogger().warning("Call to Bukkit config method in Boss plugin!");
+
+        return super.getConfig();
+    }
+
+    /**
+     * The {@link JavaPlugin} method
+     * <p></p>
+     * The BossPlugin doesn't support it.
+     *
+     * @deprecated Use the Boss config system.
+     * @see BossPlugin#getConfigManager()
+     */
+    @Override
+    @Deprecated
+    public final void saveConfig() {
+        this.getLogger().warning("Call to Bukkit config method in Boss plugin!");
+
+        super.saveConfig();
+    }
+
+    /**
+     * The {@link JavaPlugin} method
+     * <p></p>
+     * The BossPlugin doesn't support it.
+     *
+     * @deprecated Use the Boss config system.
+     * @see BossPlugin#getConfigManager()
+     */
+    @Override
+    @Deprecated
+    public final void saveDefaultConfig() {
+        this.getLogger().warning("Call to Bukkit config method in Boss plugin!");
+        super.saveDefaultConfig();
+    }
+
+    /**
+     * The {@link JavaPlugin} method
+     * <p></p>
+     * The BossPlugin doesn't support it.
+     *
+     * @deprecated Use the Boss config system.
+     * @see BossPlugin#getConfigManager()
+     */
+    @Override
+    @Deprecated
+    public final void reloadConfig() {
+        this.getLogger().warning("Call to default Bukkit method in Boss plugin!");
+
+        super.reloadConfig();
+    }
+
+
+    /**
+     * Get ConfigYml
+     *
+     * @return The config
+     */
+    @NotNull
+    public OkaeriConfig getConfigYml() {
+        return configYml;
+    }
+
+    /**
+     * Get LangYml
+     *
+     * @return The langYml
+     */
+    @NotNull
+    public OkaeriConfig getLangYml() {
+        return langYml;
+    }
+
+
+    /**
+     * Get Lang settings
+     * <p></p>
+     * It is a class with settings for api.
+     * Important: You have to override this method if you made
+     * your own class for lang.yml
+     *
+     * @return The langYml
+     */
+    @NotNull
+    public LangSettings getLangSettings() {
+        Validate.isTrue(
+                langYml instanceof LangSettings,
+                "Failed to use BossPlugin#getLangYml as LangSettings.class"+
+                        "  Override this method if you have your own class for lang.yml"
+        );
+        return (LangSettings) langYml;
+    }
+    /**
+     * Get Lang settings
+     * <p></p>
+     * It is a class with settings for api.
+     * Important: You have to override this method if you made
+     * your own class for lang.yml
+     *
+     * @return The langYml
+     */
+    @NotNull
+    public ConfigSettings getConfigSettings() {
+        Validate.isTrue(
+                langYml instanceof LangSettings,
+                "Failed to use BossPlugin#getConfigYml as ConfigSettings.class"+
+                        "  Override this method if you have your own class for config.yml"
+        );
+        return (ConfigSettings) configYml;
+    }
 
 
 

@@ -1,7 +1,5 @@
 package com.bosspvp.api.commands;
 
-import dev.plytki.baseapi.commands.command.BaseCommand;
-import dev.plytki.baseapi.commands.exception.FailedCommandRegistration;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -17,18 +15,15 @@ import java.util.logging.Level;
 
 @Data
 public class CommandRegistry {
-
+/* @TODO
     private final Plugin plugin;
-    private final Set<BaseCommand> registeredCommands;
-    @Getter
-    private static final Set<BaseCommand.Sender> defaultAllowedSenders = new HashSet<>(Arrays.asList(BaseCommand.Sender.values()));
-
+    private final Set<BossCommand> registeredCommands;
     public CommandRegistry(Plugin plugin) {
         this.plugin = plugin;
         this.registeredCommands = new HashSet<>();
     }
 
-    public void register(BaseCommand baseCommand) throws FailedCommandRegistration {
+    public void register(BossCommand baseCommand) throws FailedCommandRegistration {
         unregister(baseCommand, false);
         SimpleCommandMap commandMap;
         try {
@@ -50,22 +45,22 @@ public class CommandRegistry {
     }
 
     public void registerAll(BaseCommand... baseCommands) throws FailedCommandRegistration {
-        for (BaseCommand command : baseCommands)
+        for (BossCommand command : baseCommands)
             register(command);
         plugin.getLogger().log(Level.INFO, "Successfully registered all commands!");
     }
 
     public void unregisterAll() throws FailedCommandRegistration {
-        for (BaseCommand registeredCommand : new HashSet<>(registeredCommands))
+        for (BossCommand registeredCommand : new HashSet<>(registeredCommands))
             unregister(registeredCommand);
         plugin.getLogger().log(Level.INFO, "Successfully unregistered all commands!");
     }
 
-    private void unregister(BaseCommand baseCommand) throws FailedCommandRegistration {
+    private void unregister(BossCommand baseCommand) throws FailedCommandRegistration {
         unregister(baseCommand, true);
     }
 
-    private void unregister(BaseCommand baseCommand, boolean message) throws FailedCommandRegistration {
+    private void unregister(BossCommand baseCommand, boolean message) throws FailedCommandRegistration {
         SimpleCommandMap commandMap;
         try {
             commandMap = getCommandMap();
@@ -83,7 +78,7 @@ public class CommandRegistry {
 
         registeredCommands.remove(baseCommand);
         if (message)
-            plugin.getLogger().log(Level.INFO, "Successfully unregistered '" + baseCommand.getName() + "' command!");
+            plugin.getLogger().log(Level.INFO, "Successfully unregistered '" + baseCommand.geCo + "' command!");
     }
 
     private SimpleCommandMap getCommandMap() throws NoSuchFieldException, IllegalAccessException {
@@ -100,14 +95,16 @@ public class CommandRegistry {
         return (Map<String, Command>) knownCommandsField.get(commandMap);
     }
 
-    private void unregisterOldCommands(BaseCommand baseCommand, SimpleCommandMap commandMap, Map<String, Command> knownCommands) {
+    private void unregisterOldCommands(BossCommand baseCommand, SimpleCommandMap commandMap, Map<String, Command> knownCommands) {
         commandMap.getCommands().stream()
-                .filter(command -> command.getName().equals(baseCommand.getName()))
+                .filter(command -> command.getName().equals(baseCommand.getCommandName()))
                 .forEach(command -> command.unregister(commandMap));
 
         new HashMap<>(knownCommands).keySet().stream()
-                .filter(s -> baseCommand.getName().equals(s) || baseCommand.getAliases().contains(s))
+                .filter(s -> baseCommand.getCommandName().equals(s) || baseCommand.getAliases().contains(s))
                 .forEach(knownCommands::remove);
     }
+
+ */
 
 }

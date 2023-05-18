@@ -1,5 +1,6 @@
 package com.bosspvp.api;
 
+import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.schedule.Scheduler;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,15 @@ public interface BossAPI {
      */
     @NotNull
     EventManager createEventManager(@NotNull BossPlugin plugin);
+
+    /**
+     * Create a config manager
+     *
+     * @param plugin The plugin.
+     * @return The manager
+     */
+    @NotNull
+    ConfigManager createConfigManager(@NotNull BossPlugin plugin);
 
     /**
      * Create plugin logger.

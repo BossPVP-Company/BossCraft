@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BossSubcommand extends BossCommand{
+public abstract class BossSubcommand extends BossCommand{
     @Getter
     public final CommandBase parent;
 

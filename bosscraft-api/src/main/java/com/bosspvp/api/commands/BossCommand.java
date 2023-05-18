@@ -1,6 +1,7 @@
 package com.bosspvp.api.commands;
 
 import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.config.LangSettings;
 import com.bosspvp.api.exceptions.NotificationException;
 import com.bosspvp.api.utils.StringUtils;
 import lombok.Getter;
@@ -94,7 +95,7 @@ public abstract class BossCommand implements CommandBase, CommandExecutor, TabCo
                     return;
                 }
                 StringBuilder sb = new StringBuilder();
-                sb.append("&a------ ").append(getPlugin().getColoredName()).append(" &a------").append("\n");
+                sb.append("&a------ ").append(getPlugin().getName()).append(" &a------").append("\n");
                 for(CommandBase subcommand : subcommands.values()){
                     if(!subcommand.canExecute(sender,true)) continue;
                     sb.append("&c").append(subcommand.getUsage()).append("&7 - &f").append(subcommand.getDescription())
@@ -145,15 +146,11 @@ public abstract class BossCommand implements CommandBase, CommandExecutor, TabCo
         try{
             handleCommand(sender, args);
         }catch (NotificationException e){
-
-            if(e.isLangKey()&&plugin.getLangYml()!=null)
-                sender.sendMessage(plugin.getLangYml().getStringOrDefault(e.getMessage(),""));
-            else
-                sender.sendMessage(StringUtils.format(e.getMessage()));
-
+            sender.sendMessage(e.getMessage());
         }catch (Exception e){
             e.printStackTrace();
-            sender.sendMessage(plugin.getCorePlugin().getLangYml().getMessage("error_on_command"));
+            LangSettings langSettings = getPlugin().getLangSettings();
+            sender.sendMessage(langSettings.getPrefix()+ langSettings.getErrorOnCommand());
         }
         return true;
     }
