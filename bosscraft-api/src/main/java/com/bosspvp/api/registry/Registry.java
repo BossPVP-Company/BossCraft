@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 
 /**
  * Registry
+ *<p></p>
+ * Usage example:
+ * <p>private Registry<> registry = new Registry<></p>
  *
  * @param <T> class to be registered
  */
