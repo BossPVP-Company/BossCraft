@@ -9,6 +9,11 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * Registry
+ *
+ * @param <T> class to be registered
+ */
 public class Registry<T extends Registrable> implements Iterable<T> {
     /**
      * The ID pattern.
@@ -109,6 +114,11 @@ public class Registry<T extends Registrable> implements Iterable<T> {
         return registry.isEmpty();
     }
 
+    /**
+     * Get iterator
+     *
+     * @return The iterator
+     */
     @NotNull
     @Override
     public Iterator<T> iterator() {

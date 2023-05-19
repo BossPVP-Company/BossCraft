@@ -5,7 +5,12 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.OkaeriConfigInitializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+/**
+ * ConfigManager
+ * <p></p>
+ * Manages BossPlugin configs.
+ * Currently, uses {@link OkaeriConfig} only
+ */
 public interface ConfigManager {
     /**
      * load all configs from disk

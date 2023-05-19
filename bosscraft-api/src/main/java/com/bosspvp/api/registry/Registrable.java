@@ -2,6 +2,16 @@ package com.bosspvp.api.registry;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Registrable
+ * <p></p>
+ * Implement it for a class
+ * which you want to use in {@link Registry}
+ * <p></p>
+ * Registrable class has an ID.
+ * @see Registrable#onRegister()
+ * @see Registrable#onRemove()
+ */
 public interface Registrable {
     /**
      * Get the ID of the element.

@@ -1,6 +1,12 @@
 package com.bosspvp.api.utils;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * MathUtils
+ * <p></p>
+ * Contains fast trigonometry methods
+ * and other
+ */
 public class MathUtils {
     /**
      * Sin lookup table.
@@ -14,17 +20,41 @@ public class MathUtils {
             SIN_LOOKUP[i] = Math.sin((double) i * 3.141592653589793D * 2.0D / 65536.0D);
         }
     }
-    public static double fastSin(final double a) {
-        float f = (float) a;
+
+
+    /**
+     * Get sin from lookup table
+     * it is significantly faster that Math#sin()
+     *
+     * @param radians the radians
+     * @return result
+     */
+    public static double fastSin(final double radians) {
+        float f = (float) radians;
         return SIN_LOOKUP[(int) (f * 10430.378F) & '\uffff'];
     }
 
-    public static double fastCos(final double a) {
-        float f = (float) a;
+    /**
+     * Get cos from lookup table
+     * it is significantly faster that Math#cos()
+     *
+     * @param radians the radians
+     * @return result
+     */
+    public static double fastCos(final double radians) {
+        float f = (float) radians;
         return SIN_LOOKUP[(int) (f * 10430.378F + 16384.0F) & '\uffff'];
     }
-    public static double fastTan(final double a) {
-        float f = (float) a;
+
+    /**
+     * Get tan from lookup table
+     * it is significantly faster that Math#tan()
+     *
+     * @param radians the radians
+     * @return result
+     */
+    public static double fastTan(final double radians) {
+        float f = (float) radians;
         return SIN_LOOKUP[(int) (f * 10430.378F) & '\uffff'] /
                 SIN_LOOKUP[(int) (f * 10430.378F + 16384.0F) & '\uffff'];
     }
@@ -43,12 +73,26 @@ public class MathUtils {
         return (input * k) / (input * k - input + 1);
     }
 
-
+    /**
+     * Get random int inside bounds.
+     * Uses ThreadLocalRandom
+     *
+     * @param min The min bound
+     * @param max The max bound
+     * @return result
+     */
     public static int randInt(final int min,
                               final int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
-
+    /**
+     * Get random int inside bounds.
+     * Uses ThreadLocalRandom
+     *
+     * @param min The min bound
+     * @param max The max bound
+     * @return result
+     */
     public static double randDouble(final double min,
                                    final double max) {
         return ThreadLocalRandom.current().nextDouble(min, max);

@@ -18,10 +18,13 @@ import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.*;
+
+/**
+ * PluginUtils
+ * <p></p>
+ * Replacement of PlugMan
+ */
 public class PluginUtils {
-    private PluginUtils() {
-        throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");
-    }
 
     public static PluginLoader getPluginLoader() {
         return Bukkit.getPluginManager().getPlugins()[0].getPluginLoader();
@@ -311,5 +314,9 @@ public class PluginUtils {
 
         // Will not work on processes started with the -XX:+DisableExplicitGC flag
         System.gc();
+    }
+
+    private PluginUtils() {
+        throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");
     }
 }

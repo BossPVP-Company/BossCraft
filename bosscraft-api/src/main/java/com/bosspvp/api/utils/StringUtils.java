@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+/**
+ * StringUtils
+ */
 public class StringUtils {
 
     private static final List<Pattern> HEX_COLOR_PATTERNS = Arrays.asList(

@@ -7,6 +7,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Logger;
 
+/**
+ * Bridge between api and core.
+ *
+ * @see BossAPI#getInstance()
+ * @see BossPlugin#getAPI()
+ */
 public interface BossAPI {
 
     /**

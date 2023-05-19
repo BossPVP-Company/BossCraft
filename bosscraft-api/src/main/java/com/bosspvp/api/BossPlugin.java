@@ -21,6 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * BossPlugin
+ * <p></p>
+ * Major parent class for bukkit plugins.
+ *
+ * @see BossPlugin#loadPluginCommands()
+ * @see BossPlugin#loadListeners()
+ */
 public abstract class BossPlugin extends JavaPlugin {
     private final Logger logger;
     private final EventManager eventManager;
@@ -49,6 +57,13 @@ public abstract class BossPlugin extends JavaPlugin {
     }
 
 
+    /**
+     * Bukkit method
+     * <p></p>
+     * Loads the plugin and calls
+     * BossPlugin@handleEnable, BossPlugin@afterLoad
+     *
+     */
     @Override
     public final void onEnable() {
         this.getLogger().info("");
@@ -67,6 +82,13 @@ public abstract class BossPlugin extends JavaPlugin {
 
 
 
+    /**
+     * Bukkit method
+     * <p></p>
+     * Unregisters event listeners, cancels plugin tasks and
+     * calls BossPlugin#handleDisable
+     *
+     */
     @Override
     public final void onDisable() {
         super.onDisable();
@@ -79,7 +101,12 @@ public abstract class BossPlugin extends JavaPlugin {
         this.getLogger().info("Cleaning up...");
     }
 
-
+    /**
+     * Bukkit method
+     * <p></p>
+     * Calls BossPlugin#handleLoad
+     *
+     */
     @Override
     public final void onLoad() {
         super.onLoad();
@@ -88,7 +115,13 @@ public abstract class BossPlugin extends JavaPlugin {
     }
 
 
-
+    /**
+     * After load
+     * <p></p>
+     * Calls BossPlugin#handleAfterLoad
+     * and BossPlugin#reload
+     *
+     */
     public final void afterLoad() {
 
         this.handleAfterLoad();
@@ -100,6 +133,13 @@ public abstract class BossPlugin extends JavaPlugin {
 
 
 
+    /**
+     * Reload the plugin
+     * <p></p>
+     * Cancels all plugin tasks, reloads configs
+     * and calls BossPlugin#handleReload
+     *
+     */
     public final void reload() {
         this.getScheduler().cancelAll();
         this.getConfigManager().reloadAllConfigs();
@@ -166,7 +206,7 @@ public abstract class BossPlugin extends JavaPlugin {
     /**
      * All listeners to be registered.
      * <p></p>
-     * Override to add implementation
+     * Override to add your listeners
      *
      * @return A list of all listeners.
      */
@@ -177,7 +217,7 @@ public abstract class BossPlugin extends JavaPlugin {
     /**
      * All commands to be registered.
      * <p></p>
-     * Override to add implementation
+     * Override to add your commands
      *
      * @return A list of all commands
      */

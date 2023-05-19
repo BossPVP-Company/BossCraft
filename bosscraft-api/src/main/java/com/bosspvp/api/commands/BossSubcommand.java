@@ -5,6 +5,12 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Extra Command implementation.
+ * Use it for subcommands
+ *
+ * @see BossCommand#addSubcommand(CommandBase)
+ */
 public abstract class BossSubcommand extends BossCommand{
     @Getter
     public final CommandBase parent;

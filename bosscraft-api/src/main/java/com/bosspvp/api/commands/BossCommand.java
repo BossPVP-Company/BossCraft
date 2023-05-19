@@ -17,6 +17,10 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Major command implementation.
+ * Use it to register plugin commands
+ */
 public abstract class BossCommand implements CommandBase, CommandExecutor, TabCompleter {
 
     private final BossPlugin plugin;

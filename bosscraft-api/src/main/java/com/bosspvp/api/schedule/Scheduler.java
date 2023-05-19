@@ -4,6 +4,12 @@ import com.bosspvp.api.BossPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Plugin Scheduler
+ * <p></p>
+ * Uses {@link org.bukkit.scheduler.BukkitScheduler}
+ * Contains more convenient methods and attached to the BossPlugin
+ */
 public interface Scheduler {
     /**
      * Run the task after a specified tick delay.
@@ -66,4 +72,5 @@ public interface Scheduler {
 
 
     BossPlugin getPlugin();
+
 }

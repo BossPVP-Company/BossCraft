@@ -12,6 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * Generic interface for commands.
+ */
 public interface CommandBase {
     /**
      * Get command name.
@@ -140,7 +143,7 @@ public interface CommandBase {
      */
     default void notify(@NotNull String msg) throws NotificationException {
 
-        throw new NotificationException(msg);
+        NotificationException.notify(msg);
     }
     /**
      * throws NotificationException when obj is null
@@ -151,11 +154,7 @@ public interface CommandBase {
                                       @NotNull String msg)
             throws NotificationException {
 
-        if (obj==null) notify(msg);
-
-
-        assert obj != null;
-        return obj;
+        return NotificationException.notifyNull(obj,msg);
     }
     /**
      * throws NotificationException when predicate#test(obj) returns false
@@ -166,8 +165,7 @@ public interface CommandBase {
     default @NotNull <T> T notifyFalse(@NotNull T obj,
                                        @NotNull Predicate<T> predicate,
                                        @NotNull String msg) throws NotificationException {
-        notifyFalse(predicate.test(obj), msg);
-        return obj;
+        return NotificationException.notifyFalse(obj,predicate,msg);
     }
     /**
      * throws NotificationException when condition is false
@@ -177,10 +175,10 @@ public interface CommandBase {
     default boolean notifyFalse(boolean condition,
                                 @NotNull String msg) throws NotificationException {
 
-        if (!condition) notify(msg);
-
-        return true;
+        return NotificationException.notifyFalse(condition,msg);
     }
+
+
     /**
      * Get the plugin.
      *
