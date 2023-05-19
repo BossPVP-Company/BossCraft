@@ -8,7 +8,10 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
 
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+//made it protected cause otherwise BaseWorld class
+// won't be able to get access to constructor
+
+@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
 @Data
 public class BaseWorldProperties {
 
@@ -17,7 +20,6 @@ public class BaseWorldProperties {
     private World.Environment environment;
     private transient ChunkGenerator chunkGenerator;
 
-    public BaseWorldProperties() {}
 
     public WorldCreator getWorldCreator(String name) {
         WorldCreator worldCreator = WorldCreator.name(name);

@@ -21,11 +21,13 @@ public class BaseWorld extends BaseWorldProperties {
     private transient boolean loaded;
 
     protected BaseWorld(String name) {
+        super();
         this.name = name;
         this.worldFolder = new File(this.name).getName();
     }
 
     protected BaseWorld(World world) {
+        super();
         this.name = world.getName();
         super.setChunkGenerator(world.getGenerator());
         super.setEnvironment(world.getEnvironment());
