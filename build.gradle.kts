@@ -32,7 +32,7 @@ allprojects{
 
     }
     dependencies{
-        compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
+        compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 
         //annotations
         compileOnly("org.jetbrains:annotations:24.0.1")
@@ -41,10 +41,13 @@ allprojects{
         annotationProcessor("org.jetbrains:annotations:24.0.1")
 
 
-        //other
+        //okaeri config
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:5.0.0-beta.5")
         implementation("eu.okaeri:okaeri-configs-validator-okaeri:5.0.0-beta.5")
         implementation("eu.okaeri:okaeri-configs-yaml-bukkit:5.0.0-beta.5")
+
+        //kyori
+        implementation("net.kyori:adventure-api:4.13.1")
 
         // Test impl
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
