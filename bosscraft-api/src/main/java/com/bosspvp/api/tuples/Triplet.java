@@ -1,6 +1,7 @@
 package com.bosspvp.api.tuples;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Three values.
@@ -14,19 +15,19 @@ public class Triplet<A,B,C> {
     /**
      * The first item in the tuple.
      */
-    @NotNull
+    @Nullable
     private A first;
 
     /**
      * The second item in the tuple.
      */
-    @NotNull
+    @Nullable
     private B second;
 
     /**
      * The third item in the tuple.
      */
-    @NotNull
+    @Nullable
     private C third;
 
     /**
@@ -36,9 +37,9 @@ public class Triplet<A,B,C> {
      * @param second The second item in the pair.
      * @param third The third item in the pair.
      */
-    public Triplet(@NotNull final A first,
-                   @NotNull final B second,
-                   @NotNull final C third) {
+    public Triplet(@Nullable final A first,
+                   @Nullable final B second,
+                   @Nullable final C third) {
         this.first = first;
         this.second = second;
         this.third = third;
@@ -56,24 +57,24 @@ public class Triplet<A,B,C> {
     }
 
 
-    public @NotNull A getFirst() {
+    public @Nullable A getFirst() {
         return this.first;
     }
-    public @NotNull B getSecond() {
+    public @Nullable B getSecond() {
         return this.second;
     }
-    public @NotNull C getThird() {
+    public @Nullable C getThird() {
         return this.third;
     }
 
 
-    public void setFirst(@NotNull final A first) {
+    public void setFirst(@Nullable final A first) {
         this.first = first;
     }
-    public void setSecond(@NotNull final B second) {
+    public void setSecond(@Nullable final B second) {
         this.second = second;
     }
-    public void setThird(@NotNull final C third) {
+    public void setThird(@Nullable final C third) {
         this.third = third;
     }
 }

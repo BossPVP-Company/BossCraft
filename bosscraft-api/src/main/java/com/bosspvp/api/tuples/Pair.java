@@ -1,6 +1,7 @@
 package com.bosspvp.api.tuples;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Two values.
@@ -12,13 +13,13 @@ public class Pair<A, B> {
     /**
      * The first item in the tuple.
      */
-    @NotNull
+    @Nullable
     private A first;
 
     /**
      * The second item in the tuple.
      */
-    @NotNull
+    @Nullable
     private B second;
 
     /**
@@ -27,8 +28,8 @@ public class Pair<A, B> {
      * @param first  The first item in the pair.
      * @param second The second item in the pair.
      */
-    public Pair(@NotNull final A first,
-                @NotNull final B second) {
+    public Pair(@Nullable final A first,
+                @Nullable final B second) {
         this.first = first;
         this.second = second;
     }
@@ -42,18 +43,18 @@ public class Pair<A, B> {
     }
 
 
-    public @NotNull A getFirst() {
+    public @Nullable A getFirst() {
         return this.first;
     }
-    public @NotNull B getSecond() {
+    public @Nullable B getSecond() {
         return this.second;
     }
 
 
-    public void setFirst(@NotNull final A first) {
+    public void setFirst(@Nullable final A first) {
         this.first = first;
     }
-    public void setSecond(@NotNull final B second) {
+    public void setSecond(@Nullable final B second) {
         this.second = second;
     }
 }
