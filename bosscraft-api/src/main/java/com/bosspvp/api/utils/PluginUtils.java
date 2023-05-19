@@ -25,7 +25,7 @@ import java.util.*;
  * Replacement of PlugMan
  */
 public class PluginUtils {
-
+    @SuppressWarnings({"removal"})
     public static PluginLoader getPluginLoader() {
         return Bukkit.getPluginManager().getPlugins()[0].getPluginLoader();
     }
@@ -134,6 +134,7 @@ public class PluginUtils {
             for (File f : pluginsDir.listFiles()) {
                 if (f.getName().endsWith(".jar")) {
                     try {
+                        @SuppressWarnings({"removal"})
                         PluginDescriptionFile desc = getPluginLoader().getPluginDescription(f);
                         if (desc.getName().equalsIgnoreCase(name)) {
                             pluginFile = f;
