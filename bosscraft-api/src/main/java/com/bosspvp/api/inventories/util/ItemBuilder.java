@@ -1,5 +1,7 @@
 package com.bosspvp.api.inventories.util;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -9,10 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -139,6 +139,22 @@ public class ItemBuilder {
             im.setOwner(owner);
             is.setItemMeta(im);
         }catch(ClassCastException expected){}
+        return this;
+    }
+
+    public ItemBuilder makeCustomSkull(String texture){
+        is.setType(Material.PLAYER_HEAD);
+        SkullMeta skullMeta = (SkullMeta) is.getItemMeta();
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
+        gameProfile.getProperties().put("textures", new Property("textures", texture));
+        try {
+            Field field = skullMeta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(skullMeta, gameProfile);
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException exception) {
+            exception.printStackTrace();
+        }
+        is.setItemMeta(skullMeta);
         return this;
     }
 
