@@ -1,5 +1,6 @@
 package com.bosspvp.api.inventories.util;
 
+import com.bosspvp.api.utils.StringUtils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
@@ -88,7 +89,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setName(String name){
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(name);
+        im.setDisplayName(StringUtils.format(name));
         is.setItemMeta(im);
         return this;
     }
@@ -193,7 +194,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setLore(String... lore){
         ItemMeta im = is.getItemMeta();
-        im.setLore(Arrays.asList(lore));
+        im.setLore(StringUtils.format(Arrays.asList(lore)));
         is.setItemMeta(im);
         return this;
     }
@@ -204,7 +205,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setLore(List<String> lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(lore);
+        im.setLore(StringUtils.format(lore));
         is.setItemMeta(im);
         return this;
     }
@@ -213,6 +214,7 @@ public class ItemBuilder {
      * Remove a lore line.
      */
     public ItemBuilder removeLoreLine(String line){
+        line = StringUtils.format(line);
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
         if(!lore.contains(line))return this;
@@ -244,7 +246,7 @@ public class ItemBuilder {
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>();
         if(im.hasLore())lore = new ArrayList<>(im.getLore());
-        lore.add(line);
+        lore.add(StringUtils.format(line));
         im.setLore(lore);
         is.setItemMeta(im);
         return this;
@@ -258,7 +260,7 @@ public class ItemBuilder {
     public ItemBuilder addLoreLine(String line, int pos){
         ItemMeta im = is.getItemMeta();
         List<String> lore = new ArrayList<>(im.getLore());
-        lore.set(pos, line);
+        lore.set(pos, StringUtils.format(line));
         im.setLore(lore);
         is.setItemMeta(im);
         return this;
