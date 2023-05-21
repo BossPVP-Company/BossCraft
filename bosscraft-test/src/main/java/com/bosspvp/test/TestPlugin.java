@@ -19,6 +19,7 @@ import java.util.List;
 public class TestPlugin extends BossPlugin {
     @Override
     protected void handleEnable() {
+        getGuiController().enableUpdater(true);
 
     }
 

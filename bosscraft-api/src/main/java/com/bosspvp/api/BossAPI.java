@@ -2,6 +2,9 @@ package com.bosspvp.api;
 
 import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.events.EventManager;
+import com.bosspvp.api.gui.GuiController;
+import com.bosspvp.api.gui.menu.MenuBuilder;
+import com.bosspvp.api.gui.slot.SlotBuilder;
 import com.bosspvp.api.schedule.Scheduler;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,8 +55,33 @@ public interface BossAPI {
     Logger createLogger(@NotNull BossPlugin plugin);
 
 
+    /**
+     * Create slot builder
+     *
+     * @param positions The slot positions
+     * @return The slot builder.
+     */
+    @NotNull
+    SlotBuilder createSlotBuilder(int ... positions);
 
+    /**
+     * Create menu builder
+     *
+     * @param plugin The plugin.
+     * @return The menu builder.
+     */
+    @NotNull
+    MenuBuilder createMenuBuilder(@NotNull BossPlugin plugin,
+                                  int rows);
 
+    /**
+     * Create gui controller
+     *
+     * @param plugin The plugin.
+     * @return The gui controller.
+     */
+    @NotNull
+    GuiController createGuiController(@NotNull BossPlugin plugin);
 
 
 

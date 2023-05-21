@@ -15,6 +15,7 @@ public class CommandTest extends BossCommand {
         super(plugin, "test", null);
 
         addSubcommand(new SubcommandPlugin(plugin,this));
+        addSubcommand(new SubcommandGui(plugin,this));
     }
 
     @Override

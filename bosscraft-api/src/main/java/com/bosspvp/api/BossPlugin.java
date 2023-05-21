@@ -5,6 +5,7 @@ import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.config.ConfigSettings;
 import com.bosspvp.api.config.LangSettings;
 import com.bosspvp.api.events.EventManager;
+import com.bosspvp.api.gui.GuiController;
 import com.bosspvp.api.schedule.Scheduler;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
@@ -34,6 +35,7 @@ public abstract class BossPlugin extends JavaPlugin {
     private final EventManager eventManager;
     private final Scheduler scheduler;
     private final ConfigManager configManager;
+    private final GuiController guiController;
 
     private final OkaeriConfig configYml;
     private final OkaeriConfig langYml;
@@ -51,6 +53,7 @@ public abstract class BossPlugin extends JavaPlugin {
         eventManager = api.createEventManager(this);
         scheduler = api.createScheduler(this);
         configManager = api.createConfigManager(this);
+        guiController = api.createGuiController(this);
 
         configYml = createConfig();
         langYml = createLang();
@@ -69,6 +72,7 @@ public abstract class BossPlugin extends JavaPlugin {
         this.getLogger().info("");
         this.getLogger().info("Enabling " + this.getName());
 
+        getEventManager().registerListener(guiController);
         this.loadListeners().forEach(listener -> getEventManager().registerListener(listener));
 
         this.loadPluginCommands().forEach(BossCommand::register);
@@ -145,6 +149,10 @@ public abstract class BossPlugin extends JavaPlugin {
         this.getConfigManager().reloadAllConfigs();
 
         this.handleReload();
+
+        if(guiController.isUpdaterEnabled()){
+            guiController.enableUpdater(true);
+        }
     }
 
     /**
@@ -266,6 +274,16 @@ public abstract class BossPlugin extends JavaPlugin {
     @NotNull
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    /**
+     * Get gui controller
+     *
+     * @return gui controller
+     */
+    @NotNull
+    public GuiController getGuiController() {
+        return guiController;
     }
 
 

@@ -6,7 +6,7 @@ import eu.okaeri.configs.OkaeriConfig;
 import java.util.Objects;
 
 public class LangSettings extends OkaeriConfig {
-    private String prefix = "BossPlugin";
+    private String prefix = "&6BossPlugin ";
 
     private String errorOnCommand = "&cUnexpected error occurred while trying to execute the command!";
     private String noPermission = "&cYou don't have the required permission to execute this command";

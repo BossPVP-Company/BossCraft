@@ -1,0 +1,33 @@
+package com.bosspvp.api.gui;
+
+import com.bosspvp.api.inventories.util.ItemBuilder;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+public enum SkullSkin {
+    WARNING("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDI5NWE5MjkyMzZjMTc3OWVhYjhmNTcyNTdhODYwNzE0OThhNDg3MDE5Njk0MWY0YmZlMTk1MWU4YzZlZTIxYSJ9fX0="),
+    YOUTUBE("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDJmNmMwN2EzMjZkZWY5ODRlNzJmNzcyZWQ2NDU0NDlmNWVjOTZjNmNhMjU2NDk5YjVkMmI4NGE4ZGNlIn19fQ=="),
+    SETTINGS("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTEyM2I4ODg0NmQ2NmUxY2ZlMmY2NjRhMzZhZDRhMjJiMWE0YzJmMmU0ZDI5NWY0MWZlNWU5MjliOWU3ZDgifX19"),
+
+    NEXT_ACTIVE("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTdiMDNiNzFkM2Y4NjIyMGVmMTIyZjk4MzFhNzI2ZWIyYjI4MzMxOWM3YjYyZTdkY2QyZDY0ZDk2ODIifX19"),
+    PREVIOUS_ACTIVE("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDgzNDhhYTc3ZjlmYjJiOTFlZWY2NjJiNWM4MWI1Y2EzMzVkZGVlMWI5MDVmM2E4YjkyMDk1ZDBhMWYxNDEifX19"),
+    NEXT_DISABLED("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjlmNjFhY2VjM2FhZGM1ZTUxODI1OWQ1YzExMzFhYzE0OWI0MjdiZWVmZjVlNTdkODc5YmQzMTMxYTE3MmE3In19fQ=="),
+    PREVIOUS_DISABLED("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q0ZGVlZjE4Mzk3ZGVkNzM4ODhmMmE0NGIxZGJhNmU4NWM5NTNiOGFmZTcyMjFkZWVmZjBjZWViNmFjNWUzIn19fQ=="),
+
+    CONFIRM("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWU0ZmE0ZTZiZjQzYzRiMWIzMGU2ODRlZDhiNDA1ZDc1N2EyOTZhNGExZDA2NGJiYmMzYTdlMDc2MTEwIn19fQ=="),
+    DENY("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ==");
+
+    String skin;
+
+    SkullSkin(String string2) {
+        this.skin = string2;
+    }
+
+    public String getSkin() {
+        return this.skin;
+    }
+
+    public ItemStack getItem() {
+        return new ItemBuilder(Material.PLAYER_HEAD).makeCustomSkull(this.skin).toItemStack();
+    }
+}
