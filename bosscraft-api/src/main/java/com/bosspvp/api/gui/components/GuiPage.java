@@ -49,8 +49,7 @@ public abstract class GuiPage implements GuiComponent {
     abstract List<GuiSlot> getElements(int page);
     @Override
     public @Nullable GuiSlot getSlotAt(int row, int column) {
-        return elements.get(column+row*9);
+        return elements.get(column+row*getRowsSize());
     }
-
 
 }
