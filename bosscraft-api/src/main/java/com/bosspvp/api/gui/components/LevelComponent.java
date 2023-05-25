@@ -1,6 +1,5 @@
 package com.bosspvp.api.gui.components;
 
-import com.bosspvp.api.gui.GuiComponent;
 import com.bosspvp.api.gui.slot.GuiSlot;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
@@ -9,79 +8,92 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public abstract class LevelComponent implements GuiComponent {
+public abstract class LevelComponent extends GuiPage {
     private char[] progressionOrder = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
-/*
-    private HashMap<Integer, HashMap<Integer, GuiSlot>> slots = new HashMap<>();
 
-    val levelsPerPage: Int
-    val pages: Int
+    private HashMap<Integer, HashMap<Integer, GuiSlot>> slots = new HashMap<>();
+    private int levelsPerPage;
+    private int pages;
 
     public LevelComponent(List<String> pattern,
                           int maxLevel) {
-        val progressionSlots = mutableMapOf<Int, GUIPosition>()
+        super(pattern.get(0).toCharArray().length,pattern.size(),-1);
 
-        var x = 0
-        for (row in pattern) {
-            x++
-            var y = 0
-            for (char in row) {
-                y++
-                if (char == '0') {
-                    continue
+        var progressionSlots = new HashMap<Integer, Integer>();
+
+        var x = 0;
+        for (String row : pattern) {
+            x++;
+            var y = 0;
+            for (char c : row.toCharArray()) {
+                y++;
+                if (c == '0') {
+                    continue;
                 }
 
-                val pos = progressionOrder.indexOf(char)
-
+                var pos = -1;
+                for (int i = 0; i < progressionOrder.length;i++) {
+                    if (c == progressionOrder[i]) {
+                        pos = i;
+                        break;
+                    }
+                }
                 if (pos == -1) {
-                    continue
+                    continue;
                 }
 
-                progressionSlots[pos + 1] = GUIPosition(x, y)
+                progressionSlots.put(pos+1,x*row.toCharArray().length + y);
             }
         }
 
-        levelsPerPage = progressionSlots.size
-        pages = ceil(maxLevel.toDouble() / levelsPerPage).toInt()
+        levelsPerPage = progressionSlots.size();
+        pages = (int) Math.ceil((double) maxLevel / levelsPerPage);
+        setMaxPage(pages-1);
 
-        for (page in 1..pages) {
-            for ((levelOffset, position) in progressionSlots) {
-                val level = ((page - 1) * levelsPerPage) + levelOffset
+        for (int page = 0; page < pages; page++) {
+            for (Map.Entry<Integer,Integer> entry : progressionSlots.entrySet()) {
+                var level = (page * levelsPerPage) + entry.getKey();
 
                 if (level > maxLevel) {
-                    continue
+                    continue;
                 }
 
-                val pageSlots = slots[page] ?: mutableMapOf()
-
-                pageSlots[position] = slot { player, menu ->
-                        getLevelItem(
-                                player,
-                                menu,
-                                level,
-                                getLevelState(
-                                        player,
-                                        level
-                                )
-                        )
+                var pageSlots = slots.get(page);
+                if(pageSlots == null){
+                    pageSlots = new HashMap<>();
                 }
 
-                slots[page] = pageSlots
+                pageSlots.put(
+                        entry.getValue(),
+                        GuiSlot.builder(entry.getValue())
+                                .setItem(getLevelItem(level, getLevelState(level)))
+                                .build()
+                );
+
+                slots.put(page,pageSlots);
             }
         }
     }
 
     @Override
     public @Nullable GuiSlot getSlotAt(int row, int column) {
-        return slots[menu.getPage(player)]?.get(GUIPosition(row, column))
+        var page = slots.get(getCurrentPage());
+        if(page==null) return null;
+        return page.get(row * getColumnsSize() + column);
     }
 
+    //not needed here
+    @Override
+    List<GuiSlot> getElements(int page) {
+        return null;
+    }
 
-    abstract ItemStack getLevelItem(int level, LevelState levelState);
+    public abstract ItemStack getLevelItem(int level, LevelState levelState);
 
-    abstract LevelState getLevelState(int level);
+    public abstract LevelState getLevelState(int level);
 
 
 
@@ -97,5 +109,5 @@ public abstract class LevelComponent implements GuiComponent {
             this.key = key;
         }
 
-    }*/
+    }
 }
