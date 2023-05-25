@@ -1,11 +1,18 @@
 package com.bosspvp.api.utils;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.tuples.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileUtils {
 
@@ -22,6 +29,38 @@ public class FileUtils {
             result.add(new Pair<>(fileName,file));
         }
         return result;
+    }
+
+
+    public static Set<String> getAllPathsInResourceFolder(BossPlugin plugin,
+                                                          String dir){
+        Set<String> files = new LinkedHashSet<>();
+
+        try {
+            URI uri = plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI();
+            FileSystem fileSystem = FileSystems.newFileSystem(URI.create("jar:" + uri), Collections.emptyMap());
+            Stream<Path> streamFiles = Files.walk(fileSystem.getPath(dir));
+            files = streamFiles
+                    .filter(Objects::nonNull)
+                    .map(Path::toString)
+                    //to have dirs first
+                    .sorted((o1, o2) -> {
+                        if(o1.contains(".") && !o2.contains(".")){
+                            return 1;
+                        }
+                        if(!o1.contains(".") && o2.contains(".")){
+                            return -1;
+                        }
+                        return 0;
+                    })
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            streamFiles.close();
+            fileSystem.close();
+        } catch (Exception ex) {
+            plugin.getLogger().warning("An error occurred while trying to load files: " + ex.getMessage());
+        }
+
+        return files;
     }
 
 

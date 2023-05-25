@@ -11,6 +11,9 @@ import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public abstract class ConfigCategory <T extends OkaeriConfig>{
     private final BossPlugin plugin;
@@ -49,7 +52,9 @@ public abstract class ConfigCategory <T extends OkaeriConfig>{
         beforeReload();
         clear();
         File dir = new File(plugin.getDataFolder(),directory);
-        NotificationException.notifyFalse(dir.exists(),"&cDirectory '"+directory+"' doesn't exists!");
+        if(!dir.exists()){
+            loadDefaults();
+        }
         for(Pair<String,File> entry : FileUtils.loadFiles(dir,supportSubFolders)){
             T conf =configClass.cast( eu.okaeri.configs.ConfigManager.create(
                     configClass,
@@ -62,6 +67,25 @@ public abstract class ConfigCategory <T extends OkaeriConfig>{
             acceptConfig(entry.getFirst(),conf);
         }
         afterReload();
+    }
+    private void loadDefaults(){
+        for(String path : FileUtils.getAllPathsInResourceFolder(plugin,directory)){
+            try {
+                File file = new File(plugin.getDataFolder(), path);
+                if(!file.getName().contains(".")){
+                    file.mkdir();
+                    plugin.getLogger().info("Dir: "+path +" | " +file.getName());
+                    continue;
+                }
+                plugin.getLogger().info("File: "+path +" | " +file.getName());
+                var stream = plugin.getResource(path);
+                if(stream==null) continue;
+                Files.copy(stream, Path.of(file.toURI()), StandardCopyOption.REPLACE_EXISTING);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**
