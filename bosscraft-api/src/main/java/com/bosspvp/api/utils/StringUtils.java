@@ -1,7 +1,9 @@
 package com.bosspvp.api.utils;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.Validate;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -46,6 +48,10 @@ public class StringUtils {
         }
         return ChatColor.translateAlternateColorCodes('&', text);
     }
+    @NotNull
+    public static String formatWithPlaceholders(@NotNull Player player, @NotNull String text) {
+        return PlaceholderAPI.setPlaceholders(player,format(text));
+    }
 
     @NotNull
     public static List<String> format(@NotNull List<String> list) {
@@ -54,6 +60,11 @@ public class StringUtils {
             output.add(format(entry));
         }
         return output;
+    }
+
+    @NotNull
+    public static List<String> formatWithPlaceholders(@NotNull Player player, @NotNull List<String> list) {
+        return PlaceholderAPI.setPlaceholders(player,format(list));
     }
 
     public static String createProgressBar(final char character,
