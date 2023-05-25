@@ -157,7 +157,7 @@ public abstract class BossPlugin extends JavaPlugin {
 
     /**
      * Method with empty implementation,
-     * that is called on plugin disable
+     * that is called on plugin enable
      * right after registering commands and listeners
      * <p></p>
      * Override to add implementation
