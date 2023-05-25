@@ -2,6 +2,8 @@ package com.bosspvp.core.config;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.ConfigManager;
+import com.bosspvp.api.config.category.ConfigCategory;
+import com.bosspvp.api.exceptions.NotificationException;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.OkaeriConfigInitializer;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class BossConfigManager implements ConfigManager {
-    private final HashMap<String,OkaeriConfig> registry = new HashMap<>();
+    private final HashMap<String,OkaeriConfig> configRegistry = new HashMap<>();
+    private final HashMap<String,ConfigCategory<? extends OkaeriConfig>> configCategoryRegistry = new HashMap<>();
 
     private final BossPlugin plugin;
     public BossConfigManager(BossPlugin plugin){
@@ -18,7 +21,7 @@ public class BossConfigManager implements ConfigManager {
     }
     @Override
     public void reloadAllConfigs() {
-        registry.values().forEach(OkaeriConfig::load);
+        configRegistry.values().forEach(OkaeriConfig::load);
     }
 
     @Override
@@ -30,7 +33,7 @@ public class BossConfigManager implements ConfigManager {
 
     @Override
     public void saveAllConfigs() {
-        registry.values().forEach(OkaeriConfig::save);
+        configRegistry.values().forEach(OkaeriConfig::save);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class BossConfigManager implements ConfigManager {
 
     @Override
     public @Nullable OkaeriConfig getConfig(@NotNull String id) {
-        return registry.get(id);
+        return configRegistry.get(id);
     }
 
     @Override
@@ -51,8 +54,46 @@ public class BossConfigManager implements ConfigManager {
                 config,
                 initializer
         );
-        registry.put(id, conf);
+        configRegistry.put(id, conf);
         return conf;
+    }
+
+    @Override
+    public void reloadAllConfigCategories() {
+       for(ConfigCategory<? extends OkaeriConfig> entry : configCategoryRegistry.values()){
+           try {
+               entry.reload();
+           }catch (NotificationException exception){
+               plugin.getLogger().info("&eException while trying to " +
+                       "reload the config category with id: "+entry.getId()
+                       +"\nMessage: "+exception.getMessage()
+               );
+           }
+       }
+    }
+
+    @Override
+    public void reloadConfigCategory(@NotNull String id) {
+        try {
+            ConfigCategory<? extends OkaeriConfig> config = configCategoryRegistry.get(id);
+            if(config == null) return;
+            config.reload();
+        }catch (NotificationException exception){
+            plugin.getLogger().info("&eException while trying to " +
+                    "reload the config category with id: "+id
+                    +"\nMessage: "+exception.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public @Nullable ConfigCategory<? extends OkaeriConfig> getConfigCategory(@NotNull String id) {
+        return configCategoryRegistry.get(id);
+    }
+
+    @Override
+    public void addConfigCategory(@NotNull ConfigCategory<? extends OkaeriConfig> configCategory) {
+        configCategoryRegistry.put(configCategory.getId(),configCategory);
     }
 
 

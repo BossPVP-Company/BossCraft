@@ -1,6 +1,7 @@
 package com.bosspvp.api.config;
 
 import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.config.category.ConfigCategory;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.OkaeriConfigInitializer;
 import org.jetbrains.annotations.NotNull;
@@ -13,12 +14,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ConfigManager {
     /**
-     * load all configs from disk
+     * reload all configs
      */
     void reloadAllConfigs();
 
     /**
-     * load the specified config from disk
+     * reload the config
      *
      * @param id the name of a config
      */
@@ -30,7 +31,7 @@ public interface ConfigManager {
     void saveAllConfigs();
 
     /**
-     * Save the specified config
+     * Save the config
      *
      * @param id the name of a config
      */
@@ -48,13 +49,40 @@ public interface ConfigManager {
     /**
      * Add new config to the handler
      *
-     * @param config The loadable config
+     * @param config The config
      * @return created config
      */
     OkaeriConfig addConfig(@NotNull String id,
                            @NotNull Class<? extends OkaeriConfig> config,
                            @NotNull OkaeriConfigInitializer initializer);
 
+    /**
+     * reload all config categories
+     */
+    void reloadAllConfigCategories();
+
+    /**
+     * reload the config category
+     *
+     * @param id the id
+     */
+    void reloadConfigCategory(@NotNull String id);
+
+    /**
+     * get config category added to the manager
+     * or null if not found
+     * @param id The id
+     * @return The config category
+     */
+    @Nullable
+    ConfigCategory<? extends OkaeriConfig> getConfigCategory(@NotNull String id);
+
+    /**
+     * Add new config category
+     *
+     * @param configCategory The config category
+     */
+    void addConfigCategory(@NotNull ConfigCategory<? extends OkaeriConfig> configCategory);
 
     /**
      * Get the plugin.

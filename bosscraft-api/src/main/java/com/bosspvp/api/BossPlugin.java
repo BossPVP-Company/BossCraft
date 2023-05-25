@@ -148,6 +148,7 @@ public abstract class BossPlugin extends JavaPlugin {
     public final void reload() {
         this.getScheduler().cancelAll();
         this.getConfigManager().reloadAllConfigs();
+        this.getConfigManager().reloadAllConfigCategories();
 
         this.handleReload();
 
