@@ -142,7 +142,8 @@ public abstract class BossPlugin extends JavaPlugin {
      * <p></p>
      * Cancels all plugin tasks, reloads configs
      * and calls BossPlugin#handleReload
-     *
+     *<p></p>
+     * It is called in BossPlugin#afterLoad
      */
     public final void reload() {
         this.getScheduler().cancelAll();
