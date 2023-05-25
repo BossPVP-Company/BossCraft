@@ -7,6 +7,7 @@ import com.bosspvp.api.config.ConfigSettings;
 import com.bosspvp.core.BossAPIImpl;
 import com.bosspvp.test.commands.CommandTest;
 import com.bosspvp.test.config.ConfigFile;
+import com.bosspvp.test.config.category.CategoryTest;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
@@ -17,6 +18,11 @@ import java.io.File;
 import java.util.List;
 
 public class TestPlugin extends BossPlugin {
+    @Override
+    protected void handleLoad() {
+        getConfigManager().addConfigCategory(new CategoryTest(this));
+    }
+
     @Override
     protected void handleEnable() {
         getGuiController().enableUpdater(true);
