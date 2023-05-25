@@ -72,7 +72,14 @@ public abstract class BossCommand implements CommandBase, CommandExecutor, TabCo
         aliases.addAll(this.getAliases());
         command.setAliases(aliases);
 
-        addSubcommand(loadHelp());
+        CommandBase cmd = loadSubcommandHelp();
+        if(cmd !=null){
+            addSubcommand(cmd);
+        }
+        cmd = loadSubcommandReload();
+        if(cmd !=null){
+            addSubcommand(cmd);
+        }
 
     }
 
@@ -89,7 +96,7 @@ public abstract class BossCommand implements CommandBase, CommandExecutor, TabCo
      *
      * @return  The help command
      */
-    protected CommandBase loadHelp(){
+    protected @Nullable CommandBase loadSubcommandHelp(){
         return (new BossSubcommand(getPlugin(),"help",this) {
             @Override
             protected void onCommandExecute(@NotNull CommandSender sender, @NotNull List<String> args) throws NotificationException {
@@ -115,12 +122,45 @@ public abstract class BossCommand implements CommandBase, CommandExecutor, TabCo
 
             @Override
             public @NotNull String getDescription() {
-                return "list of available commands";
+                return "List of available commands";
             }
 
             @Override
             public @NotNull String getUsage() {
                 return getParent().getUsage() + " help";
+            }
+        });
+    }
+    /**
+     * The default reload command
+     * <p></p>
+     * Override if you want to make your own implementation
+     *
+     * @return  The help command
+     */
+    protected @Nullable CommandBase loadSubcommandReload(){
+        return (new BossSubcommand(getPlugin(),"reload",
+                plugin.getName().toLowerCase()+".admin",
+                this) {
+            @Override
+            protected void onCommandExecute(@NotNull CommandSender sender, @NotNull List<String> args) throws NotificationException {
+                plugin.reload();
+                sender.sendMessage(StringUtils.format("&aSuccessfully reloaded the plugin"));
+            }
+
+            @Override
+            protected @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull List<String> args) {
+                return new ArrayList<>();
+            }
+
+            @Override
+            public @NotNull String getDescription() {
+                return "Reload the plugin";
+            }
+
+            @Override
+            public @NotNull String getUsage() {
+                return getParent().getUsage() + " reload";
             }
         });
     }
