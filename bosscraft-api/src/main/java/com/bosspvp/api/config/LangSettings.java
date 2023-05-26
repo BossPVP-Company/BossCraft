@@ -5,7 +5,7 @@ import eu.okaeri.configs.OkaeriConfig;
 
 import java.util.Objects;
 
-public class LangSettings extends OkaeriConfig {
+public class LangSettings extends BossConfig {
     private String prefix = "&6BossPlugin ";
 
     private String errorOnCommand = "&cUnexpected error occurred while trying to execute the command!";

@@ -1,6 +1,7 @@
 package com.bosspvp.api.config.category;
 
 import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.config.BossConfig;
 import com.bosspvp.api.exceptions.NotificationException;
 import com.bosspvp.api.tuples.Pair;
 import com.bosspvp.api.utils.FileUtils;
@@ -15,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-public abstract class ConfigCategory <T extends OkaeriConfig>{
+public abstract class ConfigCategory <T extends BossConfig>{
     private final BossPlugin plugin;
     private final String id;
     private final String directory;
@@ -30,7 +31,7 @@ public abstract class ConfigCategory <T extends OkaeriConfig>{
      * @param id the category id
      * @param directory the directory path
      * @param supportSubFolders if accept configs from subFolders
-     * @param configClass class of an okaeri config to use
+     * @param configClass class of a config to use
      */
     public ConfigCategory(@NotNull BossPlugin plugin,
                           @NotNull String id,

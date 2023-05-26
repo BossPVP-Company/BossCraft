@@ -5,7 +5,7 @@ import eu.okaeri.configs.annotation.*;
 import lombok.Getter;
 
 @Names(strategy = NameStrategy.HYPHEN_CASE, modifier = NameModifier.TO_LOWER_CASE)
-public class ConfigSettings extends OkaeriConfig {
+public class ConfigSettings extends BossConfig {
     @Comment({"Plugin debug mode"})
     @Getter
     private boolean debug = false;

@@ -44,7 +44,7 @@ public interface ConfigManager {
      * @return this
      */
     @Nullable
-    OkaeriConfig getConfig(@NotNull String id);
+    BossConfig getConfig(@NotNull String id);
 
     /**
      * Add new config to the handler
@@ -52,8 +52,8 @@ public interface ConfigManager {
      * @param config The config
      * @return created config
      */
-    OkaeriConfig addConfig(@NotNull String id,
-                           @NotNull Class<? extends OkaeriConfig> config,
+    BossConfig addConfig(@NotNull String id,
+                           @NotNull Class<? extends BossConfig> config,
                            @NotNull OkaeriConfigInitializer initializer);
 
     /**

@@ -1,13 +1,13 @@
 package com.bosspvp.api;
 
 import com.bosspvp.api.commands.BossCommand;
+import com.bosspvp.api.config.BossConfig;
 import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.config.ConfigSettings;
 import com.bosspvp.api.config.LangSettings;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.gui.GuiController;
 import com.bosspvp.api.schedule.Scheduler;
-import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
@@ -37,8 +37,8 @@ public abstract class BossPlugin extends JavaPlugin {
     private final ConfigManager configManager;
     private final GuiController guiController;
 
-    private final OkaeriConfig configYml;
-    private final OkaeriConfig langYml;
+    private final BossConfig configYml;
+    private final BossConfig langYml;
 
     private final List<Runnable> onEnableTasks = new ArrayList<>();
     private final List<Runnable> onDisableTasks = new ArrayList<>();
@@ -348,7 +348,7 @@ public abstract class BossPlugin extends JavaPlugin {
      *
      * @return lang.yml.
      */
-    protected OkaeriConfig createLang() {
+    protected BossConfig createLang() {
 
         return  configManager.addConfig(
                 "lang",
@@ -368,7 +368,7 @@ public abstract class BossPlugin extends JavaPlugin {
      *
      * @return config.yml.
      */
-    protected OkaeriConfig createConfig() {
+    protected BossConfig createConfig() {
         return  configManager.addConfig(
                 "config",
                 ConfigSettings.class,
@@ -451,7 +451,7 @@ public abstract class BossPlugin extends JavaPlugin {
      * @return The config
      */
     @NotNull
-    public OkaeriConfig getConfigYml() {
+    public BossConfig getConfigYml() {
         return configYml;
     }
 
@@ -461,7 +461,7 @@ public abstract class BossPlugin extends JavaPlugin {
      * @return The langYml
      */
     @NotNull
-    public OkaeriConfig getLangYml() {
+    public BossConfig getLangYml() {
         return langYml;
     }
 
