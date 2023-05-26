@@ -40,6 +40,12 @@ public abstract class BossPlugin extends JavaPlugin {
     private final OkaeriConfig configYml;
     private final OkaeriConfig langYml;
 
+    private final List<Runnable> onEnableTasks = new ArrayList<>();
+    private final List<Runnable> onDisableTasks = new ArrayList<>();
+    private final List<Runnable> onReloadTasks = new ArrayList<>();
+    private final List<Runnable> onLoadTasks = new ArrayList<>();
+    private final List<Runnable> afterLoadTasks = new ArrayList<>();
+
     public BossPlugin(){
         BossAPI api = getAPI();
         if(api==null){
@@ -78,6 +84,7 @@ public abstract class BossPlugin extends JavaPlugin {
         this.loadPluginCommands().forEach(BossCommand::register);
 
         this.handleEnable();
+        this.onEnableTasks.forEach(Runnable::run);
 
         this.getScheduler().runLater(1,this::afterLoad);
 
@@ -101,6 +108,7 @@ public abstract class BossPlugin extends JavaPlugin {
         this.getScheduler().cancelAll();
 
         this.handleDisable();
+        this.onDisableTasks.forEach(Runnable::run);
 
         this.getLogger().info("Cleaning up...");
     }
@@ -116,6 +124,7 @@ public abstract class BossPlugin extends JavaPlugin {
         super.onLoad();
 
         this.handleLoad();
+        this.onLoadTasks.forEach(Runnable::run);
     }
 
 
@@ -129,6 +138,7 @@ public abstract class BossPlugin extends JavaPlugin {
     public final void afterLoad() {
 
         this.handleAfterLoad();
+        this.afterLoadTasks.forEach(Runnable::run);
 
         this.reload();
 
@@ -151,10 +161,51 @@ public abstract class BossPlugin extends JavaPlugin {
         this.getConfigManager().reloadAllConfigCategories();
 
         this.handleReload();
+        this.onReloadTasks.forEach(Runnable::run);
 
         if(guiController.isUpdaterEnabled()){
             guiController.enableUpdater(true);
         }
+    }
+
+    /**
+     * Add task called after BossPlugin#handleEnable()
+     *
+     */
+    public void addTaskOnEnable(Runnable task){
+        onEnableTasks.add(task);
+    }
+
+    /**
+     * Add task called after BossPlugin#handleDisable()
+     *
+     */
+    public void addTaskOnDisable(Runnable task){
+        onDisableTasks.add(task);
+    }
+
+    /**
+     * Add task called after BossPlugin#onLoad()
+     *
+     */
+    public void addTaskOnLoad(Runnable task){
+        onLoadTasks.add(task);
+    }
+
+    /**
+     * Add task called after BossPlugin#handleReload()
+     *
+     */
+    public void addTaskOnReload(Runnable task){
+        onReloadTasks.add(task);
+    }
+
+    /**
+     * Add task called after BossPlugin#handleAfterLoad()
+     *
+     */
+    public void addTaskAfterLoad(Runnable task){
+        afterLoadTasks.add(task);
     }
 
     /**
