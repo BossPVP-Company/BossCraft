@@ -3,12 +3,12 @@ package com.bosspvp.test;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.commands.BossCommand;
+import com.bosspvp.api.config.BossConfig;
 import com.bosspvp.api.config.ConfigSettings;
 import com.bosspvp.core.BossAPIImpl;
 import com.bosspvp.test.commands.CommandTest;
 import com.bosspvp.test.config.ConfigFile;
 import com.bosspvp.test.config.category.CategoryTest;
-import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
@@ -37,7 +37,7 @@ public class TestPlugin extends BossPlugin {
 
     //make your own class for config.yml or lang.yml
     @Override
-    protected OkaeriConfig createConfig() {
+    protected BossConfig createConfig() {
         return getConfigManager().addConfig("config",
                 ConfigFile.class,
                 (it)->{
