@@ -37,9 +37,9 @@ public class Registry<T extends Registrable> implements Iterable<T> {
     @NotNull
     public T register(@NotNull final T element) {
 
-        Validate.isTrue(ID_PATTERN.matcher(element.getID()).matches(), "ID must match pattern: " + ID_PATTERN.pattern() + " (received " + element.getID() + ")");
+        Validate.isTrue(ID_PATTERN.matcher(element.getId()).matches(), "ID must match pattern: " + ID_PATTERN.pattern() + " (received " + element.getId() + ")");
 
-        registry.put(element.getID(), element);
+        registry.put(element.getId(), element);
 
         element.onRegister();
 
@@ -56,7 +56,7 @@ public class Registry<T extends Registrable> implements Iterable<T> {
 
         element.onRemove();
 
-        registry.remove(element.getID());
+        registry.remove(element.getId());
 
         return element;
     }

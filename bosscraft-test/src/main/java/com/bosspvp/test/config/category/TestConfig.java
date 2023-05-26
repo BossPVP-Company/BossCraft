@@ -14,7 +14,7 @@ public class TestConfig extends BossConfig implements Registrable {
     private String message;
 
     @Override
-    public @NotNull String getID() {
+    public @NotNull String getId() {
         return getBindFile().getFileName().toString().split("\\.")[0];
     }
 

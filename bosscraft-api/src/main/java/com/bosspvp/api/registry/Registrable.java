@@ -19,7 +19,7 @@ public interface Registrable {
      * @return The ID.
      */
     @NotNull
-    String getID();
+    String getId();
 
     /**
      * Called after the element is registered in {@link Registry}
