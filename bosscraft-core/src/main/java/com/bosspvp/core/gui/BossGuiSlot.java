@@ -41,8 +41,8 @@ public class BossGuiSlot implements GuiSlot {
         this.clickHandlers = clickHandlers;
 
         if(slotUpdater!=null) {
-            this.slotUpdater = slotUpdater.component2();
-            this.updatePeriod = slotUpdater.component1();
+            this.slotUpdater = slotUpdater.getSecond();
+            this.updatePeriod = slotUpdater.getFirst();
         }
     }
 
@@ -61,21 +61,21 @@ public class BossGuiSlot implements GuiSlot {
     public @Nullable SlotClickHandler getClickHandler(@NotNull ClickType clickType) {
         Triplet<String,Boolean,SlotClickHandler> triplet = clickHandlers.get(clickType);
         if(triplet == null) return null;
-        return triplet.component3();
+        return triplet.getThird();
     }
 
     @Override
     public @Nullable String requiredPermission(@NotNull ClickType clickType) {
         Triplet<String,Boolean,SlotClickHandler> triplet = clickHandlers.get(clickType);
         if(triplet == null) return null;
-        return triplet.component1();
+        return triplet.getFirst();
     }
 
     @Override
     public boolean requiresConfirmation(@NotNull ClickType clickType) {
         Triplet<String,Boolean,SlotClickHandler> triplet = clickHandlers.get(clickType);
         if(triplet == null) return false;
-        return triplet.component2();
+        return Boolean.TRUE.equals(triplet.getSecond());
     }
 
     @Override
