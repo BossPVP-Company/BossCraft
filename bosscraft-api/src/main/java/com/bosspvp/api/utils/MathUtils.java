@@ -1,4 +1,6 @@
 package com.bosspvp.api.utils;
+import redempt.crunch.Crunch;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -96,6 +98,12 @@ public class MathUtils {
     public static double randDouble(final double min,
                                    final double max) {
         return ThreadLocalRandom.current().nextDouble(min, max);
+    }
+
+
+    public static double evaluate(String expression){
+
+        return Crunch.compileExpression(expression).evaluate();
     }
 
 

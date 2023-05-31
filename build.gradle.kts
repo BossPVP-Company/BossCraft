@@ -25,6 +25,9 @@ allprojects{
         //PAPI
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
+        //crunch
+        maven("https://redempt.dev")
+
         //other
         maven ("https://repo.papermc.io/repository/maven-public/")
         maven("https://storehouse.okaeri.eu/repository/maven-public/")
@@ -51,6 +54,9 @@ allprojects{
 
         //kyori
         implementation("net.kyori:adventure-api:4.13.1")
+
+        //crunch
+        implementation("com.github.Redempt:Crunch:1.1.3")
 
         //PAPI
         compileOnly("me.clip:placeholderapi:2.11.2")
