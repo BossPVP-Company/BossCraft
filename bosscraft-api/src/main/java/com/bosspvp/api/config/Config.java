@@ -2,7 +2,7 @@ package com.bosspvp.api.config;
 
 import com.bosspvp.api.config.serialization.ConfigDeserializer;
 import com.bosspvp.api.config.serialization.ConfigSerializer;
-import com.bosspvp.api.placeholders.InjectablePlaceholder;
+import com.bosspvp.api.placeholders.InjectablePlaceholderList;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.utils.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Delegated config section with useful methods
  */
-public interface Config {
+public interface Config extends InjectablePlaceholderList {
     /**
      * Get if the config contains a specified path
      *
@@ -140,9 +140,9 @@ public interface Config {
         if(context == null){
             return StringUtils.format(getStringOrDefault(path,""));
         }
-        context.getInjectableContext().addInjectablePlaceholder(getInjectedPlaceholders());
+        context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
         String formatted = StringUtils.formatWithPlaceholders(getStringOrDefault(path,""),context);;
-        context.getInjectableContext().removeInjectablePlaceholder(getInjectedPlaceholders());
+        context.getInjectableContext().removeInjectablePlaceholder(getPlaceholderInjections());
         return formatted;
     }
     @NotNull
@@ -167,12 +167,12 @@ public interface Config {
         if(context == null){
             return StringUtils.format(Objects.requireNonNullElse(getStringList(path),new ArrayList<>()));
         }
-        context.getInjectableContext().addInjectablePlaceholder(getInjectedPlaceholders());
+        context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
         List<String> out = StringUtils.formatWithPlaceholders(
                 Objects.requireNonNullElse(getStringList(path),new ArrayList<>()),
                 context
         );;
-        context.getInjectableContext().removeInjectablePlaceholder(getInjectedPlaceholders());
+        context.getInjectableContext().removeInjectablePlaceholder(getPlaceholderInjections());
         return out;
     }
     @NotNull
@@ -214,9 +214,6 @@ public interface Config {
 
 
 
-    void addInjectablePlaceholders(List<InjectablePlaceholder> placeholders);
-    List<InjectablePlaceholder> getInjectedPlaceholders();
-    void clearInjectedPlaceholders();
 
     @NotNull
     ConfigurationSection getHandle();

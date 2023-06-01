@@ -3,21 +3,15 @@ package com.bosspvp.core.config;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
-import com.bosspvp.api.placeholders.InjectablePlaceholderList;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import redempt.crunch.Crunch;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 
 public class BossConfig implements Config {
     @Getter
@@ -103,7 +97,7 @@ public class BossConfig implements Config {
         ConfigurationSection section = handle.getConfigurationSection(path);
         if(section==null) return null;
         BossConfig out = new BossConfig(yamlHandle,section);
-        out.addInjectablePlaceholders(injections);
+        out.addInjectablePlaceholder(injections);
         return out;
     }
 
@@ -113,18 +107,18 @@ public class BossConfig implements Config {
     }
 
     @Override
-    public void addInjectablePlaceholders(List<InjectablePlaceholder> placeholders) {
-        injections.addAll(placeholders);
+    public void addInjectablePlaceholder(@NotNull Iterable<InjectablePlaceholder> placeholders) {
+        placeholders.forEach(it->injections.add(it));
     }
 
     @Override
-    public List<InjectablePlaceholder> getInjectedPlaceholders() {
-        return injections;
-    }
-
-    @Override
-    public void clearInjectedPlaceholders() {
+    public void removeInjectablePlaceholder(@NotNull Iterable<InjectablePlaceholder> placeholders) {
         injections.clear();
+    }
+
+    @Override
+    public @NotNull List<InjectablePlaceholder> getPlaceholderInjections() {
+        return injections;
     }
 
     @Override

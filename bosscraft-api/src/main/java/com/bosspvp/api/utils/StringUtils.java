@@ -1,9 +1,9 @@
 package com.bosspvp.api.utils;
 
-import me.clip.placeholderapi.PlaceholderAPI;
+import com.bosspvp.api.placeholders.PlaceholderManager;
+import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.Validate;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -49,8 +49,9 @@ public class StringUtils {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
     @NotNull
-    public static String formatWithPlaceholders(@NotNull Player player, @NotNull String text) {
-        return PlaceholderAPI.setPlaceholders(player,format(text));
+    public static String formatWithPlaceholders(@NotNull String text,
+                                                @NotNull PlaceholderContext context) {
+        return PlaceholderManager.translatePlaceholders(format(text),context);
     }
 
     @NotNull
@@ -63,8 +64,13 @@ public class StringUtils {
     }
 
     @NotNull
-    public static List<String> formatWithPlaceholders(@NotNull Player player, @NotNull List<String> list) {
-        return PlaceholderAPI.setPlaceholders(player,format(list));
+    public static List<String> formatWithPlaceholders(@NotNull List<String> list,
+                                                      @NotNull PlaceholderContext context) {
+        List<String> out = new ArrayList<>();
+        for(String s : list){
+            out.add(PlaceholderManager.translatePlaceholders(format(s),context));
+        }
+        return out;
     }
 
 
