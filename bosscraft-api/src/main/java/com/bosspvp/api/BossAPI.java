@@ -1,12 +1,18 @@
 package com.bosspvp.api;
 
+import com.bosspvp.api.config.Config;
 import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.gui.GuiController;
 import com.bosspvp.api.gui.menu.MenuBuilder;
 import com.bosspvp.api.gui.slot.SlotBuilder;
+import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.schedule.Scheduler;
+import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.logging.Logger;
 
@@ -85,6 +91,18 @@ public interface BossAPI {
 
 
 
+    /**
+     * Evaluate an expression.
+     *
+     * @param expression The expression.
+     * @param context    The context.
+     * @return The value of the expression, or zero if invalid.
+     */
+    double evaluate(@NotNull String expression,
+                    @NotNull PlaceholderContext context);
+
+    @Nullable
+    BossPlugin getPluginByName(@NotNull String name);
     /**
      * Get BossAPI instance
      *

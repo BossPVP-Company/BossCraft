@@ -1,11 +1,10 @@
 package com.bosspvp.api.config.category;
 
 import com.bosspvp.api.BossPlugin;
-import com.bosspvp.api.config.BossConfig;
+import com.bosspvp.api.config.impl.BossConfigOkaeri;
 import com.bosspvp.api.exceptions.NotificationException;
 import com.bosspvp.api.tuples.Pair;
 import com.bosspvp.api.utils.FileUtils;
-import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
@@ -16,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-public abstract class ConfigCategory <T extends BossConfig>{
+public abstract class ConfigCategory <T extends BossConfigOkaeri>{
     private final BossPlugin plugin;
     private final String id;
     private final String directory;

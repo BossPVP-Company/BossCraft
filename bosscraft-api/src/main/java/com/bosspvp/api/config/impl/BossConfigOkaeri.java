@@ -1,39 +1,39 @@
-package com.bosspvp.api.config;
+package com.bosspvp.api.config.impl;
 
+import com.bosspvp.api.BossAPI;
+import com.bosspvp.api.config.Config;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
+/**
+ * Config supporting Okaeri lib
+ */
+public class BossConfigOkaeri extends OkaeriConfig {
+    private Config config;
 
-public class BossConfig extends OkaeriConfig {
-    private YamlConfiguration handle;
-
-    public BossConfig(){
+    public BossConfigOkaeri(){
         if(!(getConfigurer() instanceof YamlBukkitConfigurer)) {
             throw new IllegalArgumentException("Tried to apply unsupported okaeri configurer for BossConfig");
         }
         try {
             Field configField = getConfigurer().getClass().getDeclaredField("config");
             configField.setAccessible(true);
-            this.handle = (YamlConfiguration) configField.get(getConfigurer());
+            YamlConfiguration conf = (YamlConfiguration) configField.get(getConfigurer());
+            this.config = BossAPI.getInstance().createDelegatedConfig(conf,conf);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public boolean has(@NotNull String path){
-        return get(path) != null;
+    public @Nullable Config getSubsection(@NotNull String path){
+        return config.getSubsection(path);
     }
-
-    public @Nullable ConfigurationSection getSubsection(@NotNull String path){
-        return handle.getConfigurationSection(path);
-    }
-    public @NotNull ConfigurationSection asSection(){
-        return handle;
+    public @NotNull Config asConfig(){
+        return config;
     }
 }

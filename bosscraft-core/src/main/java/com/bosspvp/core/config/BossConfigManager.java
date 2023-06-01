@@ -1,7 +1,7 @@
 package com.bosspvp.core.config;
 
 import com.bosspvp.api.BossPlugin;
-import com.bosspvp.api.config.BossConfig;
+import com.bosspvp.api.config.impl.BossConfigOkaeri;
 import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.config.category.ConfigCategory;
 import com.bosspvp.api.exceptions.NotificationException;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class BossConfigManager implements ConfigManager {
-    private final HashMap<String,BossConfig> configRegistry = new HashMap<>();
+    private final HashMap<String, BossConfigOkaeri> configRegistry = new HashMap<>();
     private final HashMap<String,ConfigCategory<? extends OkaeriConfig>> configCategoryRegistry = new HashMap<>();
 
     private final BossPlugin plugin;
@@ -45,13 +45,13 @@ public class BossConfigManager implements ConfigManager {
     }
 
     @Override
-    public @Nullable BossConfig getConfig(@NotNull String id) {
+    public @Nullable BossConfigOkaeri getConfig(@NotNull String id) {
         return configRegistry.get(id);
     }
 
     @Override
-    public BossConfig addConfig(@NotNull String id, @NotNull Class<? extends BossConfig> config, @NotNull OkaeriConfigInitializer initializer) {
-        BossConfig conf = eu.okaeri.configs.ConfigManager.create(
+    public BossConfigOkaeri addConfig(@NotNull String id, @NotNull Class<? extends BossConfigOkaeri> config, @NotNull OkaeriConfigInitializer initializer) {
+        BossConfigOkaeri conf = eu.okaeri.configs.ConfigManager.create(
                 config,
                 initializer
         );

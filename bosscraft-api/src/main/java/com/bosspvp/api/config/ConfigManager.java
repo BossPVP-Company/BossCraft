@@ -2,6 +2,7 @@ package com.bosspvp.api.config;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.category.ConfigCategory;
+import com.bosspvp.api.config.impl.BossConfigOkaeri;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.OkaeriConfigInitializer;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +45,7 @@ public interface ConfigManager {
      * @return this
      */
     @Nullable
-    BossConfig getConfig(@NotNull String id);
+    BossConfigOkaeri getConfig(@NotNull String id);
 
     /**
      * Add new config to the handler
@@ -52,9 +53,9 @@ public interface ConfigManager {
      * @param config The config
      * @return created config
      */
-    BossConfig addConfig(@NotNull String id,
-                           @NotNull Class<? extends BossConfig> config,
-                           @NotNull OkaeriConfigInitializer initializer);
+    BossConfigOkaeri addConfig(@NotNull String id,
+                               @NotNull Class<? extends BossConfigOkaeri> config,
+                               @NotNull OkaeriConfigInitializer initializer);
 
     /**
      * reload all config categories
