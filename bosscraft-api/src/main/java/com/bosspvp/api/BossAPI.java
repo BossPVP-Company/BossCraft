@@ -90,6 +90,18 @@ public interface BossAPI {
     GuiController createGuiController(@NotNull BossPlugin plugin);
 
 
+    //@TODO
+    @NotNull
+    DispatchedTriggerFactory createDTF(@NotNull BossPlugin plugin);
+    /**
+     * Creates delegated config class
+     *
+     * @param ymlHandle The Yaml file
+     * @param handle    The section to delegate
+     * @return The delegated config
+     */
+    Config createDelegatedConfig(@NotNull YamlConfiguration ymlHandle,
+                                 @NotNull ConfigurationSection handle);
 
     /**
      * Evaluate an expression.

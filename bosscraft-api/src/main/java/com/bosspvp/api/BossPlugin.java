@@ -1,16 +1,18 @@
 package com.bosspvp.api;
 
 import com.bosspvp.api.commands.BossCommand;
-import com.bosspvp.api.config.BossConfig;
+import com.bosspvp.api.config.impl.BossConfigOkaeri;
 import com.bosspvp.api.config.ConfigManager;
-import com.bosspvp.api.config.ConfigSettings;
-import com.bosspvp.api.config.LangSettings;
+import com.bosspvp.api.config.impl.ConfigSettings;
+import com.bosspvp.api.config.impl.LangSettings;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.gui.GuiController;
 import com.bosspvp.api.schedule.Scheduler;
+import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
+import lombok.Getter;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -36,9 +38,11 @@ public abstract class BossPlugin extends JavaPlugin {
     private final Scheduler scheduler;
     private final ConfigManager configManager;
     private final GuiController guiController;
+    @Getter //@TODO temporary
+    private final DispatchedTriggerFactory dispatchedTriggerFactory;
 
-    private final BossConfig configYml;
-    private final BossConfig langYml;
+    private final BossConfigOkaeri configYml;
+    private final BossConfigOkaeri langYml;
 
     private final List<Runnable> onEnableTasks = new ArrayList<>();
     private final List<Runnable> onDisableTasks = new ArrayList<>();
@@ -60,6 +64,7 @@ public abstract class BossPlugin extends JavaPlugin {
         scheduler = api.createScheduler(this);
         configManager = api.createConfigManager(this);
         guiController = api.createGuiController(this);
+        dispatchedTriggerFactory = api.createDTF(this);
 
         configYml = createConfig();
         langYml = createLang();
@@ -348,7 +353,7 @@ public abstract class BossPlugin extends JavaPlugin {
      *
      * @return lang.yml.
      */
-    protected BossConfig createLang() {
+    protected BossConfigOkaeri createLang() {
 
         return  configManager.addConfig(
                 "lang",
@@ -368,7 +373,7 @@ public abstract class BossPlugin extends JavaPlugin {
      *
      * @return config.yml.
      */
-    protected BossConfig createConfig() {
+    protected BossConfigOkaeri createConfig() {
         return  configManager.addConfig(
                 "config",
                 ConfigSettings.class,
@@ -451,7 +456,7 @@ public abstract class BossPlugin extends JavaPlugin {
      * @return The config
      */
     @NotNull
-    public BossConfig getConfigYml() {
+    public BossConfigOkaeri getConfigYml() {
         return configYml;
     }
 
@@ -461,7 +466,7 @@ public abstract class BossPlugin extends JavaPlugin {
      * @return The langYml
      */
     @NotNull
-    public BossConfig getLangYml() {
+    public BossConfigOkaeri getLangYml() {
         return langYml;
     }
 
