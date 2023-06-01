@@ -1,7 +1,7 @@
 package com.bosspvp.api.commands;
 
 import com.bosspvp.api.BossPlugin;
-import com.bosspvp.api.config.LangSettings;
+import com.bosspvp.api.config.impl.LangSettings;
 import com.bosspvp.api.exceptions.NotificationException;
 import com.bosspvp.api.utils.StringUtils;
 import lombok.Getter;

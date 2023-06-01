@@ -2,6 +2,7 @@ package com.bosspvp.api.skills.triggers;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
+import com.bosspvp.api.skills.holder.ProvidedHolder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 public abstract class Trigger implements Listener, Registrable {
@@ -32,18 +34,19 @@ public abstract class Trigger implements Listener, Registrable {
     protected void dispatch(
             @NotNull Player player,
             @NotNull TriggerData data,
-            @Nullable Collection<ProvidedHolder> forceHolders
+            @Nullable List<ProvidedHolder> forceHolders
     ) {
-        val dispatch = plugin.dispatchedTriggerFactory.create(player, this, data) ?: return
-                dispatch.generatePlaceholders(data)
+        var dispatch = plugin.getDispatchedTriggerFactory().create(player, this, data);
+        if(dispatch==null) return;
+        //dispatch.generatePlaceholders(data)
 
-        val dispatchEvent = TriggerDispatchEvent(player, dispatch)
+        /*val dispatchEvent = TriggerDispatchEvent(player, dispatch)
         Bukkit.getPluginManager().callEvent(dispatchEvent)
         if (dispatchEvent.isCancelled) {
             return
-        }
+        }*/
 
-        val effects = forceHolders?.getProvidedActiveEffects(player) ?: player.providedActiveEffects
+        var effects = forceHolders.getProvidedActiveEffects(player) ?: player.providedActiveEffects
 
         for ((holder, blocks) in effects) {
             val withHolder = data.copy(holder = holder)

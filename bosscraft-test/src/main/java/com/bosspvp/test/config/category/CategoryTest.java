@@ -5,11 +5,11 @@ import com.bosspvp.api.config.category.ConfigCategory;
 import com.bosspvp.api.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
-public class CategoryTest extends ConfigCategory<TestConfig> {
-    private Registry<TestConfig> registry = new Registry<>();
+public class CategoryTest extends ConfigCategory<TestConfigOkaeri> {
+    private Registry<TestConfigOkaeri> registry = new Registry<>();
 
     public CategoryTest(@NotNull BossPlugin plugin) {
-        super(plugin, "test", "testCategory", true, TestConfig.class);
+        super(plugin, "test", "testCategory", true, TestConfigOkaeri.class);
     }
 
     @Override
@@ -18,7 +18,7 @@ public class CategoryTest extends ConfigCategory<TestConfig> {
     }
 
     @Override
-    protected void acceptConfig(@NotNull String id, @NotNull TestConfig config) {
+    protected void acceptConfig(@NotNull String id, @NotNull TestConfigOkaeri config) {
         registry.register(config);
     }
 }

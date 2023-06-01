@@ -1,32 +1,46 @@
 package com.bosspvp.api.skills;
 
-import com.bosspvp.api.config.BossConfig;
+import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registrable;
 import com.bosspvp.api.skills.violation.ConfigViolation;
 import com.bosspvp.api.skills.violation.ViolationContext;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 public abstract class Compilable<T> implements Registrable {
 
     @Getter
     private final String id;
     @Getter
-    private final ConfigArgument.Arguments arguments;
-    public Compilable(@NotNull String id, @NotNull ConfigArgument.Arguments arguments){
+    private ConfigArgument.Arguments arguments = new ConfigArgument.Arguments(new ArrayList<>());
+    public Compilable(@NotNull String id){
         this.id = id;
-        this.arguments = arguments;
 
     }
 
-
-    public T makeCompileData(BossConfig config, ViolationContext context) {
-
-        return null;
+    protected void setArguments(@NotNull Consumer<ConfigArgument.ConfigArgumentsBuilder> arguments){
+        ConfigArgument.ConfigArgumentsBuilder builder = new ConfigArgument.ConfigArgumentsBuilder();
+        arguments.accept(builder);
+        this.arguments = builder.build();
     }
 
-    public boolean checkConfig(@NotNull BossConfig config, ViolationContext context) {
-        var violations = arguments.test(config.asSection());
+    public T makeCompileData(Config config, ViolationContext context) throws Exception{
+        try {
+            var empty = ((T) new NoCompileData());
+            return empty;
+        }catch (ClassCastException e){
+            throw new Exception(
+                    "You must override makeCompileData or use NoCompileData as the type!"
+            );
+        }
+
+    }
+
+    public boolean checkConfig(@NotNull Config config, ViolationContext context) {
+        var violations = arguments.test(config);
 
         for (ConfigViolation violation : violations) {
             context.log(this, violation);
@@ -36,7 +50,14 @@ public abstract class Compilable<T> implements Registrable {
     }
 
     public interface Compiled<T>{
-        BossConfig getConfig();
+        Config getConfig();
         T getCompileData();
+    }
+
+    /**
+     * Empty data container for compiler
+     */
+    public class NoCompileData{
+
     }
 }

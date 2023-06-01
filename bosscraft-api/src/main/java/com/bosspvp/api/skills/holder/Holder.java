@@ -5,7 +5,6 @@ import com.bosspvp.api.skills.effects.EffectList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Holder {
 

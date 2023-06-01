@@ -1,11 +1,11 @@
-package com.bosspvp.api.config;
+package com.bosspvp.api.config.impl;
 
 import com.bosspvp.api.utils.StringUtils;
 import eu.okaeri.configs.OkaeriConfig;
 
 import java.util.Objects;
 
-public class LangSettings extends BossConfig {
+public class LangSettings extends BossConfigOkaeri {
     private String prefix = "&6BossPlugin ";
 
     private String errorOnCommand = "&cUnexpected error occurred while trying to execute the command!";

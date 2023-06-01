@@ -1,10 +1,11 @@
 package com.bosspvp.api.skills.conditions;
 
-import com.bosspvp.api.config.BossConfig;
+import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.Compilable;
-import com.bosspvp.api.skills.holder.Holder;
+import com.bosspvp.api.skills.effects.EffectList;
 import com.bosspvp.api.skills.holder.ProvidedHolder;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,17 +13,25 @@ import java.util.List;
 
 @AllArgsConstructor
 public class ConditionBlock<T> implements Compilable.Compiled<T> {
-    @NotNull private Condition<T> condition;
-    @NotNull private BossConfig config;
-    @NotNull private T compileData;
-    @NotNull private EffectList notMetEffects;
-    @NotNull private List<String> notMetLines;
+
+    @NotNull @Getter
+    private Condition<T> condition;
+    @NotNull @Getter
+    private Config config;
+    @NotNull @Getter
+    private T compileData;
+    @NotNull @Getter
+    private EffectList notMetEffects;
+    @NotNull @Getter
+    private List<String> notMetLines;
+    @Getter
     private boolean showNotMet;
+    @Getter
     private boolean isInverted;
 
 
     @Override
-    public BossConfig getConfig() {
+    public Config getConfig() {
         return config;
     }
 
@@ -32,10 +41,10 @@ public class ConditionBlock<T> implements Compilable.Compiled<T> {
     }
 
     public boolean isMet(Player player, ProvidedHolder holder) {
-        var withHolder = config.applyHolder(holder, player)
+        var withHolder = config; //@TODO placeholders inject
 
-        var metWith = condition.isMet(player, withHolder, holder, compileData)
-        var metWithout = condition.isMet(player, withHolder, compileData)
+        var metWith = condition.isMet(player, withHolder, holder, compileData);
+        var metWithout = condition.isMet(player, withHolder, compileData);
 
         return (metWith && metWithout) || !isInverted;
     }

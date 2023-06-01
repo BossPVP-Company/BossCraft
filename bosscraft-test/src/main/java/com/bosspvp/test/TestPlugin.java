@@ -3,11 +3,11 @@ package com.bosspvp.test;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.commands.BossCommand;
-import com.bosspvp.api.config.BossConfig;
-import com.bosspvp.api.config.ConfigSettings;
+import com.bosspvp.api.config.impl.BossConfigOkaeri;
+import com.bosspvp.api.config.impl.ConfigSettings;
 import com.bosspvp.core.BossAPIImpl;
 import com.bosspvp.test.commands.CommandTest;
-import com.bosspvp.test.config.ConfigFile;
+import com.bosspvp.test.config.ConfigFileOkaeri;
 import com.bosspvp.test.config.category.CategoryTest;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
@@ -37,9 +37,9 @@ public class TestPlugin extends BossPlugin {
 
     //make your own class for config.yml or lang.yml
     @Override
-    protected BossConfig createConfig() {
+    protected BossConfigOkaeri createConfig() {
         return getConfigManager().addConfig("config",
-                ConfigFile.class,
+                ConfigFileOkaeri.class,
                 (it)->{
                     it.withConfigurer(new OkaeriValidator(new YamlBukkitConfigurer(), true), new SerdesBukkit());
                     it.withBindFile(new File(getDataFolder(),"config.yml"));
@@ -50,7 +50,7 @@ public class TestPlugin extends BossPlugin {
     @Override
     public @NotNull ConfigSettings getConfigSettings() {
         //obtain ConfigSettings variable from your config class
-        return ((ConfigFile)getConfigManager().getConfig("config")).getSettings();
+        return ((ConfigFileOkaeri)getConfigManager().getConfig("config")).getSettings();
     }
 
 
@@ -65,6 +65,6 @@ public class TestPlugin extends BossPlugin {
     // The plugin which loads an API has to be enabled first
     @Override
     public BossAPI loadAPI() {
-        return new BossAPIImpl();
+        return new BossAPIImpl(this);
     }
 }

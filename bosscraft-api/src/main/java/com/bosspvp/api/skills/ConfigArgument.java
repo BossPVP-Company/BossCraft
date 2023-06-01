@@ -1,8 +1,8 @@
 package com.bosspvp.api.skills;
 
+import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.violation.ConfigViolation;
-import com.bosspvp.api.tuples.Pair;
-import org.bukkit.configuration.ConfigurationSection;
+import com.bosspvp.api.tuples.PairRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,19 +14,60 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public interface ConfigArgument {
-    List<ConfigViolation> test(@NotNull ConfigurationSection config);
+    List<ConfigViolation> test(@NotNull Config config);
 
+    class ConfigArgumentsBuilder {
+        private List<ConfigArgument> arguments = new ArrayList<>();
 
+        public void require(@NotNull String name, @NotNull String message) {
+            require(List.of(name), message);
+        }
+
+        public <T> void require(
+                @NotNull String name,
+                @NotNull String message,
+                @NotNull Function<PairRecord<Config,String>,T> getter,
+                @NotNull Predicate<T> predicate) {
+
+            require(List.of(name), message, getter, predicate);
+        }
+
+        public <T> void require(@NotNull List<String> names, @NotNull String message) {
+            require(names, message, entry -> (T)entry.first().get(entry.second()), (it->true));
+        }
+
+        public <T> void require(
+                @NotNull List<String> names,
+                @NotNull String message,
+                @NotNull Function<PairRecord<Config,String>,T> getter,
+                @NotNull Predicate<T> predicate) {
+
+            arguments.add(new RequiredArgument<T>(names, message, getter, predicate));
+        }
+
+        public void inherit(@NotNull Function<Config, Compilable<?>> getter) {
+            arguments.add(new InheritedArguments(getter));
+        }
+
+        public void inherit(@NotNull String subsection,
+                            @NotNull Function<Config, Compilable<?>> getter) {
+            arguments.add(new InheritedArguments(getter, subsection));
+        }
+
+        public Arguments build(){
+           return new Arguments(arguments);
+        }
+    }
 
     class RequiredArgument<T> implements ConfigArgument {
         private List<String> names;
         private String message;
-        private Function<Pair<ConfigurationSection,String>,T> getter;
+        private Function<PairRecord<Config,String>,T> getter;
         private Predicate<T> predicate;
 
         public RequiredArgument(@NotNull List<String> names,
                                 @NotNull String message,
-                                @NotNull Function<Pair<ConfigurationSection,String>,T> getter,
+                                @NotNull Function<PairRecord<Config,String>,T> getter,
                                 @NotNull Predicate<T> predicate){
             this.names = names;
             this.message = message;
@@ -35,10 +76,10 @@ public interface ConfigArgument {
         }
 
         @Override
-        public List<ConfigViolation> test(@NotNull ConfigurationSection config) {
+        public List<ConfigViolation> test(@NotNull Config config) {
             for (String name : names) {
-                var value = getter.apply(new Pair<>(config,name));
-                if (config.contains(name) && predicate.test(value)) {
+                var value = getter.apply(new PairRecord<>(config,name));
+                if (config.hasPath(name) && predicate.test(value)) {
                     return new ArrayList<>();
                 }
             }
@@ -46,17 +87,20 @@ public interface ConfigArgument {
         }
     }
     class InheritedArguments implements ConfigArgument{
-        private Function<ConfigurationSection,Compilable<?>> getter;
+        private Function<Config,Compilable<?>> getter;
         private String subsection;
-        public InheritedArguments(@NotNull Function<ConfigurationSection,Compilable<?>> getter,
+        public InheritedArguments(@NotNull Function<Config,Compilable<?>> getter){
+            this(getter,null);
+        }
+        public InheritedArguments(@NotNull Function<Config,Compilable<?>> getter,
                                   @Nullable String subsection){
             this.getter = getter;
             this.subsection = subsection;
         }
         @Override
-        public List<ConfigViolation> test(@NotNull ConfigurationSection config) {
+        public List<ConfigViolation> test(@NotNull Config config) {
 
-            var section = Optional.ofNullable(config.getConfigurationSection(subsection)).orElse(config);
+            var section = Optional.ofNullable(config.getSubsection(subsection)).orElse(config);
             var compilable = getter.apply(section);
 
 
@@ -70,7 +114,7 @@ public interface ConfigArgument {
         public Arguments(@NotNull List<ConfigArgument> list){
             this.list = list;
         }
-        public List<ConfigViolation> test(@NotNull ConfigurationSection config){
+        public List<ConfigViolation> test(@NotNull Config config){
             return list.stream().flatMap(it->it.test(config).stream()).collect(Collectors.toList());
         }
     }
