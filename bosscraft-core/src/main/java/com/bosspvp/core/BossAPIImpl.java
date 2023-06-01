@@ -2,6 +2,7 @@ package com.bosspvp.core;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.config.Config;
 import com.bosspvp.api.config.ConfigManager;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.gui.GuiController;
@@ -9,6 +10,8 @@ import com.bosspvp.api.gui.menu.MenuBuilder;
 import com.bosspvp.api.gui.slot.SlotBuilder;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.schedule.Scheduler;
+import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
+import com.bosspvp.core.config.BossConfig;
 import com.bosspvp.core.config.BossConfigManager;
 import com.bosspvp.core.events.BossEventManager;
 import com.bosspvp.core.gui.BossGuiController;
@@ -17,6 +20,9 @@ import com.bosspvp.core.gui.BossSlotBuilder;
 import com.bosspvp.core.logger.BossLogger;
 import com.bosspvp.core.math.Evaluator;
 import com.bosspvp.core.schedule.BossScheduler;
+import lombok.Getter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +32,13 @@ import java.util.logging.Logger;
 public class BossAPIImpl implements BossAPI {
     private HashMap<String, BossPlugin> loadedPlugins = new HashMap<>();
     private Evaluator evaluator = new Evaluator();
+    @Getter
+    private final BossPlugin corePlugin;
+
+    public BossAPIImpl(BossPlugin core){
+        corePlugin = core;
+    }
+
     @Override
     public @NotNull Scheduler createScheduler(@NotNull BossPlugin plugin) {
         return new BossScheduler(plugin);
@@ -65,6 +78,16 @@ public class BossAPIImpl implements BossAPI {
     }
 
     @Override
+    public @NotNull DispatchedTriggerFactory createDTF(@NotNull BossPlugin plugin) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Config createDelegatedConfig(@NotNull YamlConfiguration ymlHandle, @NotNull ConfigurationSection handle) {
+        return new BossConfig(ymlHandle,handle);
+    }
+
+    @Override
     public double evaluate(@NotNull String expression, @NotNull PlaceholderContext context) {
         return evaluator.evaluate(expression,context);
     }
@@ -74,4 +97,10 @@ public class BossAPIImpl implements BossAPI {
     public @Nullable BossPlugin getPluginByName(@NotNull String name) {
         return loadedPlugins.get(name.toLowerCase());
     }
+
+    @Override
+    public void addPlugin(@NotNull BossPlugin plugin) {
+        loadedPlugins.put(plugin.getName().toLowerCase(),plugin);
+    }
+
 }

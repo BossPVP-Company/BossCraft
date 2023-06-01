@@ -52,10 +52,12 @@ public abstract class BossPlugin extends JavaPlugin {
 
     public BossPlugin(){
         BossAPI api = getAPI();
-        if(api==null){
+        if(api==null){ //api implementation loader
             api = loadAPI();
             BossAPI.Instance.set(api);
         }
+        api.addPlugin(this);
+
         logger = api.createLogger(this);
 
         getLogger().info("Initializing "  + this.getName());

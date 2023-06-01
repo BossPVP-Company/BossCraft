@@ -100,6 +100,7 @@ public interface BossAPI {
      * @param handle    The section to delegate
      * @return The delegated config
      */
+    @NotNull
     Config createDelegatedConfig(@NotNull YamlConfiguration ymlHandle,
                                  @NotNull ConfigurationSection handle);
 
@@ -113,8 +114,27 @@ public interface BossAPI {
     double evaluate(@NotNull String expression,
                     @NotNull PlaceholderContext context);
 
+    /**
+     * Get saved plugin by name
+     *
+     */
     @Nullable
     BossPlugin getPluginByName(@NotNull String name);
+
+    /**
+     * Add boss plugin to the list
+     *
+     */
+    void addPlugin(@NotNull BossPlugin plugin);
+
+    /**
+     * Get the plugin which loads api implementation
+     *
+     */
+    @NotNull
+    BossPlugin getCorePlugin();
+
+
     /**
      * Get BossAPI instance
      *
