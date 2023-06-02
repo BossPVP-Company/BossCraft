@@ -1,5 +1,6 @@
 package com.bosspvp.api.skills.triggers;
 
+import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.placeholders.AdditionalPlayer;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
@@ -7,9 +8,7 @@ import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.placeholders.types.injectable.StaticPlaceholder;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholder;
-import com.bosspvp.api.skills.triggers.placeholders.types.TriggerPlaceholderText;
-import com.bosspvp.api.skills.triggers.placeholders.types.TriggerPlaceholderValue;
-import com.bosspvp.api.skills.triggers.placeholders.types.TriggerPlaceholderVictim;
+import com.bosspvp.api.skills.triggers.placeholders.types.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -23,15 +22,7 @@ public record DispatchedTrigger(@NotNull Player player,
                                 @NotNull Trigger trigger,
                                 @NotNull TriggerData data,
                                 @NotNull List<InjectablePlaceholder> placeholders) {
-    public final static Registry<TriggerPlaceholder> TRIGGER_PLACEHOLDERS;
 
-    static {
-        Registry<TriggerPlaceholder> registry = new Registry<>();
-        registry.register(new TriggerPlaceholderText(null));
-        registry.register(new TriggerPlaceholderVictim(null));
-        registry.register(new TriggerPlaceholderValue(null));
-        TRIGGER_PLACEHOLDERS = registry;
-    }
     public DispatchedTrigger(@NotNull Player player,
                              @NotNull Trigger trigger,
                              @NotNull TriggerData data){
@@ -52,23 +43,13 @@ public record DispatchedTrigger(@NotNull Player player,
     }
 
     public void generateTriggerPlaceholders(TriggerData data){
-            for(TriggerPlaceholder placeholder : TRIGGER_PLACEHOLDERS){
+            for(TriggerPlaceholder placeholder : BossAPI.getInstance().getCorePlugin().getSkillsManager()
+                    .getTriggerPlaceholdersRegistry().values()){
+
                 placeholders.addAll(placeholder.createPlaceholders(data));
             }
     }
     public void generateTriggerPlaceholders(){
         generateTriggerPlaceholders(this.data);
-    }
-    public PlaceholderContext toPlaceholderContext(@NotNull Config config) {
-        List<AdditionalPlayer> additionalPlayers = new ArrayList<>();
-        if(data.victim()!=null && data.victim() instanceof Player victim){
-            additionalPlayers.add(new AdditionalPlayer(victim,"victim"));
-        }
-
-        return new PlaceholderContext(data.player(),
-                (ItemStack) data.holder().getProvider(),
-                config,
-                additionalPlayers
-        );
     }
 }

@@ -4,12 +4,13 @@ import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @AllArgsConstructor
 public abstract class TriggerGroup implements Registrable {
-    private BossPlugin plugin;
+    @Getter
     private String prefix;
 
 

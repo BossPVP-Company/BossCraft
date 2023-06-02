@@ -6,13 +6,10 @@ import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.Compilable;
 import com.bosspvp.api.skills.ConfigurableElement;
 import com.bosspvp.api.skills.conditions.ConditionList;
-import com.bosspvp.api.skills.effects.arguments.EffectArgumentBlock;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentResponse;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
-import com.bosspvp.api.utils.MathUtils;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 public abstract class ElementLike implements ConfigurableElement {
     public abstract EffectArgumentList getArguments();
@@ -42,7 +39,7 @@ public abstract class ElementLike implements ConfigurableElement {
         // Extra initial injection, otherwise it's not possible to use injections
         // in the repeat configs.
         config.addInjectablePlaceholder(trigger.placeholders());
-        PlaceholderContext context = trigger.toPlaceholderContext(config);
+        PlaceholderContext context = trigger.data().toPlaceholderContext(config);
         int repeatTimes = (int) Math.max(config.getEvaluated("repeat.times", context), 1);
         double repeatStart = config.getEvaluated("repeat.start", context);
         double repeatIncrement = config.getEvaluated("repeat.increment", context);
@@ -53,7 +50,7 @@ public abstract class ElementLike implements ConfigurableElement {
         trigger.addPlaceholder("repeat_increment", String.valueOf(repeatIncrement));
         trigger.addPlaceholderDynamic("repeat_count",()-> String.valueOf(repeatCount[0]));
         //update context
-        context = trigger.toPlaceholderContext(config);
+        context = trigger.data().toPlaceholderContext(config);
         long delay = (long) Math.max(
                 isSupportDelay()?config.getEvaluated("delay", context) : 0,
                 0

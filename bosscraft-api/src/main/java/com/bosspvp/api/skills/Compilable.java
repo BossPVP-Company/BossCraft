@@ -26,6 +26,9 @@ public abstract class Compilable<T> implements Registrable {
         arguments.accept(builder);
         this.arguments = builder.build();
     }
+    protected void setArguments(@NotNull ConfigArgument.Arguments arguments){
+        this.arguments = arguments;
+    }
 
     public T makeCompileData(Config config, ViolationContext context) throws Exception{
         try {

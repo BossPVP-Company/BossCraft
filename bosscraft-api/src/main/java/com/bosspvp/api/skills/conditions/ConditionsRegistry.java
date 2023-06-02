@@ -1,7 +1,7 @@
 package com.bosspvp.api.skills.conditions;
 
+import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
-import com.bosspvp.api.config.impl.BossConfigOkaeri;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.violation.ConfigViolation;
 import com.bosspvp.api.skills.violation.ViolationContext;
@@ -11,14 +11,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConditionRegistry extends Registry<Condition<?>> {
+public class ConditionsRegistry extends Registry<Condition<?>> {
 
 
     /**
      * Compile a list of [configs] into a ConditionList in a given [context].
      */
     @NotNull
-    public ConditionList compile(List<BossConfigOkaeri> configs, ViolationContext context){
+    public ConditionList compile(List<Config> configs, ViolationContext context){
         return new ConditionList(
                 configs.stream().map(it->compile(it,context)).collect(Collectors.toList())
         );
@@ -29,7 +29,7 @@ public class ConditionRegistry extends Registry<Condition<?>> {
      */
     public @Nullable ConditionBlock<?> compile(Config cfg, ViolationContext context){
         //@TODO
-        var config = cfg.separatorAmbivalent();
+        Config config = cfg.separatorAmbivalent();
 
         var condition = get(config.getString("id"));
 
@@ -49,11 +49,12 @@ public class ConditionRegistry extends Registry<Condition<?>> {
         }
         var compileData = condition.makeCompileData(config,context);
         //@TODO
-        var notMetEffects = Effects.compile(
-                config.getSubsection("not-met-effects"),
-                context.with("not-met-effects")
-        );
-        return new ConditionBlock(
+        var notMetEffects = BossAPI.getInstance().getCorePlugin().getSkillsManager()
+                .getEffectsRegistry().compile(
+                        config.getSubsections("not-met-effects"),
+                        context.with("not-met-effects")
+                );
+        return new ConditionBlock<T>(
                 condition,
                 config,
                 compileData,

@@ -1,5 +1,6 @@
 package com.bosspvp.api.skills.triggers;
 
+import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
 import com.bosspvp.api.skills.holder.ProvidedHolder;
@@ -14,19 +15,16 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class Trigger implements Listener, Registrable {
-    @Getter
-    private final BossPlugin plugin;
 
     @Getter
     private final String id;
+    @Getter
     private Set<TriggerParameter> parameters;
 
     @Getter @Setter
     private boolean enabled;
-    public Trigger(@NotNull BossPlugin plugin,
-                   @NotNull String id,
+    public Trigger(@NotNull String id,
                    @NotNull Set<TriggerParameter> parameters){
-        this.plugin = plugin;
         this.id = id;
         this.parameters = parameters;
     }
@@ -36,7 +34,7 @@ public abstract class Trigger implements Listener, Registrable {
             @NotNull TriggerData data,
             @Nullable List<ProvidedHolder> forceHolders
     ) {
-        var dispatch = plugin.getDispatchedTriggerFactory().create(player, this, data);
+        var dispatch = BossAPI.getInstance().getCorePlugin().getDispatchedTriggerFactory().create(player, this, data);
         if(dispatch==null) return;
         //dispatch.generatePlaceholders(data)
 
@@ -64,6 +62,7 @@ public abstract class Trigger implements Listener, Registrable {
 
     @Override
     public final void onRegister() {
+        BossPlugin plugin = BossAPI.getInstance().getCorePlugin();
         plugin.getEventManager().unregisterListener(this);
         plugin.getEventManager().registerListener(this);
         afterRegister();

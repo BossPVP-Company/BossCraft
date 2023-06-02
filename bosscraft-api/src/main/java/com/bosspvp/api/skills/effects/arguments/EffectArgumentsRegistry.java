@@ -2,11 +2,15 @@ package com.bosspvp.api.skills.effects.arguments;
 
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registry;
+import com.bosspvp.api.skills.effects.arguments.types.ArgumentRequire;
 import com.bosspvp.api.skills.violation.ViolationContext;
 
 import java.util.ArrayList;
 
 public class EffectArgumentsRegistry extends Registry<EffectArgument<?>> {
+    public EffectArgumentsRegistry(){
+        register(new ArgumentRequire());
+    }
 
     public EffectArgumentList compile(Config config, ViolationContext context){
         var blocks = new ArrayList<EffectArgumentBlock<?>>();

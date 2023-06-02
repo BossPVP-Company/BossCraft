@@ -1,5 +1,7 @@
 package com.bosspvp.api.skills.triggers;
 
+import lombok.Getter;
+
 public enum TriggerParameter {
     PLAYER,
     VICTIM,
@@ -12,7 +14,8 @@ public enum TriggerParameter {
     TEXT,
     VALUE;
 
-    private TriggerParameter[] inheritsFrom;
+    @Getter
+    private final TriggerParameter[] inheritsFrom;
     TriggerParameter(TriggerParameter ... args){
         inheritsFrom = args;
     }

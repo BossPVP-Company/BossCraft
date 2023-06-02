@@ -7,9 +7,7 @@ import com.bosspvp.api.placeholders.InjectablePlaceholder;
 import com.bosspvp.api.skills.Compilable;
 import com.bosspvp.api.skills.ConfigArgument;
 import com.bosspvp.api.skills.holder.ProvidedHolder;
-import com.bosspvp.api.skills.triggers.DispatchedTrigger;
-import com.bosspvp.api.skills.triggers.TriggerData;
-import com.bosspvp.api.skills.triggers.TriggerParameter;
+import com.bosspvp.api.skills.triggers.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
@@ -17,30 +15,31 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Effect<T> extends Compilable<T> implements Listener {
-    private HashMap<UUID,Integer> effectCounter = new HashMap<>();
-    public Effect(@NotNull String id, ConfigArgument.@NotNull Arguments arguments) {
-        super(id, arguments);
-    }
+    private final HashMap<UUID,Integer> effectCounter = new HashMap<>();
 
-    // The identifier factory.
-    private val identifierFactory = IdentifierFactory(UUID.nameUUIDFromBytes(id.toByteArray()))
+    private final IdentifierFactory identifierFactory =
+            new IdentifierFactory(UUID.nameUUIDFromBytes(getId().getBytes()));
+    public Effect(@NotNull String id) {
+        super(id);
+    }
 
     /**
      * If the effect supports a certain [trigger].
      */
-    fun supportsTrigger(trigger: Trigger) =
-            Triggers.withParameters(parameters)(trigger)
+    public boolean supportsTrigger(Trigger trigger){
+      return TriggersRegistry.getInstance().withParameters(getParameters()).test(trigger);
+    }
 
     /**
      * Enable a permanent effect.
      *
      * @param player The player.
-     * @param config The effect config.
+     * @param chainElement The chain element.
      */
     public void enable(
             Player player,
             ProvidedHolder holder,
-            config: ChainElement<T>,
+            ChainElement<T> chainElement,
             boolean isReload
     ) {
         if (isReload && !isShouldReload()) {
@@ -51,9 +50,10 @@ public class Effect<T> extends Compilable<T> implements Listener {
         effectCounter.put(player.getUniqueId(),effectCounter.get(player.getUniqueId())+1);
         int count = effectCounter.get(player.getUniqueId());
 
-        val withHolder = config.config.applyHolder(holder, player);
+        //@TODO ProvidedHolderConfig
+        //Config withHolder = chainElement.getConfig().applyHolder(holder, player);
 
-        onEnable(player, withHolder, identifierFactory.makeIdentifiers(count), holder, config.compileData);
+        onEnable(player, chainElement.getConfig(), identifierFactory.makeIdentifiers(count), holder, chainElement.getCompileData());
     }
 
     /**
@@ -94,7 +94,7 @@ public class Effect<T> extends Compilable<T> implements Listener {
 
         int count = effectCounter.get(player.getUniqueId()) - 1;
         effectCounter.put(player.getUniqueId(),count);
-        onDisable(player, identifierFactory.makeIdentifiers(count), holder)
+        onDisable(player, identifierFactory.makeIdentifiers(count), holder);
     }
 
     /**
@@ -103,7 +103,7 @@ public class Effect<T> extends Compilable<T> implements Listener {
      * @param player The player.
      * @param identifiers The identifiers.
      */
-    protected boolean onDisable(
+    protected void onDisable(
             Player player,
             Identifiers identifiers,
             ProvidedHolder holder
@@ -117,13 +117,13 @@ public class Effect<T> extends Compilable<T> implements Listener {
      * Returns if the execution was successful.
      *
      * @param trigger The trigger.
-     * @param config The config.
+     * @param chainElement The chain element.
      */
     public boolean trigger(
             DispatchedTrigger trigger,
-            config: ChainElement<T>
+            ChainElement<T> chainElement
     ){
-        return onTrigger(config.config, trigger.data, config.compileData);
+        return onTrigger(chainElement.getConfig(), trigger.data(), chainElement.getCompileData());
     }
 
     /**
@@ -139,7 +139,7 @@ public class Effect<T> extends Compilable<T> implements Listener {
             TriggerData data,
             T compileData
     ) {
-        return false
+        return false;
     }
 
     /**
@@ -147,9 +147,9 @@ public class Effect<T> extends Compilable<T> implements Listener {
      */
     boolean shouldTrigger(
             DispatchedTrigger trigger,
-            config: ChainElement<T>
+            ChainElement<T> chainElement
     ){
-      return shouldTrigger(config.config, trigger.data, config.compileData);
+      return shouldTrigger(chainElement.getConfig(), trigger.data(), chainElement.getCompileData());
     }
 
     /**
@@ -191,6 +191,9 @@ public class Effect<T> extends Compilable<T> implements Listener {
         return RunOrder.NORMAL;
     }
     public boolean isShouldReload(){
+        return true;
+    }
+    public boolean isSupportsDelay(){
         return true;
     }
 }

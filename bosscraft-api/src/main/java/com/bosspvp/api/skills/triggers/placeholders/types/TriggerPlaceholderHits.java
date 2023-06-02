@@ -14,8 +14,8 @@ import java.util.*;
 
 public class TriggerPlaceholderHits extends TriggerPlaceholder {
     private final String HITS_META_KEY = "bosspvp_tracked_hits";
-    public TriggerPlaceholderHits(@NotNull BossPlugin plugin) {
-        super(plugin, "hits");
+    public TriggerPlaceholderHits() {
+        super("hits");
     }
 
     @Override

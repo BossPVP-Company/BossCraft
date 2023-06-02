@@ -8,6 +8,7 @@ import com.bosspvp.api.config.impl.LangSettings;
 import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.gui.GuiController;
 import com.bosspvp.api.schedule.Scheduler;
+import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
@@ -33,17 +34,21 @@ import java.util.logging.Logger;
  * @see BossPlugin#loadListeners()
  */
 public abstract class BossPlugin extends JavaPlugin {
+
     private final Logger logger;
     private final EventManager eventManager;
     private final Scheduler scheduler;
     private final ConfigManager configManager;
     private final GuiController guiController;
+    private final SkillsManager skillsManager;
     @Getter //@TODO temporary
     private final DispatchedTriggerFactory dispatchedTriggerFactory;
 
+    //-----------files-----------
     private final BossConfigOkaeri configYml;
     private final BossConfigOkaeri langYml;
 
+    //-----------tasks-----------
     private final List<Runnable> onEnableTasks = new ArrayList<>();
     private final List<Runnable> onDisableTasks = new ArrayList<>();
     private final List<Runnable> onReloadTasks = new ArrayList<>();
@@ -55,6 +60,9 @@ public abstract class BossPlugin extends JavaPlugin {
         if(api==null){ //api implementation loader
             api = loadAPI();
             BossAPI.Instance.set(api);
+            skillsManager = api.createSkillsManager(this);
+        }else{
+            skillsManager = api.getCorePlugin().skillsManager;
         }
         api.addPlugin(this);
 
@@ -67,6 +75,7 @@ public abstract class BossPlugin extends JavaPlugin {
         configManager = api.createConfigManager(this);
         guiController = api.createGuiController(this);
         dispatchedTriggerFactory = api.createDTF(this);
+
 
         configYml = createConfig();
         langYml = createLang();
@@ -346,7 +355,15 @@ public abstract class BossPlugin extends JavaPlugin {
         return guiController;
     }
 
-
+    /**
+     * Get skills manager
+     *
+     * @return skills manager
+     */
+    @NotNull
+    public SkillsManager getSkillsManager() {
+        return skillsManager;
+    }
 
     /**
      * Creates LangYml

@@ -15,8 +15,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class TriggerPlaceholderVictim extends TriggerPlaceholder {
-    public TriggerPlaceholderVictim(@NotNull BossPlugin plugin) {
-        super(plugin, "victim");
+    public TriggerPlaceholderVictim() {
+        super("victim");
     }
 
 

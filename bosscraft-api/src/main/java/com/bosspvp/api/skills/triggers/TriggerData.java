@@ -1,5 +1,8 @@
 package com.bosspvp.api.skills.triggers;
 
+import com.bosspvp.api.config.Config;
+import com.bosspvp.api.placeholders.AdditionalPlayer;
+import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.EffectList;
 import com.bosspvp.api.skills.holder.Holder;
@@ -16,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public record TriggerData(
@@ -53,7 +57,18 @@ public record TriggerData(
                 1.0
             );
     }
+    public PlaceholderContext toPlaceholderContext(@NotNull Config config) {
+        List<AdditionalPlayer> additionalPlayers = new ArrayList<>();
+        if(victim()!=null && victim() instanceof Player victimP){
+            additionalPlayers.add(new AdditionalPlayer(victimP,"victim"));
+        }
 
+        return new PlaceholderContext(player(),
+                (ItemStack) holder().getProvider(),
+                config,
+                additionalPlayers
+        );
+    }
     @Override
     public int hashCode() {
         return Objects.hash(

@@ -8,6 +8,7 @@ import com.bosspvp.api.gui.menu.MenuBuilder;
 import com.bosspvp.api.gui.slot.SlotBuilder;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.schedule.Scheduler;
+import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -93,6 +94,9 @@ public interface BossAPI {
     //@TODO
     @NotNull
     DispatchedTriggerFactory createDTF(@NotNull BossPlugin plugin);
+
+
+
     /**
      * Creates delegated config class
      *
@@ -103,6 +107,17 @@ public interface BossAPI {
     @NotNull
     Config createDelegatedConfig(@NotNull YamlConfiguration ymlHandle,
                                  @NotNull ConfigurationSection handle);
+
+
+
+    /**
+     * Create Skills Manager
+     *
+     * @param plugin The plugin
+     * @return The skills manager
+     */
+    @NotNull
+    SkillsManager createSkillsManager(@NotNull BossPlugin plugin);
 
     /**
      * Evaluate an expression.
