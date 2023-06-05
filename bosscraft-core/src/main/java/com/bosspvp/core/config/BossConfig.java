@@ -149,5 +149,14 @@ public class BossConfig implements Config {
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof BossConfig other)) return false;
+        return handle.equals(other.handle) && yamlHandle.equals(other.yamlHandle);
+    }
 
+    @Override
+    public int hashCode() {
+        return handle.hashCode() + yamlHandle.hashCode();
+    }
 }

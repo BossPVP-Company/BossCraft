@@ -247,4 +247,8 @@ public interface Config extends InjectablePlaceholderList {
     ConfigurationSection getHandle();
     @NotNull
     ConfigurationSection getYamlHandle();
+
+
+    boolean equals(Object other);
+    int hashCode();
 }
