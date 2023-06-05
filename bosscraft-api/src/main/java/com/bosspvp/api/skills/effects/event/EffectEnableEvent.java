@@ -1,7 +1,7 @@
 package com.bosspvp.api.skills.effects.event;
 
 import com.bosspvp.api.skills.effects.Effect;
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;

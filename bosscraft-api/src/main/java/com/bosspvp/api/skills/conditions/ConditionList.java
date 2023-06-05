@@ -1,6 +1,6 @@
 package com.bosspvp.api.skills.conditions;
 
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import com.bosspvp.api.utils.StringUtils;
 import lombok.AllArgsConstructor;

@@ -51,7 +51,7 @@ public class EffectsRegistry extends Registry<Effect<?>> {
         Config args = config.getSubsection("args");
 
         var arguments = skillsManager.getEffectArgumentsRegistry().compile(args, context.with("args"));
-        var conditions = skillsManager.getConditionsRegistry().compile(config.getSubsections("conditions"), context.with("conditions"));
+        var conditions = skillsManager.getConditionsRegistry().compile(config.getSubsectionList("conditions"), context.with("conditions"));
 
         //@TODO
         /* val mutators = Mutators.compile(config.getSubsections("mutators"), context.with("mutators"))
@@ -64,24 +64,20 @@ public class EffectsRegistry extends Registry<Effect<?>> {
             triggers.add(trigger);
         }
 
-        //@TODO
-        val effectConfigs = if (config.has("id")) {
-            listOf(config)
-        } else {
-            config.getSubsections("effects")
-        }
+        var effectConfigs = config.hasPath("id") ? List.of(config) : config.getSubsectionList("effects");
+
 
         boolean directIDSpecified = config.hasPath("id");
 
         ChainExecutor executor = skillsManager.getChainExecutorsRegistry()
                 .getByID(args.getStringOrNull("run-type"));
 
-        val chain = compileChain(effectConfigs, executor, context, directIDSpecified) ?:return null
+        var chain = compileChain(effectConfigs, executor, context, directIDSpecified) ?:return null
 
-        val permanentEffects = chain.filter {
+        var permanentEffects = chain.filter {
             it.effect.isPermanent
         }
-        val triggeredEffects = chain.filterNot {
+        var triggeredEffects = chain.filterNot {
             it.effect.isPermanent
         }
 
@@ -161,7 +157,8 @@ public class EffectsRegistry extends Registry<Effect<?>> {
     ) {
         return null;
         //@TODO
-        /*val elements = configs.stream().map(
+        /*
+        val elements = configs.stream().map(
                 it-> it.separatorAmbivalent() }.mapNotNull { compileElement(it, context)
     )
 

@@ -10,6 +10,7 @@ import com.bosspvp.api.gui.menu.MenuBuilder;
 import com.bosspvp.api.gui.slot.SlotBuilder;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.schedule.Scheduler;
+import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.core.config.BossConfig;
 import com.bosspvp.core.config.BossConfigManager;
@@ -20,6 +21,7 @@ import com.bosspvp.core.gui.BossSlotBuilder;
 import com.bosspvp.core.logger.BossLogger;
 import com.bosspvp.core.math.Evaluator;
 import com.bosspvp.core.schedule.BossScheduler;
+import com.bosspvp.core.skills.BossSkillsManager;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -76,15 +78,14 @@ public class BossAPIImpl implements BossAPI {
     public @NotNull GuiController createGuiController(@NotNull BossPlugin plugin) {
         return new BossGuiController(plugin);
     }
-
-    @Override
-    public @NotNull DispatchedTriggerFactory createDTF(@NotNull BossPlugin plugin) {
-        return null;
-    }
-
     @Override
     public @NotNull Config createDelegatedConfig(@NotNull YamlConfiguration ymlHandle, @NotNull ConfigurationSection handle) {
         return new BossConfig(ymlHandle,handle);
+    }
+
+    @Override
+    public @NotNull SkillsManager createSkillsManager(@NotNull BossPlugin plugin) {
+        return new BossSkillsManager(plugin);
     }
 
     @Override

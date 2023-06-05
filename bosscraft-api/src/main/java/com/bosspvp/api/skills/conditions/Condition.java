@@ -3,7 +3,7 @@ package com.bosspvp.api.skills.conditions;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.Compilable;
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

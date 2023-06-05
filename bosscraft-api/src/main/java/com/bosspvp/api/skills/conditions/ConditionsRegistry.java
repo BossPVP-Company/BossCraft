@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class ConditionsRegistry extends Registry<Condition<?>> {
 
+    
 
     /**
      * Compile a list of [configs] into a ConditionList in a given [context].
@@ -23,12 +24,13 @@ public class ConditionsRegistry extends Registry<Condition<?>> {
                 configs.stream().map(it->compile(it,context)).collect(Collectors.toList())
         );
     }
-
     /**
      * Compile a [cfg] into a ConditionBlock in a given [context].
      */
     public @Nullable ConditionBlock<?> compile(Config cfg, ViolationContext context){
+
         //@TODO
+
         Config config = cfg.separatorAmbivalent();
 
         var condition = get(config.getString("id"));
@@ -47,22 +49,27 @@ public class ConditionsRegistry extends Registry<Condition<?>> {
         if(!condition.checkConfig(config,context)){
             return null;
         }
-        var compileData = condition.makeCompileData(config,context);
-        //@TODO
-        var notMetEffects = BossAPI.getInstance().getCorePlugin().getSkillsManager()
-                .getEffectsRegistry().compile(
-                        config.getSubsections("not-met-effects"),
-                        context.with("not-met-effects")
-                );
-        return new ConditionBlock<T>(
-                condition,
-                config,
-                compileData,
-                notMetEffects,
-                config.getStringList("not-met-lines"),
-                config.getBool("show-not-met"),
-                config.getBool("inverse")
-        );
+        try {
+            var compileData = condition.makeCompileData(config, context);
+            //@TODO
+            var notMetEffects = BossAPI.getInstance().getCorePlugin().getSkillsManager()
+                    .getEffectsRegistry().compile(
+                            config.getSubsectionList("not-met-effects"),
+                            context.with("not-met-effects")
+                    );
+            return new ConditionBlock<T>(
+                    condition,
+                    config,
+                    compileData,
+                    notMetEffects,
+                    config.getStringList("not-met-lines"),
+                    config.getBool("show-not-met"),
+                    config.getBool("inverse")
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
 
     }
 }

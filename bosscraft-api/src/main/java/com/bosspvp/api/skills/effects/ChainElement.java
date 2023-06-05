@@ -6,7 +6,7 @@ import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
 import com.bosspvp.api.skills.effects.event.EffectDisableEvent;
 import com.bosspvp.api.skills.effects.event.EffectEnableEvent;
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import lombok.Getter;
 import org.bukkit.Bukkit;

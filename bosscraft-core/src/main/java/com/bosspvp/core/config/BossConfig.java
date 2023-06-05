@@ -93,11 +93,28 @@ public class BossConfig implements Config {
     }
 
 
+    @Override
     public @Nullable BossConfig getSubsection(@NotNull String path){
         ConfigurationSection section = handle.getConfigurationSection(path);
         if(section==null) return null;
         BossConfig out = new BossConfig(yamlHandle,section);
         out.addInjectablePlaceholder(injections);
+        return out;
+    }
+
+    @Override
+    public @Nullable List<Config> getSubsectionListOrNull(@NotNull String path) {
+        Object obj = handle.get(path);
+        if(obj==null) return null;
+        if(!(obj instanceof Iterable<?> list)) return null;
+        if(!(list.iterator().next() instanceof ConfigurationSection)) return null;
+        List<Config> out = new ArrayList<>();
+        list.forEach(it->{
+            ConfigurationSection section = (ConfigurationSection) it;
+            BossConfig config = new BossConfig(yamlHandle,section);
+            config.addInjectablePlaceholder(injections);
+            out.add(config);
+        });
         return out;
     }
 
@@ -113,6 +130,11 @@ public class BossConfig implements Config {
 
     @Override
     public void removeInjectablePlaceholder(@NotNull Iterable<InjectablePlaceholder> placeholders) {
+        placeholders.forEach(it->injections.remove(it));
+    }
+
+    @Override
+    public void clearInjectedPlaceholders() {
         injections.clear();
     }
 

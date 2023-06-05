@@ -90,13 +90,6 @@ public interface BossAPI {
     @NotNull
     GuiController createGuiController(@NotNull BossPlugin plugin);
 
-
-    //@TODO
-    @NotNull
-    DispatchedTriggerFactory createDTF(@NotNull BossPlugin plugin);
-
-
-
     /**
      * Creates delegated config class
      *

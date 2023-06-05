@@ -3,7 +3,7 @@ package com.bosspvp.api.skills.effects;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import com.bosspvp.api.skills.triggers.Trigger;
 import lombok.Getter;

@@ -41,8 +41,6 @@ public abstract class BossPlugin extends JavaPlugin {
     private final ConfigManager configManager;
     private final GuiController guiController;
     private final SkillsManager skillsManager;
-    @Getter //@TODO temporary
-    private final DispatchedTriggerFactory dispatchedTriggerFactory;
 
     //-----------files-----------
     private final BossConfigOkaeri configYml;
@@ -74,7 +72,6 @@ public abstract class BossPlugin extends JavaPlugin {
         scheduler = api.createScheduler(this);
         configManager = api.createConfigManager(this);
         guiController = api.createGuiController(this);
-        dispatchedTriggerFactory = api.createDTF(this);
 
 
         configYml = createConfig();
@@ -94,7 +91,11 @@ public abstract class BossPlugin extends JavaPlugin {
         this.getLogger().info("");
         this.getLogger().info("Enabling " + this.getName());
 
+        //lib
         getEventManager().registerListener(guiController);
+        skillsManager.loadListeners().forEach(listener -> getEventManager().registerListener(listener));
+
+        //plugin
         this.loadListeners().forEach(listener -> getEventManager().registerListener(listener));
 
         this.loadPluginCommands().forEach(BossCommand::register);
@@ -182,6 +183,7 @@ public abstract class BossPlugin extends JavaPlugin {
         if(guiController.isUpdaterEnabled()){
             guiController.enableUpdater(true);
         }
+        skillsManager.startTasks();
     }
 
     /**
