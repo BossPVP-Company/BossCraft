@@ -3,7 +3,8 @@ package com.bosspvp.api.skills.triggers;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.HolderManager;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -20,6 +21,8 @@ public abstract class Trigger implements Listener, Registrable {
     private final String id;
     @Getter
     private Set<TriggerParameter> parameters;
+    protected final BossPlugin plugin;
+    protected final HolderManager holderManager;
 
     @Getter @Setter
     private boolean enabled;
@@ -27,6 +30,9 @@ public abstract class Trigger implements Listener, Registrable {
                    @NotNull Set<TriggerParameter> parameters){
         this.id = id;
         this.parameters = parameters;
+        this.plugin = BossAPI.getInstance().getCorePlugin();
+        this.holderManager = BossAPI.getInstance().getCorePlugin().getSkillsManager().getHolderManager();
+
     }
 
     protected void dispatch(
@@ -34,35 +40,36 @@ public abstract class Trigger implements Listener, Registrable {
             @NotNull TriggerData data,
             @Nullable List<ProvidedHolder> forceHolders
     ) {
-        var dispatch = BossAPI.getInstance().getCorePlugin().getDispatchedTriggerFactory().create(player, this, data);
+        var dispatch = plugin.getSkillsManager().getDispatchedTriggerFactory().create(player, this, data);
         if(dispatch==null) return;
-        //dispatch.generatePlaceholders(data)
-
+        dispatch.generateTriggerPlaceholders(data);
+        //@TODO later, not required rn
         /*val dispatchEvent = TriggerDispatchEvent(player, dispatch)
         Bukkit.getPluginManager().callEvent(dispatchEvent)
         if (dispatchEvent.isCancelled) {
             return
         }*/
 
-        var effects = forceHolders.getProvidedActiveEffects(player) ?: player.providedActiveEffects
+        var effects = forceHolders==null?
+                holderManager.getPreviousStates().get(player.getUniqueId()) :
+                holderManager.getActiveEffects(player,forceHolders);
 
-        for ((holder, blocks) in effects) {
-            val withHolder = data.copy(holder = holder)
-            val dispatchWithHolder = DispatchedTrigger(player, this, withHolder).inheritPlaceholders(dispatch)
+        for (var entry : effects) {
+            var withHolder = data.copy(entry.holder());
+            var dispatchWithHolder = new DispatchedTrigger(player, this, withHolder).inheritPlaceholders(dispatch);
 
-            for (placeholder in holder.generatePlaceholders(player)) {
-                dispatchWithHolder.addPlaceholder(placeholder)
+            for (var placeholder : holderManager.generatePlaceholders(entry.holder(),player)) {
+                dispatchWithHolder.addPlaceholder(placeholder);
             }
 
-            for (block in blocks) {
-                block.tryTrigger(dispatchWithHolder)
+            for (var block : entry.effects()) {
+                block.tryTrigger(dispatchWithHolder);
             }
         }
     }
 
     @Override
     public final void onRegister() {
-        BossPlugin plugin = BossAPI.getInstance().getCorePlugin();
         plugin.getEventManager().unregisterListener(this);
         plugin.getEventManager().registerListener(this);
         afterRegister();

@@ -6,7 +6,7 @@ import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.EffectList;
 import com.bosspvp.api.skills.holder.Holder;
-import com.bosspvp.api.skills.holder.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -67,6 +67,22 @@ public record TriggerData(
                 (ItemStack) holder().getProvider(),
                 config,
                 additionalPlayers
+        );
+    }
+
+    public TriggerData copy(ProvidedHolder holder){
+        return new TriggerData(
+                holder,
+                player,
+                victim,
+                block,
+                event,
+                location,
+                projectile,
+                velocity,
+                item,
+                text,
+                value
         );
     }
     @Override

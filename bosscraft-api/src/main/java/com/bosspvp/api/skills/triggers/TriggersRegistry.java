@@ -12,7 +12,7 @@ public class TriggersRegistry extends Registry<Trigger> {
     private static TriggersRegistry instance;
     private Registry<TriggerGroup> groupRegistry = new Registry<>();
 
-    TriggersRegistry(){
+    public TriggersRegistry(){
         instance = this;
     }
 
