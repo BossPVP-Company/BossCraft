@@ -58,6 +58,9 @@ allprojects{
         //crunch
         implementation("com.github.Redempt:Crunch:1.1.3")
 
+        //caffeine
+        implementation("com.github.ben-manes.caffeine:caffeine:3.1.6")
+
         //PAPI
         compileOnly("me.clip:placeholderapi:2.11.2")
 
