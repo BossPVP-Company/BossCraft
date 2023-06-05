@@ -14,7 +14,7 @@ public interface Scheduler {
     /**
      * Run the task after a specified tick delay.
      *
-     * @param delay The amount of ticks to wait before execution.
+     * @param delay      The amount of ticks to wait before the first execution.
      * @param runnable   The task to run.
      * @return The created {@link BukkitTask}.
      */
