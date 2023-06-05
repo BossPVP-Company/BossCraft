@@ -160,6 +160,14 @@ public class PlaceholderContext {
         );
     }
 
+    public PlaceholderContext copy(ItemStack item) {
+        return new PlaceholderContext(
+                this.getPlayer(),
+                item,
+                this.injectableContext,
+                this.additionalPlayers
+        );
+    }
     @Override
     public String toString() {
         return "PlaceholderContext{" +

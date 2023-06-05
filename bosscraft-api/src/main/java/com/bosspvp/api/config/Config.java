@@ -128,20 +128,30 @@ public interface Config extends InjectablePlaceholderList {
     @Nullable
     List<Boolean> getBoolListOrNull(@NotNull String path);
 
-
-
     @NotNull
-    default String getFormattedString(@NotNull String path){
-        return getFormattedString(path,null);
+    default String getFormattedString(@NotNull String path) {
+        return Objects.requireNonNullElse(getFormattedStringOrNull(path,null), "");
     }
     @NotNull
     default String getFormattedString(@NotNull String path,
-                                      @Nullable PlaceholderContext context){
+                                      @Nullable PlaceholderContext context) {
+        return Objects.requireNonNullElse(getFormattedStringOrNull(path,context), "");
+    }
+
+    @Nullable
+    default String getFormattedStringOrNull(@NotNull String path){
+        return getFormattedString(path,null);
+    }
+    @Nullable
+    default String getFormattedStringOrNull(@NotNull String path,
+                                            @Nullable PlaceholderContext context){
+        String text = getStringOrNull(path);
+        if(text == null) return null;
         if(context == null){
-            return StringUtils.format(getStringOrDefault(path,""));
+            return StringUtils.format(text);
         }
         context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
-        String formatted = StringUtils.formatWithPlaceholders(getStringOrDefault(path,""),context);;
+        String formatted = StringUtils.formatWithPlaceholders(text,context);;
         context.getInjectableContext().removeInjectablePlaceholder(getPlaceholderInjections());
         return formatted;
     }
@@ -156,25 +166,36 @@ public interface Config extends InjectablePlaceholderList {
     @Nullable
     String getStringOrNull(@NotNull String path);
 
-
     @NotNull
     default List<String> getFormattedStringList(@NotNull String path) {
-        return getFormattedStringList(path,null);
+        return Objects.requireNonNullElse(getFormattedStringListOrNull(path,null), new ArrayList<>());
     }
     @NotNull
     default List<String> getFormattedStringList(@NotNull String path,
-                                                @Nullable PlaceholderContext context){
+                                                @Nullable PlaceholderContext context) {
+        return Objects.requireNonNullElse(getFormattedStringListOrNull(path,context), new ArrayList<>());
+    }
+    @Nullable
+    default List<String> getFormattedStringListOrNull(@NotNull String path) {
+        return getFormattedStringListOrNull(path,null);
+    }
+    @Nullable
+    default List<String> getFormattedStringListOrNull(@NotNull String path,
+                                                      @Nullable PlaceholderContext context){
+        List<String> list = getStringListOrNull(path);
+        if(list == null) return null;
         if(context == null){
-            return StringUtils.format(Objects.requireNonNullElse(getStringList(path),new ArrayList<>()));
+            return StringUtils.format(list);
         }
         context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
         List<String> out = StringUtils.formatWithPlaceholders(
-                Objects.requireNonNullElse(getStringList(path),new ArrayList<>()),
+                list,
                 context
-        );;
+        );
         context.getInjectableContext().removeInjectablePlaceholder(getPlaceholderInjections());
         return out;
     }
+
     @NotNull
     default List<String> getStringList(@NotNull String path) {
         return Objects.requireNonNullElse(getStringListOrNull(path), new ArrayList<>());
@@ -205,6 +226,13 @@ public interface Config extends InjectablePlaceholderList {
 
     @Nullable
     Config getSubsection(@NotNull String path);
+
+
+    default List<Config> getSubsectionList(@NotNull String path){
+        return Objects.requireNonNullElse(getSubsectionListOrNull(path), new ArrayList<>());
+    }
+    @Nullable
+    List<Config> getSubsectionListOrNull(@NotNull String path);
 
 
     default double getEvaluated(@NotNull String path){

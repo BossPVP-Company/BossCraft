@@ -33,6 +33,9 @@ public record DispatchedTrigger(@NotNull Player player,
                                  @NotNull String value){
         placeholders.add(new StaticPlaceholder(placeholder,()-> value));
     }
+    public void  addPlaceholder(@NotNull InjectablePlaceholder placeholder){
+        placeholders.add(placeholder);
+    }
     public void  addPlaceholderDynamic(@NotNull String placeholder,
                                        @NotNull Supplier<String> value){
         placeholders.add(new StaticPlaceholder(placeholder,value));
