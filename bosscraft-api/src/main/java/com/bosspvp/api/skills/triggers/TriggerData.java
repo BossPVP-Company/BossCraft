@@ -106,4 +106,83 @@ public record TriggerData(
     public boolean equals(Object obj) {
         return (obj instanceof TriggerData) && obj.hashCode() == this.hashCode();
     }
+
+
+    public static Builder builder(){
+        return new Builder();
+    }
+    public static class Builder{
+        private ProvidedHolder holder;
+
+        private Player player;
+        private LivingEntity victim;
+        private Block block;
+        private Event event;
+        private Location location;
+        private Projectile projectile;
+        private Vector velocity;
+        private ItemStack item;
+        private String text;
+        private double value;
+
+        public Builder holder(ProvidedHolder holder){
+            this.holder = holder;
+            return this;
+        }
+        public Builder player(Player player){
+            this.player = player;
+            return this;
+        }
+        public Builder victim(LivingEntity victim){
+            this.victim = victim;
+            return this;
+        }
+        public Builder block(Block block){
+            this.block = block;
+            return this;
+        }
+        public Builder event(Event event){
+            this.event = event;
+            return this;
+        }
+        public Builder location(Location location){
+            this.location = location;
+            return this;
+        }
+        public Builder projectile(Projectile projectile){
+            this.projectile = projectile;
+            return this;
+        }
+        public Builder velocity(Vector velocity){
+            this.velocity = velocity;
+            return this;
+        }
+        public Builder item(ItemStack item){
+            this.item = item;
+            return this;
+        }
+        public Builder text(String text){
+            this.text = text;
+            return this;
+        }
+        public Builder value(double value){
+            this.value = value;
+            return this;
+        }
+        public TriggerData build(){
+            return new TriggerData(
+                    holder,
+                    player,
+                    victim,
+                    block,
+                    event,
+                    location,
+                    projectile,
+                    velocity,
+                    item,
+                    text,
+                    value
+            );
+        }
+    }
 }
