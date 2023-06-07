@@ -16,31 +16,23 @@ public class BossSkillsManager implements SkillsManager {
     @Getter
     private final BossPlugin plugin;
     @Getter
-    private final HolderManager holderManager;
+    private HolderManager holderManager;
     @Getter
-    private final TriggersRegistry triggersRegistry;
+    private TriggersRegistry triggersRegistry;
     @Getter
-    private final TriggerPlaceholdersRegistry triggerPlaceholdersRegistry;
+    private TriggerPlaceholdersRegistry triggerPlaceholdersRegistry;
     @Getter
-    private final ConditionsRegistry conditionsRegistry;
+    private ConditionsRegistry conditionsRegistry;
     @Getter
-    private final EffectsRegistry effectsRegistry;
+    private EffectsRegistry effectsRegistry;
     @Getter
-    private final BossDTF dispatchedTriggerFactory;
+    private BossDTF dispatchedTriggerFactory;
     @Getter
-    private final ChainExecutorRegistry chainExecutorsRegistry;
+    private ChainExecutorRegistry chainExecutorsRegistry;
     @Getter
-    private final EffectArgumentsRegistry effectArgumentsRegistry;
+    private EffectArgumentsRegistry effectArgumentsRegistry;
     public BossSkillsManager(BossPlugin plugin) {
         this.plugin = plugin;
-        holderManager = new HolderManager();
-        triggersRegistry = new TriggersRegistry();
-        triggerPlaceholdersRegistry = new TriggerPlaceholdersRegistry();
-        conditionsRegistry = new ConditionsRegistry();
-        effectsRegistry = new EffectsRegistry();
-        effectArgumentsRegistry = new EffectArgumentsRegistry();
-        chainExecutorsRegistry = new ChainExecutorRegistry();
-        dispatchedTriggerFactory = new BossDTF();
 
     }
 
@@ -53,5 +45,17 @@ public class BossSkillsManager implements SkillsManager {
             }
         });
         dispatchedTriggerFactory.startTicking(getPlugin());
+    }
+
+    @Override
+    public void init() {
+        holderManager = new HolderManager();
+        triggersRegistry = new TriggersRegistry(plugin);
+        triggerPlaceholdersRegistry = new TriggerPlaceholdersRegistry(plugin);
+        conditionsRegistry = new ConditionsRegistry(plugin);
+        effectsRegistry = new EffectsRegistry(plugin);
+        effectArgumentsRegistry = new EffectArgumentsRegistry(plugin);
+        chainExecutorsRegistry = new ChainExecutorRegistry();
+        dispatchedTriggerFactory = new BossDTF();
     }
 }
