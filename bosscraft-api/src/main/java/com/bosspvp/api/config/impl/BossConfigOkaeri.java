@@ -16,9 +16,22 @@ import java.lang.reflect.Field;
 public class BossConfigOkaeri extends OkaeriConfig {
     private Config config;
 
-    public BossConfigOkaeri(){
+
+    public @Nullable Config getSubsection(@NotNull String path){
+        if(config == null) obtainConfig();
+        return config.getSubsection(path);
+    }
+    public @NotNull Config asConfig(){
+        if(config == null) obtainConfig();
+        return config;
+    }
+
+    //Why not set config in a constructor?
+    // Because getConfigurer() returns null there
+    private void obtainConfig(){
         if(!(getConfigurer() instanceof YamlBukkitConfigurer)) {
-            throw new IllegalArgumentException("Tried to apply unsupported okaeri configurer for BossConfig");
+            throw new IllegalArgumentException("Tried to apply unsupported okaeri configurer for BossConfig. " +
+                    "Configurer Class: " + getConfigurer().getClass().getName());
         }
         try {
             Field configField = getConfigurer().getClass().getDeclaredField("config");
@@ -28,12 +41,5 @@ public class BossConfigOkaeri extends OkaeriConfig {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    public @Nullable Config getSubsection(@NotNull String path){
-        return config.getSubsection(path);
-    }
-    public @NotNull Config asConfig(){
-        return config;
     }
 }
