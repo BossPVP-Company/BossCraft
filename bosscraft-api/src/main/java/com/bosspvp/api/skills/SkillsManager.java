@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public interface SkillsManager {
+    void init();
 
     TriggersRegistry getTriggersRegistry();
     TriggerPlaceholdersRegistry getTriggerPlaceholdersRegistry();

@@ -1,6 +1,7 @@
 package com.bosspvp.api.skills.effects.types;
 
 import com.bosspvp.api.BossAPI;
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.Compilable;
 import com.bosspvp.api.skills.effects.Effect;
@@ -10,13 +11,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class EffectIgnite extends Effect<Compilable<?>.NoCompileData> {
+public class EffectIgnite extends Effect<Compilable.NoCompileData> {
 
-    public EffectIgnite() {
-        super("ignite");
+    public EffectIgnite(@NotNull BossPlugin plugin) {
+        super(plugin,"ignite");
         setArguments(it->{
             it.require("damage_per_tick", "You must specify the damage per fire tick!");
             it.require("ticks", "You must specify the duration!");
@@ -24,7 +26,7 @@ public class EffectIgnite extends Effect<Compilable<?>.NoCompileData> {
     }
 
     @Override
-    protected boolean onTrigger(Config config, TriggerData data, Compilable<?>.NoCompileData compileData) {
+    protected boolean onTrigger(Config config, TriggerData data, Compilable.NoCompileData compileData) {
         LivingEntity victim = data.victim();
         if(victim==null) return false;
         double damage = config.getEvaluated("damage_per_tick", data.toPlaceholderContext(config));
@@ -33,7 +35,7 @@ public class EffectIgnite extends Effect<Compilable<?>.NoCompileData> {
         victim.setFireTicks(duration);
         victim.setMetadata("bosspvp-ignite",
                 new FixedMetadataValue(
-                        BossAPI.getInstance().getCorePlugin(),
+                        getPlugin(),
                         damage
                 )
         );

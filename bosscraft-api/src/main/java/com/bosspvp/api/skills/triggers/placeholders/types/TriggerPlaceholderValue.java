@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class TriggerPlaceholderValue extends TriggerPlaceholder {
-    public TriggerPlaceholderValue() {
-        super("trigger_value");
+    public TriggerPlaceholderValue(@NotNull BossPlugin plugin) {
+        super(plugin,"trigger_value");
     }
 
     @Override

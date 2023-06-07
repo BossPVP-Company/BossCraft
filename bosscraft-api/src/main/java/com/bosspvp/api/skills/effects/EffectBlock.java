@@ -1,5 +1,6 @@
 package com.bosspvp.api.skills.effects;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
@@ -37,13 +38,15 @@ public class EffectBlock extends ElementLike {
     @Getter
     private int weight;
 
-    public EffectBlock(@NotNull UUID uuid,
+    public EffectBlock(@NotNull BossPlugin plugin,
+                       @NotNull UUID uuid,
                        @NotNull Config config,
                        @NotNull Chain effects,
                        @NotNull Collection<Trigger> triggers,
                        @NotNull EffectArgumentList arguments,
                        @NotNull ConditionList conditions,
                        boolean elementOwnChain) {
+        super(plugin);
         this.uuid = uuid;
         this.config = config;
         this.effects = effects;

@@ -16,25 +16,33 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class Trigger implements Listener, Registrable {
+    @Getter
+    protected final BossPlugin plugin;
 
     @Getter
     private final String id;
     @Getter
     private Set<TriggerParameter> parameters;
-    protected final BossPlugin plugin;
     protected final HolderManager holderManager;
 
     @Getter @Setter
     private boolean enabled;
-    public Trigger(@NotNull String id,
+    public Trigger(@NotNull BossPlugin plugin,
+                   @NotNull String id,
                    @NotNull Set<TriggerParameter> parameters){
         this.id = id;
         this.parameters = parameters;
-        this.plugin = BossAPI.getInstance().getCorePlugin();
-        this.holderManager = BossAPI.getInstance().getCorePlugin().getSkillsManager().getHolderManager();
+        this.plugin = plugin;
+        this.holderManager = plugin.getSkillsManager().getHolderManager();
 
     }
 
+    protected void dispatch(
+            @NotNull Player player,
+            @NotNull TriggerData data
+    ) {
+        dispatch(player,data,null);
+    }
     protected void dispatch(
             @NotNull Player player,
             @NotNull TriggerData data,

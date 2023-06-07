@@ -19,6 +19,9 @@ public class ViolationContext {
     public ViolationContext(@NotNull BossPlugin plugin){
        this(plugin, new ArrayList<>(),true);
     }
+    public ViolationContext(@NotNull BossPlugin plugin, @NotNull String context){
+        this(plugin, List.of(context),true);
+    }
     public ViolationContext(@NotNull BossPlugin plugin,
                             @NotNull List<String> parents,
                             boolean log){

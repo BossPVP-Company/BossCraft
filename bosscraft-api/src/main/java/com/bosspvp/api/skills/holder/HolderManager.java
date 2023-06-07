@@ -39,6 +39,7 @@ public class HolderManager {
             .build();
 
     public void registerHolderProvider(HolderProvider provider){
+
         holderProviders.add(provider);
     }
     public void registerHolderProvider(Function<Player, Collection<ProvidedHolder>> provider){
@@ -59,7 +60,9 @@ public class HolderManager {
         return holderCache.get(player.getUniqueId(), (key) -> {
             Collection<ProvidedHolder> holders = new ArrayList<>();
             for (HolderProvider provider : holderProviders) {
-                holders.addAll(provider.provide(player));
+                Collection<ProvidedHolder> holder = provider.provide(player);
+                if(holder == null) continue;
+                holders.addAll(holder);
             }
             Bukkit.getPluginManager().callEvent(
                    new HolderProvideEvent(player, holders)

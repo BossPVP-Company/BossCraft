@@ -15,13 +15,14 @@ import java.util.Collection;
 
 @AllArgsConstructor
 public abstract class TriggerPlaceholder implements Listener, Registrable {
+    @Getter
+    protected final BossPlugin plugin;
     @NotNull @Getter
     private String id;
 
     @Override
     public void onRegister() {
-        BossPlugin plugin = BossAPI.getInstance().getCorePlugin();
-        BossAPI.getInstance().getCorePlugin().addTaskOnReload(() -> {
+        plugin.addTaskOnReload(() -> {
                     plugin.getEventManager().unregisterListener(this);
                     plugin.getEventManager().registerListener(this);
                     afterRegister();

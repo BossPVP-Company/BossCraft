@@ -1,5 +1,6 @@
 package com.bosspvp.api.skills;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registrable;
 import com.bosspvp.api.skills.violation.ConfigViolation;
@@ -11,12 +12,15 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public abstract class Compilable<T> implements Registrable {
-
+    @Getter
+    private final BossPlugin plugin;
     @Getter
     private final String id;
     @Getter
     private ConfigArgument.Arguments arguments = new ConfigArgument.Arguments(new ArrayList<>());
-    public Compilable(@NotNull String id){
+    public Compilable(@NotNull BossPlugin plugin,
+                      @NotNull String id){
+        this.plugin = plugin;
         this.id = id;
 
     }
@@ -60,7 +64,7 @@ public abstract class Compilable<T> implements Registrable {
     /**
      * Empty data container for compiler
      */
-    public class NoCompileData{
+    public static class NoCompileData{
 
     }
 }

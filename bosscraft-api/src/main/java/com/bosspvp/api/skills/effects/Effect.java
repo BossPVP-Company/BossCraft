@@ -15,10 +15,12 @@ import java.util.*;
 public class Effect<T> extends Compilable<T> implements Listener {
     private final HashMap<UUID,Integer> effectCounter = new HashMap<>();
 
-    private final IdentifierFactory identifierFactory =
-            new IdentifierFactory(UUID.nameUUIDFromBytes(getId().getBytes()));
-    public Effect(@NotNull String id) {
-        super(id);
+    private final IdentifierFactory identifierFactory;
+    public Effect(@NotNull BossPlugin plugin,
+                  @NotNull String id) {
+        super(plugin,id);
+        identifierFactory =
+                new IdentifierFactory(plugin, UUID.nameUUIDFromBytes(getId().getBytes()));
     }
 
     /**
@@ -165,10 +167,9 @@ public class Effect<T> extends Compilable<T> implements Listener {
 
     @Override
     public void onRegister() {
-        BossPlugin plugin = BossAPI.getInstance().getCorePlugin();
-        BossAPI.getInstance().getCorePlugin().addTaskOnReload(() -> {
-                    plugin.getEventManager().unregisterListener(this);
-                    plugin.getEventManager().registerListener(this);
+        getPlugin().addTaskOnReload(() -> {
+                    getPlugin().getEventManager().unregisterListener(this);
+                    getPlugin().getEventManager().registerListener(this);
                     afterRegister();
                 }
         );

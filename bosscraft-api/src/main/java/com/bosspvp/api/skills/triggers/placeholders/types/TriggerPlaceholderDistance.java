@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public class TriggerPlaceholderDistance extends TriggerPlaceholder {
-    public TriggerPlaceholderDistance() {
-        super("distance");
+    public TriggerPlaceholderDistance(@NotNull BossPlugin plugin) {
+        super(plugin,"distance");
     }
 
     @Override

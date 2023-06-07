@@ -9,19 +9,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class TestConfigOkaeri extends BossConfigOkaeri implements Registrable {
-    //tested this annotation
-    @CustomKey(value = "msg")
-    private String message;
 
     @Override
     public @NotNull String getId() {
         return getBindFile().getFileName().toString().split("\\.")[0];
     }
 
-    @Override
-    public void onRegister() {
-        for(Player player : Bukkit.getOnlinePlayers()){
-            player.sendMessage(StringUtils.format(message));
-        }
-    }
 }

@@ -1,6 +1,7 @@
 package com.bosspvp.api.skills.effects;
 
 import com.bosspvp.api.BossAPI;
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.Compilable;
@@ -9,14 +10,23 @@ import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentResponse;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
+import lombok.Getter;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public abstract class ElementLike implements ConfigurableElement {
+    @Getter
+    private final BossPlugin plugin;
+    public ElementLike(BossPlugin plugin){
+        this.plugin = plugin;
+    }
+
     public abstract EffectArgumentList getArguments();
     public abstract ConditionList getConditions();
     //@TODO
     /*abstract val mutators: MutatorList
     abstract val filters: FilterList*/
+
+
 
     public abstract boolean isSupportDelay();
 
@@ -144,7 +154,7 @@ public abstract class ElementLike implements ConfigurableElement {
                         cancel();
                     }
                 }
-            }.runTaskTimer(BossAPI.getInstance().getCorePlugin(), delay, delay);
+            }.runTaskTimer(plugin, delay, delay);
         }
 
 

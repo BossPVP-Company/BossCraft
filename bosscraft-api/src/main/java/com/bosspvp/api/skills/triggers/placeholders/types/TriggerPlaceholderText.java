@@ -13,8 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class TriggerPlaceholderText extends TriggerPlaceholder {
-    public TriggerPlaceholderText() {
-        super("text");
+    public TriggerPlaceholderText(@NotNull BossPlugin plugin) {
+        super(plugin,"text");
     }
 
     @Override

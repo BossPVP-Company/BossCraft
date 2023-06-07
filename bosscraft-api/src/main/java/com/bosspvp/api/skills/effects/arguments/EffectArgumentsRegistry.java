@@ -1,15 +1,17 @@
 package com.bosspvp.api.skills.effects.arguments;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.effects.arguments.types.ArgumentRequire;
 import com.bosspvp.api.skills.violation.ViolationContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class EffectArgumentsRegistry extends Registry<EffectArgument<?>> {
-    public EffectArgumentsRegistry(){
-        register(new ArgumentRequire());
+    public EffectArgumentsRegistry(@NotNull BossPlugin plugin){
+        register(new ArgumentRequire(plugin));
     }
 
     public EffectArgumentList compile(Config config, ViolationContext context){

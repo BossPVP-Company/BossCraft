@@ -1,7 +1,10 @@
 package com.bosspvp.api.skills.triggers;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registry;
+import com.bosspvp.api.skills.triggers.types.TriggerMove;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -11,10 +14,6 @@ public class TriggersRegistry extends Registry<Trigger> {
     @Getter
     private static TriggersRegistry instance;
     private Registry<TriggerGroup> groupRegistry = new Registry<>();
-
-    public TriggersRegistry(){
-        instance = this;
-    }
 
     /**
      * Get a trigger by [id].
@@ -59,5 +58,10 @@ public class TriggersRegistry extends Registry<Trigger> {
                     out.add(param);
                     return out;
                 }).toList()).containsAll(parameters);
+    }
+
+    public TriggersRegistry(@NotNull BossPlugin plugin) {
+        instance = this;
+        register(new TriggerMove(plugin));
     }
 }

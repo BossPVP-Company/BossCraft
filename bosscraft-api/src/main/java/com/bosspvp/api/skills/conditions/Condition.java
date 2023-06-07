@@ -15,7 +15,7 @@ public abstract class Condition<T> extends Compilable<T> implements Listener {
 
     public Condition(@NotNull BossPlugin plugin,
                      @NotNull String id){
-        super(id);
+        super(plugin,id);
         this.plugin = plugin;
     }
     public boolean isMet(

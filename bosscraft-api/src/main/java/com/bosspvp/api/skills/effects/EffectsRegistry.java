@@ -1,6 +1,7 @@
 package com.bosspvp.api.skills.effects;
 
 import com.bosspvp.api.BossAPI;
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.SkillsManager;
@@ -12,8 +13,10 @@ import com.bosspvp.api.skills.violation.ViolationContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EffectsRegistry extends Registry<Effect<?>> {
+    private final BossPlugin plugin;
     private HashMap<String, Chain> identifiedChains = new HashMap<>();
 
     @Nullable
@@ -43,10 +46,11 @@ public class EffectsRegistry extends Registry<Effect<?>> {
 
     @Nullable
     public EffectBlock compile(Config cfg, ViolationContext context) {
-        SkillsManager skillsManager = BossAPI.getInstance().getCorePlugin().getSkillsManager();
+        SkillsManager skillsManager = plugin.getSkillsManager();
 
-        //@TODO
-        Config config = cfg.separatorAmbivalent();
+        //@TODO cfg.separatorAmbivalent();
+        // I'm not sure yet whether it is really needed. I'll leave it for now.
+        Config config = cfg;
 
         Config args = config.getSubsection("args");
 
@@ -72,79 +76,81 @@ public class EffectsRegistry extends Registry<Effect<?>> {
         ChainExecutor executor = skillsManager.getChainExecutorsRegistry()
                 .getByID(args.getStringOrNull("run-type"));
 
-        var chain = compileChain(effectConfigs, executor, context, directIDSpecified) ?:return null
+        var chain = compileChain(effectConfigs, executor, context, directIDSpecified);
+        if(chain==null) return null;
 
-        var permanentEffects = chain.filter {
-            it.effect.isPermanent
-        }
-        var triggeredEffects = chain.filterNot {
-            it.effect.isPermanent
-        }
+        var permanentEffects = chain.getList().stream().filter (it -> it.getEffect().isPermanent()).toList();
+        var triggeredEffects = chain.getList().stream().filter (it -> !it.getEffect().isPermanent()).toList();
 
-        if (triggers.isNotEmpty() && permanentEffects.isNotEmpty()) {
+        if (!triggers.isEmpty() && !permanentEffects.isEmpty()) {
             context.log(
+                    //@TODO add "effects: ${permanentEffects.joinToString(", ") { it.effect.id }}!"
                     new ConfigViolation(
-                            "triggers", "Triggers are not allowed on permanent " +
-                            "effects: ${permanentEffects.joinToString(", ") { it.effect.id }}!"
+                            "triggers", "Triggers are not allowed on permanent "
                     )
-            )
-            return null
+            );
+            return null;
         }
 
-        if (triggers.isEmpty() && chain.any {
-            !it.effect.isPermanent
-        }){
+        boolean hasNoPermanent = false;
+        for(var block : chain.getList()) {
+            if(!block.getEffect().isPermanent()) {
+                hasNoPermanent = true;
+                break;
+            }
+        }
+        if (triggers.isEmpty() && hasNoPermanent){
             context.log(
-                    ConfigViolation(
-                            "triggers", "You must specify at least one trigger for " +
-                                    "triggered effects: ${triggeredEffects.joinToString(", ") { it.effect.id }}!"
+                    //@TODO add "triggered effects: ${triggeredEffects.joinToString(", ") { it.effect.id }}!"
+                    new ConfigViolation(
+                            "triggers", "You must specify at least one trigger for "
                     )
-            )
-            return null
+            );
+            return null;
         }
 
-        var isInvalid = false
-        for (element in chain) {
-            for (trigger in triggers) {
-                if (!element.effect.supportsTrigger(trigger)) {
-                    isInvalid = true
+        var isInvalid = false;
+        for (var element : chain.getList()) {
+            for (var trigger : triggers) {
+                if (!element.getEffect().supportsTrigger(trigger)) {
+                    isInvalid = true;
                     context.log(
-                            ConfigViolation(
+                            new ConfigViolation(
                                     "triggers",
-                                    "${element.effect.id} does not support trigger ${trigger.id}"
+                                    element.getEffect().getId()+" does not support trigger "+trigger.getId()
                             )
-                    )
+                    );
                 }
             }
 
-            if (!triggers.all {
-                element.effect.supportsTrigger(it)
-            }){
-                isInvalid = true
+            boolean allSupportTrigger = triggers.stream().allMatch(
+                    it -> element.getEffect().supportsTrigger(it)
+            );
+            if (!allSupportTrigger){
+                isInvalid = true;
             }
         }
 
         if (isInvalid) {
-            return null
+            return null;
         }
 
         return new EffectBlock(
+                plugin,
                 UUID.randomUUID(),
                 args,
                 chain,
                 triggers,
                 arguments,
                 conditions,
-                mutators,
-                filters,
                 directIDSpecified
-        )
+        );
     }
 
     @Nullable
     public Chain compileChain(Collection<Config> configs,
                               ChainExecutor executor,
-                              ViolationContext context,
+                              ViolationContext context
                               ) {
         return compileChain(configs, executor, context, false);
     }
@@ -155,87 +161,77 @@ public class EffectsRegistry extends Registry<Effect<?>> {
                                ViolationContext context,
                                boolean directIDSpecified// If it's configured with 'id', rather than 'effects'
     ) {
-        return null;
-        //@TODO
-        /*
-        val elements = configs.stream().map(
-                it-> it.separatorAmbivalent() }.mapNotNull { compileElement(it, context)
-    )
-
-        if ((elements.size > 1 || !directIDSpecified) && elements.any { it.effect.isPermanent }) {
+        List<ChainElement<?>> elements = new ArrayList<>();
+        for(var config : configs) {
+            var element = compileElement(config, context);
+            if(element==null) continue;
+            elements.add(element);
+        }
+        if((elements.size() > 1 || !directIDSpecified) && elements.stream().anyMatch(it -> it.getEffect().isPermanent())) {
             context.log(
-                    ConfigViolation(
+                    new ConfigViolation(
                             "effects",
-                            "Permanent effects (${
-                            elements.filter { it.effect.isPermanent }.joinToString(", ") { it.effect.id }
-        }) are not allowed in chains!")
-            )
-        return null
+                            "Permanent effects ("+
+                                    elements.stream()
+                                            .filter(it -> it.getEffect().isPermanent())
+                                            .map(it -> it.getEffect().getId())
+                                            .collect(Collectors.joining(", "))
+                                    +") are not allowed in chains!"
+                    )
+            );
+            return null;
+        }
+        return new Chain(elements, executor);
     }
 
-        return Chain(elements, executor)*/
+    private ChainElement<?> compileElement(Config config, ViolationContext context){
+        var id = config.getString("id");
+        var effect = this.get(id);
+        if(effect==null) {
+            context.log(
+                    new ConfigViolation(
+                            "id",
+                            "Invalid effect ID specified: "+id+"!"
+                    )
+            );
+            return null;
+        }
+        return makeElement(effect, config, context);
     }
-    /*
 
-    private fun compileElement(config: Config, context: ViolationContext): ChainElement<*>? {
-        val id = config.getString("id")
-        val effect = this.get(id)
-
-        if (effect == null) {
-        context.log(ConfigViolation("id", "Invalid effect ID specified: ${id}!"))
-        return null
-        }
-
-        *//*
-
-        This might be useful in the future to warn people about deprecated effects,
-        but currently it would lead to a shit ton of bug reports, especially for
-        run_chain_inline.
-
-        val deprecation = effect::class.java.annotations
-            .firstOrNull { it::class.java == Deprecated::class.java }
-            ?.let { it as? Deprecated }?.message
-
-        if (deprecation != null) {
-            context.log(ConfigViolation("id", "Effect $id is deprecated: $deprecation"))
-            // Continue anyway
-        }
-
-         *//*
-
-        return makeElement(effect, config, context)
-        }
-
-private fun <T> makeElement(
-        effect: Effect<T>,
-        config: Config,
-        context: ViolationContext
-        ): ChainElement<T>? {
-        val args = config.getSubsection("args")
+    private<T> ChainElement<T> makeElement(Effect<T> effect, Config config, ViolationContext context) {
+        var args = config.getSubsection("args");
 
         if (!effect.checkConfig(args, context.with("args"))) {
-        return null
+            return null;
         }
 
-        val compileData = effect.makeCompileData(args, context.with("args"))
+        try {
+            var compileData = effect.makeCompileData(args, context.with("args"));
 
-        val arguments = EffectArguments.compile(args, context.with("args"))
-        val conditions = Conditions.compile(config.getSubsections("conditions"), context.with("conditions"))
-        val mutators = Mutators.compile(config.getSubsections("mutators"), context.with("mutators"))
-        val filters = Filters.compile(config.getSubsection("filters"), context.with("filters"))
+            var arguments = plugin.getSkillsManager().getEffectArgumentsRegistry().compile(args, context.with("args"));
+            var conditions = plugin.getSkillsManager().getConditionsRegistry().compile(config.getSubsectionList("conditions"), context.with("conditions"));
 
-        return ChainElement(
-        effect,
-        args,
-        compileData,
-        arguments,
-        conditions,
-        mutators,
-        filters
-        )
-        }*/
-    public EffectsRegistry() {
-        register(new EffectIgnite());
+            //@TODO
+           /* val mutators = Mutators.compile(config.getSubsections("mutators"), context.with("mutators"))
+           val filters = Filters.compile(config.getSubsection("filters"), context.with("filters"))
+           */
+            return new ChainElement<>(
+                    plugin,
+                    effect,
+                    args,
+                    compileData,
+                    arguments,
+                    conditions
+            );
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public EffectsRegistry(BossPlugin plugin) {
+        this.plugin = plugin;
+        register(new EffectIgnite(plugin));
     }
 
 

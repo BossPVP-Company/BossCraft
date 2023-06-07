@@ -1,19 +1,24 @@
 package com.bosspvp.api.skills.effects;
 
 import com.bosspvp.api.BossAPI;
+import com.bosspvp.api.BossPlugin;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
 public class IdentifierFactory {
+    private final BossPlugin plugin;
     private final UUID uuid;
 
-    public IdentifierFactory(@NotNull UUID uuid){
+    public IdentifierFactory(@NotNull BossPlugin plugin,
+                             @NotNull UUID uuid){
+        this.plugin = plugin;
         this.uuid = uuid;
     }
     public Identifiers makeIdentifiers(int offset){
         return new Identifiers(
+                plugin,
                 makeUUID(offset),
                 makeKey(offset)
         );
@@ -23,7 +28,7 @@ public class IdentifierFactory {
     }
     private NamespacedKey makeKey(int offset) {
         return new NamespacedKey(
-                BossAPI.getInstance().getCorePlugin().getName(),
+                plugin.getName(),
                 uuid.hashCode()+"_"+offset
         );
     }

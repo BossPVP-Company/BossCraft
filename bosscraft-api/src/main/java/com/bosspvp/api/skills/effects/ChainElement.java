@@ -1,5 +1,6 @@
 package com.bosspvp.api.skills.effects;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.Compilable;
 import com.bosspvp.api.skills.conditions.ConditionList;
@@ -33,11 +34,13 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
     private UUID uuid = UUID.randomUUID();
     @Getter
     private boolean supportDelay = effect.isSupportsDelay();
-    public ChainElement(@NotNull Effect<T> effect,
+    public ChainElement(@NotNull BossPlugin plugin,
+                        @NotNull Effect<T> effect,
                         @NotNull Config config,
                         @NotNull T compileData,
                         @NotNull EffectArgumentList arguments,
                         @NotNull ConditionList conditions){
+        super(plugin);
         this.effect = effect;
         this.config = config;
         this.compileData = compileData;

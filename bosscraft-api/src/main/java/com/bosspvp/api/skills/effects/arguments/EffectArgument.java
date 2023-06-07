@@ -1,5 +1,6 @@
 package com.bosspvp.api.skills.effects.arguments;
 
+import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.Compilable;
 import com.bosspvp.api.skills.ConfigurableElement;
@@ -9,8 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class EffectArgument<T> extends Compilable<T> {
 
-    public EffectArgument(String id){
-        super(id);
+    public EffectArgument(@NotNull BossPlugin plugin,
+                          String id){
+        super(plugin, id);
     }
 
     RunOrder getRunOrder(){
