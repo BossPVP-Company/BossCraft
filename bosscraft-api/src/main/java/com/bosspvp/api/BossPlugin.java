@@ -60,7 +60,7 @@ public abstract class BossPlugin extends JavaPlugin {
             BossAPI.Instance.set(api);
             skillsManager = api.createSkillsManager(this);
         }else{
-            skillsManager = api.getCorePlugin().skillsManager;
+            skillsManager = api.getCorePlugin().getSkillsManager();
         }
         api.addPlugin(this);
 
@@ -93,6 +93,7 @@ public abstract class BossPlugin extends JavaPlugin {
 
         //lib
         getEventManager().registerListener(guiController);
+        skillsManager.init();
         skillsManager.loadListeners().forEach(listener -> getEventManager().registerListener(listener));
 
         //plugin
