@@ -3,6 +3,7 @@ package com.bosspvp.api.config.impl;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
 import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -29,14 +30,18 @@ public class BossConfigOkaeri extends OkaeriConfig {
     //Why not set config in a constructor?
     // Because getConfigurer() returns null there
     private void obtainConfig(){
-        if(!(getConfigurer() instanceof YamlBukkitConfigurer)) {
-            throw new IllegalArgumentException("Tried to apply unsupported okaeri configurer for BossConfig. " +
+        if(!(getConfigurer() instanceof OkaeriValidator wrapper)) {
+            throw new IllegalArgumentException("Tried to apply unsupported okaeri configurer wrapper for BossConfig. " +
                     "Configurer Class: " + getConfigurer().getClass().getName());
         }
+        if(!(wrapper.getWrapped() instanceof YamlBukkitConfigurer configurer)) {
+            throw new IllegalArgumentException("Tried to apply unsupported okaeri wrapped configurer for BossConfig. " +
+                    "Wrapped Configurer Class: " + wrapper.getWrapped().getClass().getName());
+        }
         try {
-            Field configField = getConfigurer().getClass().getDeclaredField("config");
+            Field configField = configurer.getClass().getDeclaredField("config");
             configField.setAccessible(true);
-            YamlConfiguration conf = (YamlConfiguration) configField.get(getConfigurer());
+            YamlConfiguration conf = (YamlConfiguration) configField.get(configurer);
             this.config = BossAPI.getInstance().createDelegatedConfig(conf,conf);
         }catch (Exception e){
             e.printStackTrace();
