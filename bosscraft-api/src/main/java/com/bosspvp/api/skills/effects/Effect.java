@@ -167,12 +167,9 @@ public class Effect<T> extends Compilable<T> implements Listener {
 
     @Override
     public void onRegister() {
-        getPlugin().addTaskOnReload(() -> {
-                    getPlugin().getEventManager().unregisterListener(this);
-                    getPlugin().getEventManager().registerListener(this);
-                    afterRegister();
-                }
-        );
+        getPlugin().getEventManager().unregisterListener(this);
+        getPlugin().getEventManager().registerListener(this);
+        afterRegister();
     }
 
 
