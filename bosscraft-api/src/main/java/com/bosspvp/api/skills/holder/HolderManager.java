@@ -109,6 +109,9 @@ public class HolderManager {
     }
     public void updateEffects(@NotNull Player player){
         var before = previousStates.get(player.getUniqueId());
+        if(before == null){
+            before = Collections.emptyList();
+        }
         var after = getActiveEffects(player,getPlayerHolders(player));
 
         List<ProvidedEffectBlock> afterF = new ArrayList<>();
