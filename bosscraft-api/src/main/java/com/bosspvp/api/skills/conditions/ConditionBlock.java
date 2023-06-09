@@ -46,7 +46,7 @@ public class ConditionBlock<T> implements Compilable.Compiled<T> {
         var metWith = condition.isMet(player, withHolder, holder, compileData);
         var metWithout = condition.isMet(player, withHolder, compileData);
 
-        return (metWith && metWithout) || !isInverted;
+        return (metWith && metWithout) != isInverted;
     }
 
 }
