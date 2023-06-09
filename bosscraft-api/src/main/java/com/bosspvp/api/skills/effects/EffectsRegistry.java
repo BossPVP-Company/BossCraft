@@ -1,12 +1,15 @@
 package com.bosspvp.api.skills.effects;
 
-import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.effects.executors.ChainExecutor;
 import com.bosspvp.api.skills.effects.types.EffectIgnite;
+import com.bosspvp.api.skills.effects.types.attribute.EffectArmor;
+import com.bosspvp.api.skills.effects.types.attribute.EffectArmorToughness;
+import com.bosspvp.api.skills.effects.types.attribute.EffectAttackSpeedMultiplier;
+import com.bosspvp.api.skills.effects.types.attribute.EffectBonusHealth;
 import com.bosspvp.api.skills.triggers.Trigger;
 import com.bosspvp.api.skills.violation.ConfigViolation;
 import com.bosspvp.api.skills.violation.ViolationContext;
@@ -226,6 +229,10 @@ public class EffectsRegistry extends Registry<Effect<?>> {
     public EffectsRegistry(BossPlugin plugin) {
         this.plugin = plugin;
         register(new EffectIgnite(plugin));
+        register(new EffectArmor(plugin));
+        register(new EffectBonusHealth(plugin));
+        register(new EffectArmorToughness(plugin));
+        register(new EffectAttackSpeedMultiplier(plugin));
     }
 
 
