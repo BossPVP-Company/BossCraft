@@ -32,14 +32,17 @@ public interface ProvidedHolder {
 
 
 
-    @AllArgsConstructor
     class SimpleProvidedHolder implements ProvidedHolder {
         @Getter
         @NotNull
         private Holder holder;
         @Getter
         @Nullable
-        private Object provider;
+        private Object provider = null;
+
+        public SimpleProvidedHolder(@NotNull Holder holder) {
+            this.holder = holder;
+        }
 
         @Override
         public int hashCode() {

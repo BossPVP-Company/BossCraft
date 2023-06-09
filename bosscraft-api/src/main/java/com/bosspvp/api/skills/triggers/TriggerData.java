@@ -42,8 +42,7 @@ public record TriggerData(
                         new Holder.SimpleHolder("blank",
                                 new ConditionList(new ArrayList<>()),
                                 new EffectList(new ArrayList<>())
-                        ),
-                        null
+                        )
                 ),
                 null,
                 null,

@@ -20,8 +20,8 @@ public class CategoryTest extends ConfigCategory<TestConfigOkaeri> {
     }
 
     public TestHolder getSkillsHolder(Player player) {
-        return cache.get(player.getName(),(id)-> {
-            TestConfigOkaeri preConf = registry.get(player.getName());
+        return cache.get(player.getName().toLowerCase(),(id)-> {
+            TestConfigOkaeri preConf = registry.get(id);
             if (preConf == null) {
                 return null;
             }
@@ -32,11 +32,11 @@ public class CategoryTest extends ConfigCategory<TestConfigOkaeri> {
                     player,
                     skillsManager.getEffectsRegistry().compile(
                             config.getSubsectionList("effects"),
-                            new ViolationContext(getPlugin(), player.getName())
+                            new ViolationContext(getPlugin(), id)
                     ),
                     skillsManager.getConditionsRegistry().compile(
                             config.getSubsectionList("conditions"),
-                            new ViolationContext(getPlugin(), player.getName())
+                            new ViolationContext(getPlugin(), id)
                     )
             );
         });
@@ -44,6 +44,7 @@ public class CategoryTest extends ConfigCategory<TestConfigOkaeri> {
 
     @Override
     protected void clear() {
+        cache.invalidateAll();
         registry.clear();
     }
 

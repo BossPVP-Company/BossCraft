@@ -5,6 +5,7 @@ import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.commands.BossCommand;
 import com.bosspvp.api.config.impl.BossConfigOkaeri;
 import com.bosspvp.api.config.impl.ConfigSettings;
+import com.bosspvp.api.skills.holder.Holder;
 import com.bosspvp.api.skills.holder.HolderProvider;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import com.bosspvp.core.BossAPIImpl;
@@ -47,12 +48,20 @@ public class TestPlugin extends BossPlugin {
                 new HolderProvider() {
                     @Override
                     public Collection<ProvidedHolder> provide(Player player) {
-                        return Collections.singletonList((ProvidedHolder) categoryTest.getSkillsHolder(player));
+                        Holder holder = categoryTest.getSkillsHolder(player);
+                        if(holder == null) {
+                            return null;
+                        }
+                        ProvidedHolder providedHolder = new ProvidedHolder.SimpleProvidedHolder(
+                                holder
+                        );
+                        return Collections.singletonList(providedHolder);
                     }
                 }
         );
 
     }
+
 
     @Override
     protected void handleDisable() {

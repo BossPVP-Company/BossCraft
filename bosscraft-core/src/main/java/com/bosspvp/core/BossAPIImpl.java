@@ -11,7 +11,6 @@ import com.bosspvp.api.gui.slot.SlotBuilder;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.schedule.Scheduler;
 import com.bosspvp.api.skills.SkillsManager;
-import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.core.config.BossConfig;
 import com.bosspvp.core.config.BossConfigManager;
 import com.bosspvp.core.events.BossEventManager;
