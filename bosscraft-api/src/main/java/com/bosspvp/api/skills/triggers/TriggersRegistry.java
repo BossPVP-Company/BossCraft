@@ -51,13 +51,19 @@ public class TriggersRegistry extends Registry<Trigger> {
      * Get a predicate requiring certain trigger parameters.
      */
     public Predicate<Trigger> withParameters(Set<TriggerParameter> parameters) {
-        return (it) -> new HashSet<>(it.getParameters().stream().map(
-                param -> {
-                    List<TriggerParameter> out = new ArrayList<>();
-                    out.addAll(Arrays.asList(param.getInheritsFrom()));
-                    out.add(param);
-                    return out;
-                }).toList()).containsAll(parameters);
+        return (it) -> {
+            Set<TriggerParameter> triggerParameters = new HashSet<>();
+            for(List<TriggerParameter> entry: it.getParameters().stream().map(
+                    param -> {
+                        List<TriggerParameter> out = new ArrayList<>();
+                        out.addAll(Arrays.asList(param.getInheritsFrom()));
+                        out.add(param);
+                        return out;
+                    }).toList()){
+                triggerParameters.addAll(entry);
+            }
+           return triggerParameters.containsAll(parameters);
+        };
     }
 
     public TriggersRegistry(@NotNull BossPlugin plugin) {
