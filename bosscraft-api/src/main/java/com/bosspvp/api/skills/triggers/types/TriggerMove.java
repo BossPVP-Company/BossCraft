@@ -12,13 +12,15 @@ import java.util.Set;
 
 public class TriggerMove extends Trigger {
     public TriggerMove(@NotNull BossPlugin plugin) {
-        super(plugin,"move", Set.of(
-                TriggerParameter.PLAYER,
-                TriggerParameter.LOCATION,
-                TriggerParameter.VELOCITY,
-                TriggerParameter.EVENT,
-                TriggerParameter.ITEM
-        ));
+        super(plugin,"move",
+                Set.of(
+                        TriggerParameter.PLAYER,
+                        TriggerParameter.LOCATION,
+                        TriggerParameter.VELOCITY,
+                        TriggerParameter.EVENT,
+                        TriggerParameter.ITEM
+                )
+        );
     }
     @EventHandler(ignoreCancelled = true)
     public void handle(PlayerMoveEvent event){

@@ -2,6 +2,8 @@ package com.bosspvp.api.skills.triggers;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registry;
+import com.bosspvp.api.skills.triggers.types.TriggerClickEntity;
+import com.bosspvp.api.skills.triggers.types.TriggerConsume;
 import com.bosspvp.api.skills.triggers.types.TriggerMove;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -69,5 +71,8 @@ public class TriggersRegistry extends Registry<Trigger> {
     public TriggersRegistry(@NotNull BossPlugin plugin) {
         instance = this;
         register(new TriggerMove(plugin));
+        register(new TriggerConsume(plugin));
+        register(new TriggerClickEntity(plugin));
+        register(new TriggerClickEntity(plugin));
     }
 }

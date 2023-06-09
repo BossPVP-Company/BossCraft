@@ -1,6 +1,5 @@
 package com.bosspvp.api.skills.triggers;
 
-import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
 import com.bosspvp.api.skills.holder.HolderManager;
