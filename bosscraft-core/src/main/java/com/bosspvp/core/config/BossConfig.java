@@ -9,9 +9,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 public class BossConfig implements Config {
     @Getter
@@ -106,12 +105,12 @@ public class BossConfig implements Config {
     public @Nullable List<Config> getSubsectionListOrNull(@NotNull String path) {
         Object obj = handle.get(path);
         if(obj==null) return null;
-        if(!(obj instanceof Iterable<?> list)) return null;
-        if(!(list.iterator().next() instanceof ConfigurationSection)) return null;
+        if(!(obj instanceof ConfigurationSection mainSection)) return null;
+        List<ConfigurationSection> list = mainSection.getKeys(false).stream()
+                .map(mainSection::getConfigurationSection).filter(Objects::nonNull).toList();
         List<Config> out = new ArrayList<>();
         list.forEach(it->{
-            ConfigurationSection section = (ConfigurationSection) it;
-            BossConfig config = new BossConfig(yamlHandle,section);
+            BossConfig config = new BossConfig(yamlHandle,it);
             config.addInjectablePlaceholder(injections);
             out.add(config);
         });
