@@ -28,7 +28,7 @@ public class ConditionsRegistry extends Registry<Condition<?>> {
     @NotNull
     public ConditionList compile(List<Config> configs, ViolationContext context){
         return new ConditionList(
-                configs.stream().map(it->compile(it,context)).collect(Collectors.toList())
+                configs.stream().map(it->compile(it,context)).filter(Objects::nonNull).collect(Collectors.toList())
         );
     }
     /**
