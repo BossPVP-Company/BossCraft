@@ -1,6 +1,5 @@
 package com.bosspvp.api.skills.effects;
 
-import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.Compilable;
@@ -47,7 +46,7 @@ public class Effect<T> extends Compilable<T> implements Listener {
         }
 
         // Increment first to fix reload bug where effects are applied twice.
-        effectCounter.put(player.getUniqueId(),effectCounter.get(player.getUniqueId())+1);
+        effectCounter.put(player.getUniqueId(),Objects.requireNonNullElse(effectCounter.get(player.getUniqueId()),0)+1);
         int count = effectCounter.get(player.getUniqueId());
 
         //@TODO ProvidedHolderConfig
