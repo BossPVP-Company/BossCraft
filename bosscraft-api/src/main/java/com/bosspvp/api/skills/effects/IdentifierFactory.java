@@ -28,7 +28,7 @@ public class IdentifierFactory {
     }
     private NamespacedKey makeKey(int offset) {
         return new NamespacedKey(
-                plugin.getName(),
+                plugin.getName().toLowerCase(),
                 uuid.hashCode()+"_"+offset
         );
     }
