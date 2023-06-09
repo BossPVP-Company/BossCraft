@@ -26,7 +26,7 @@ public class Effect<T> extends Compilable<T> implements Listener {
      * If the effect supports a certain [trigger].
      */
     public boolean supportsTrigger(Trigger trigger){
-      return TriggersRegistry.getInstance().withParameters(getParameters()).test(trigger);
+      return getPlugin().getSkillsManager().getTriggersRegistry().withParameters(getParameters()).test(trigger);
     }
 
     /**

@@ -10,32 +10,89 @@ import com.bosspvp.api.skills.holder.HolderUpdaterListener;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public interface SkillsManager {
+
+    /**
+     * Initialize the manager.
+     */
     void init();
 
-    TriggersRegistry getTriggersRegistry();
-    TriggerPlaceholdersRegistry getTriggerPlaceholdersRegistry();
-    ConditionsRegistry getConditionsRegistry();
+    /**
+     * Get the triggers registry.
+     *
+     * @return The triggers registry.
+     */
+    @NotNull TriggersRegistry getTriggersRegistry();
 
-    EffectsRegistry getEffectsRegistry();
-    EffectArgumentsRegistry getEffectArgumentsRegistry();
-    ChainExecutorRegistry getChainExecutorsRegistry();
-    HolderManager getHolderManager();
+    /**
+     * Get the trigger placeholders registry.
+     *
+     * @return The trigger placeholders registry.
+     */
+    @NotNull TriggerPlaceholdersRegistry getTriggerPlaceholdersRegistry();
 
-    DispatchedTriggerFactory getDispatchedTriggerFactory();
+    /**
+     * Get the condition registry.
+     *
+     * @return The condition registry.
+     */
+    @NotNull ConditionsRegistry getConditionsRegistry();
+
+    /**
+     * Get the effect registry.
+     *
+     * @return The effect registry.
+     */
+    @NotNull EffectsRegistry getEffectsRegistry();
+
+    /**
+     * Get the effect arguments registry.
+     *
+     * @return The effect arguments registry.
+     */
+    @NotNull EffectArgumentsRegistry getEffectArgumentsRegistry();
+
+    /**
+     * Get the chain executor registry.
+     *
+     * @return The chain executor registry.
+     */
+    @NotNull ChainExecutorRegistry getChainExecutorsRegistry();
+
+    /**
+     * Get the holder manager.
+     *
+     * @return The holder manager.
+     */
+    @NotNull HolderManager getHolderManager();
+
+    /**
+     * Get the dispatched trigger factory.
+     *
+     * @return The dispatched trigger factory.
+     */
+    @NotNull DispatchedTriggerFactory getDispatchedTriggerFactory();
 
 
-    default List<Listener> loadListeners(){
+    /**
+     * Load the listeners.
+     *
+     * @return The listeners.
+     */
+    default @NotNull List<Listener> loadListeners(){
         return List.of(
                 new HolderUpdaterListener(getPlugin())
         );
     }
+
+    /**
+     * Start the manager's tasks
+     */
     void startTasks();
 
 

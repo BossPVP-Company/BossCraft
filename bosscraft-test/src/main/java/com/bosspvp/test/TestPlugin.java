@@ -8,6 +8,7 @@ import com.bosspvp.api.config.impl.ConfigSettings;
 import com.bosspvp.api.skills.holder.Holder;
 import com.bosspvp.api.skills.holder.HolderProvider;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.SimpleProvidedHolder;
 import com.bosspvp.core.BossAPIImpl;
 import com.bosspvp.test.commands.CommandTest;
 import com.bosspvp.test.config.ConfigFileOkaeri;
@@ -52,7 +53,7 @@ public class TestPlugin extends BossPlugin {
                         if(holder == null) {
                             return null;
                         }
-                        ProvidedHolder providedHolder = new ProvidedHolder.SimpleProvidedHolder(
+                        ProvidedHolder providedHolder = new SimpleProvidedHolder(
                                 holder
                         );
                         return Collections.singletonList(providedHolder);

@@ -106,7 +106,7 @@ public class EffectBlock extends ElementLike {
         return Objects.hashCode(this.uuid);
     }
     @Override
-    public UUID getUUID() {
+    public @NotNull UUID getUUID() {
         return uuid;
     }
 }

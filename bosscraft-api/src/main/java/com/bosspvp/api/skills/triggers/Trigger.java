@@ -58,7 +58,7 @@ public abstract class Trigger implements Listener, Registrable {
         }*/
 
         var effects = forceHolders==null?
-                holderManager.getPreviousStates().get(player.getUniqueId()) :
+                holderManager.getPreviousState(player) :
                 holderManager.getActiveEffects(player,forceHolders);
 
         for (var entry : effects) {

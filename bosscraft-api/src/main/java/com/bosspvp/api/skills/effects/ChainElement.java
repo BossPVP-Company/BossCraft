@@ -78,7 +78,7 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
     }
 
     @Override
-    public UUID getUUID() {
+    public @NotNull UUID getUUID() {
         return uuid;
     }
 }

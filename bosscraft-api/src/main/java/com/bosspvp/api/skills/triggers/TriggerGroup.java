@@ -1,7 +1,6 @@
 package com.bosspvp.api.skills.triggers;
 
 import com.bosspvp.api.BossAPI;
-import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +13,7 @@ public abstract class TriggerGroup implements Registrable {
     private String prefix;
 
 
-    abstract @Nullable Trigger create(String value);
+    public abstract @Nullable Trigger create(@NotNull String value);
 
     @Override
     public void onRegister() {

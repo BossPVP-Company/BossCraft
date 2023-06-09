@@ -5,8 +5,9 @@ import com.bosspvp.api.placeholders.AdditionalPlayer;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.EffectList;
-import com.bosspvp.api.skills.holder.Holder;
+import com.bosspvp.api.skills.holder.SimpleHolder;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
+import com.bosspvp.api.skills.holder.provided.SimpleProvidedHolder;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -38,8 +39,8 @@ public record TriggerData(
 ) {
     TriggerData(){
         this(
-                new ProvidedHolder.SimpleProvidedHolder(
-                        new Holder.SimpleHolder("blank",
+                new SimpleProvidedHolder(
+                        new SimpleHolder("blank",
                                 new ConditionList(new ArrayList<>()),
                                 new EffectList(new ArrayList<>())
                         )

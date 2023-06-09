@@ -30,15 +30,6 @@ public class ConditionBlock<T> implements Compilable.Compiled<T> {
     private boolean isInverted;
 
 
-    @Override
-    public Config getConfig() {
-        return config;
-    }
-
-    @Override
-    public T getCompileData() {
-        return compileData;
-    }
 
     public boolean isMet(Player player, ProvidedHolder holder) {
         var withHolder = config; //@TODO placeholders inject

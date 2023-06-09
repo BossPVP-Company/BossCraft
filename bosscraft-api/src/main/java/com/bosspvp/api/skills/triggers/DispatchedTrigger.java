@@ -1,18 +1,11 @@
 package com.bosspvp.api.skills.triggers;
 
 import com.bosspvp.api.BossAPI;
-import com.bosspvp.api.config.Config;
-import com.bosspvp.api.placeholders.AdditionalPlayer;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
-import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.placeholders.types.injectable.StaticPlaceholder;
-import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholder;
-import com.bosspvp.api.skills.triggers.placeholders.types.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +40,7 @@ public record DispatchedTrigger(@NotNull Player player,
 
     public void generateTriggerPlaceholders(TriggerData data){
             for(TriggerPlaceholder placeholder : BossAPI.getInstance().getCorePlugin().getSkillsManager()
-                    .getTriggerPlaceholdersRegistry().values()){
+                    .getTriggerPlaceholdersRegistry().getRegistry().values()){
 
                 placeholders.addAll(placeholder.createPlaceholders(data));
             }

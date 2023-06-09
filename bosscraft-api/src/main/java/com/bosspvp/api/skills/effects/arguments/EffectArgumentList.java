@@ -1,6 +1,5 @@
 package com.bosspvp.api.skills.effects.arguments;
 
-import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.ConfigurableElement;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import lombok.Getter;

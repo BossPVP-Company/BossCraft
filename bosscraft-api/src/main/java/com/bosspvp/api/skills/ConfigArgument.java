@@ -13,8 +13,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+
 public interface ConfigArgument {
-    List<ConfigViolation> test(@NotNull Config config);
+    @NotNull List<ConfigViolation> test(@NotNull Config config);
 
     class ConfigArgumentsBuilder {
         private List<ConfigArgument> arguments = new ArrayList<>();
@@ -54,6 +55,7 @@ public interface ConfigArgument {
             arguments.add(new InheritedArguments(getter, subsection));
         }
 
+        @NotNull
         public Arguments build(){
            return new Arguments(arguments);
         }
@@ -76,7 +78,7 @@ public interface ConfigArgument {
         }
 
         @Override
-        public List<ConfigViolation> test(@NotNull Config config) {
+        public @NotNull List<ConfigViolation> test(@NotNull Config config) {
             for (String name : names) {
                 var value = getter.apply(new PairRecord<>(config,name));
                 if (config.hasPath(name) && predicate.test(value)) {
@@ -98,7 +100,7 @@ public interface ConfigArgument {
             this.subsection = subsection;
         }
         @Override
-        public List<ConfigViolation> test(@NotNull Config config) {
+        public @NotNull List<ConfigViolation> test(@NotNull Config config) {
 
             var section = Optional.ofNullable(config.getSubsection(subsection)).orElse(config);
             var compilable = getter.apply(section);
@@ -110,7 +112,7 @@ public interface ConfigArgument {
     }
 
     class Arguments{
-        private List<ConfigArgument> list;
+        private final List<ConfigArgument> list;
         public Arguments(@NotNull List<ConfigArgument> list){
             this.list = list;
         }

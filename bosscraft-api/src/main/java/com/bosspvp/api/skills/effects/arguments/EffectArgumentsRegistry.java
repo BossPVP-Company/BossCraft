@@ -3,43 +3,33 @@ package com.bosspvp.api.skills.effects.arguments;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.registry.Registry;
-import com.bosspvp.api.skills.effects.arguments.types.ArgumentRequire;
 import com.bosspvp.api.skills.violation.ViolationContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+public interface EffectArgumentsRegistry {
 
-public class EffectArgumentsRegistry extends Registry<EffectArgument<?>> {
-    public EffectArgumentsRegistry(@NotNull BossPlugin plugin){
-        register(new ArgumentRequire(plugin));
-    }
+    /**
+     * compile the config into a list of arguments
+     * @param config the config
+     * @param context the context
+     * @return the list of arguments
+     */
+    @Nullable EffectArgumentList compile(@NotNull Config config, @NotNull ViolationContext context);
 
-    public EffectArgumentList compile(Config config, ViolationContext context){
-        var blocks = new ArrayList<EffectArgumentBlock<?>>();
+    /**
+     * Get the registry.
+     *
+     * @return The registry.
+     */
+    Registry<EffectArgument<?>> getRegistry();
 
-        for (String key : config.getKeys(false)) {
-            var argument = get(key);
-            if(argument==null) continue;
-            var block = makeBlock(argument, config, context);
-            if(block == null) continue;
-            blocks.add(block);
-        }
-
-        return new EffectArgumentList(blocks);
-    }
-    private<T> EffectArgumentBlock<T> makeBlock(EffectArgument<T> argument,
-                                                Config config,
-                                                ViolationContext context){
-        if (!argument.checkConfig(config, context)) {
-            return null;
-        }
-        try {
-            var compileData = argument.makeCompileData(config, context);
-            return new EffectArgumentBlock<T>(argument, config, compileData);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
+    /**
+     * Get the plugin.
+     *
+     * @return The plugin instance.
+     */
+    @NotNull
+    BossPlugin getPlugin();
 
 }

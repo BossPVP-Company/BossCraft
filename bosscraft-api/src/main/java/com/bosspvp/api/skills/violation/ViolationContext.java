@@ -3,6 +3,7 @@ package com.bosspvp.api.skills.violation;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.skills.Compilable;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,7 +62,10 @@ public class ViolationContext {
      * Log a violation.
      */
     public void log(ConfigViolation violation) {
-        if(!log) return;
+        if(!log) {
+            Bukkit.getLogger().info("no log");
+            return;
+        }
 
         plugin.getLogger().warning(
                 String.format(

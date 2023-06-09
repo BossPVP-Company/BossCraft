@@ -1,34 +1,35 @@
 package com.bosspvp.api.skills.effects.executors;
 
-import com.bosspvp.api.skills.effects.executors.types.CycleExecutorFactory;
-import com.bosspvp.api.skills.effects.executors.types.NormalExecutorFactory;
-import com.bosspvp.api.skills.effects.executors.types.RandomExecutorFactory;
+import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.registry.Registry;
+import com.bosspvp.api.skills.triggers.Trigger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-
-public class ChainExecutorRegistry {
-    private HashMap<String,ChainExecutorFactory> registry = new HashMap<>();
-
-    public ChainExecutorRegistry(){
-        register(new CycleExecutorFactory());
-        register(new NormalExecutorFactory());
-        register(new RandomExecutorFactory());
-    }
-    public void register(ChainExecutorFactory factory) {
-        registry.put(factory.getId(),factory);
-    }
+public interface ChainExecutorRegistry {
 
     /**
      * Get executor by ID, or null if invalid ID is provided.
-     *
      * Returns normal if the ID is null.
+     *
+     * @param id the id
+     * @return the chain executor
      */
-    public ChainExecutor getByID(@Nullable String id) {
-        ChainExecutorFactory factory = id != null ? registry.get(id) : registry.get("normal");
-        if(factory==null) {
-            factory = registry.get("normal");
-        }
-        return factory.create();
-    }
+    @NotNull
+    ChainExecutor getOrNormal(@Nullable String id);
+
+    /**
+     * Get the registry.
+     *
+     * @return The registry.
+     */
+    Registry<ChainExecutorFactory> getRegistry();
+
+    /**
+     * Get the plugin.
+     *
+     * @return The plugin instance.
+     */
+    @NotNull
+    BossPlugin getPlugin();
 }

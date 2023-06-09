@@ -1,7 +1,6 @@
 package com.bosspvp.core.skills;
 
 import com.bosspvp.api.BossPlugin;
-import com.bosspvp.api.schedule.Scheduler;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.api.skills.triggers.Trigger;

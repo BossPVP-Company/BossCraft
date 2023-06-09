@@ -1,6 +1,5 @@
 package com.bosspvp.api.skills.triggers.placeholders;
 
-import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
 import com.bosspvp.api.registry.Registrable;
