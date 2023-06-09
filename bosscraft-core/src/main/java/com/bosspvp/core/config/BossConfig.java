@@ -120,7 +120,9 @@ public class BossConfig implements Config {
 
     @Override
     public double getEvaluated(@NotNull String path, @NotNull PlaceholderContext context) {
-        return BossAPI.getInstance().evaluate(getString(path),context);
+        String text = getStringOrNull(path);
+        if(text==null) return 0;
+        return BossAPI.getInstance().evaluate(text,context);
     }
 
     @Override
