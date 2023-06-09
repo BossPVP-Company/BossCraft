@@ -33,7 +33,7 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
 
     private UUID uuid = UUID.randomUUID();
     @Getter
-    private boolean supportDelay = effect.isSupportsDelay();
+    private boolean supportDelay;
     public ChainElement(@NotNull BossPlugin plugin,
                         @NotNull Effect<T> effect,
                         @NotNull Config config,
@@ -42,6 +42,7 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
                         @NotNull ConditionList conditions){
         super(plugin);
         this.effect = effect;
+        this.supportDelay = effect.isSupportsDelay();
         this.config = config;
         this.compileData = compileData;
         this.arguments = arguments;
