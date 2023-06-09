@@ -120,14 +120,8 @@ public class EffectsRegistry extends Registry<Effect<?>> {
                                     element.getEffect().getId()+" does not support trigger "+trigger.getId()
                             )
                     );
+                    break;
                 }
-            }
-
-            boolean allSupportTrigger = triggers.stream().allMatch(
-                    it -> element.getEffect().supportsTrigger(it)
-            );
-            if (!allSupportTrigger){
-                isInvalid = true;
             }
         }
 
