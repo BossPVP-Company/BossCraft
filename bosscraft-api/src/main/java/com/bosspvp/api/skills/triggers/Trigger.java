@@ -4,6 +4,7 @@ import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registrable;
 import com.bosspvp.api.skills.holder.HolderManager;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
+import com.bosspvp.api.skills.triggers.event.TriggerDispatchEvent;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -61,7 +62,7 @@ public abstract class Trigger implements Listener, Registrable {
                 holderManager.getActiveEffects(player,forceHolders);
 
         for (var entry : effects) {
-            var withHolder = data.copy(entry.holder());
+            var withHolder = data.copyToBuilder().holder(entry.holder()).build();
             var dispatchWithHolder = new DispatchedTrigger(player, this, withHolder).inheritPlaceholders(dispatch);
 
             for (var placeholder : holderManager.generatePlaceholders(entry.holder(),player)) {

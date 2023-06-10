@@ -7,6 +7,7 @@ import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.effects.*;
 import com.bosspvp.api.skills.effects.executors.ChainExecutor;
+import com.bosspvp.api.skills.filters.FilterList;
 import com.bosspvp.core.skills.effects.types.EffectIgnite;
 import com.bosspvp.core.skills.effects.types.attribute.EffectArmor;
 import com.bosspvp.core.skills.effects.types.attribute.EffectArmorToughness;
@@ -56,6 +57,7 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
 
     @Override
     public @Nullable EffectBlock compile(@NotNull Config cfg, @NotNull ViolationContext context) {
+
         SkillsManager skillsManager = plugin.getSkillsManager();
 
         //@TODO cfg.separatorAmbivalent();
@@ -71,10 +73,16 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
         var arguments = skillsManager.getEffectArgumentsRegistry().compile(args, context.with("args"));
         var conditions = skillsManager.getConditionsRegistry().compile(config.getSubsectionList("conditions"), context.with("conditions"));
 
-        //@TODO
-        /* val mutators = Mutators.compile(config.getSubsections("mutators"), context.with("mutators"))
-        val filters = Filters.compile(config.getSubsection("filters"), context.with("filters"))
-       */
+        var mutators  = skillsManager.getMutatorRegistry()
+                .compile(config.getSubsectionList("mutators"), context.with("mutators"));
+        var filterSection = config.getSubsection("filters");
+        FilterList filters;
+        if(filterSection==null){
+            filters = new FilterList(new ArrayList<>());
+        }else{
+            filters = skillsManager.getFilterRegistry()
+                    .compile(filterSection, context.with("filters"));
+        }
         List<Trigger> triggers = new ArrayList<>();
         for (String entry : config.getStringList("triggers")) {
             Trigger trigger = skillsManager.getTriggersRegistry().get(entry);
@@ -91,7 +99,9 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
                 .getOrNormal(args.getStringOrNull("run-type"));
 
         var chain = compileChain(effectConfigs, executor, context, directIDSpecified);
-        if(chain==null) return null;
+        if(chain==null) {
+            return null;
+        }
 
         var permanentEffects = chain.getList().stream().filter (it -> it.getEffect().isPermanent()).toList();
         var triggeredEffects = chain.getList().stream().filter (it -> !it.getEffect().isPermanent()).toList();
@@ -151,6 +161,8 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
                 triggers,
                 arguments,
                 conditions,
+                mutators,
+                filters,
                 directIDSpecified
         );
     }
@@ -220,17 +232,25 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
             var arguments = plugin.getSkillsManager().getEffectArgumentsRegistry().compile(args, context.with("args"));
             var conditions = plugin.getSkillsManager().getConditionsRegistry().compile(config.getSubsectionList("conditions"), context.with("conditions"));
 
-            //@TODO
-           /* val mutators = Mutators.compile(config.getSubsections("mutators"), context.with("mutators"))
-           val filters = Filters.compile(config.getSubsection("filters"), context.with("filters"))
-           */
+            var mutators = plugin.getSkillsManager()
+                    .getMutatorRegistry().compile(config.getSubsectionList("mutators"), context.with("mutators"));
+            var filterSection = config.getSubsection("filters");
+            FilterList filters;
+            if(filterSection==null){
+                filters = new FilterList(new ArrayList<>());
+            }else{
+                filters = plugin.getSkillsManager().getFilterRegistry()
+                        .compile(filterSection, context.with("filters"));
+            }
             return new ChainElement<>(
                     plugin,
                     effect,
                     args,
                     compileData,
                     arguments,
-                    conditions
+                    conditions,
+                    mutators,
+                    filters
             );
         }catch (Exception e){
             e.printStackTrace();

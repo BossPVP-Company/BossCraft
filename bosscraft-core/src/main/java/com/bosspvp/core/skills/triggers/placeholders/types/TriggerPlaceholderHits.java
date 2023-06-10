@@ -4,7 +4,6 @@ import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
 import com.bosspvp.api.placeholders.types.injectable.StaticPlaceholder;
 import com.bosspvp.api.skills.triggers.TriggerData;
-import com.bosspvp.api.skills.triggers.event.TriggerDispatchEvent;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholder;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

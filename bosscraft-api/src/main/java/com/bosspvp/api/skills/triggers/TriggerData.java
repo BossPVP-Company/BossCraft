@@ -70,20 +70,21 @@ public record TriggerData(
         );
     }
 
-    public TriggerData copy(ProvidedHolder holder){
-        return new TriggerData(
-                holder,
-                player,
-                victim,
-                block,
-                event,
-                location,
-                projectile,
-                velocity,
-                item,
-                text,
-                value
-        );
+    public TriggerData.Builder copyToBuilder(){
+        //copy all
+        return new Builder()
+                .holder(holder())
+                .player(player())
+                .victim(victim())
+                .block(block())
+                .event(event())
+                .item(item())
+                .location(location())
+                .projectile(projectile())
+                .text(text())
+                .value(value())
+                .velocity(velocity());
+
     }
     @Override
     public int hashCode() {

@@ -4,7 +4,9 @@ import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
+import com.bosspvp.api.skills.filters.FilterList;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
+import com.bosspvp.api.skills.mutators.MutatorList;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import com.bosspvp.api.skills.triggers.Trigger;
 import lombok.Getter;
@@ -29,9 +31,11 @@ public class EffectBlock extends ElementLike {
     private final ConditionList conditions;
     @Getter
     private final boolean elementOwnChain;
-    //@TODO
-   /* override val mutators: MutatorList,
-    override val filters: FilterList,*/
+
+    @Getter
+    private final MutatorList mutators;
+    @Getter
+    private final FilterList filters;
 
     @Getter
     private boolean supportDelay;
@@ -45,6 +49,8 @@ public class EffectBlock extends ElementLike {
                        @NotNull Collection<Trigger> triggers,
                        @NotNull EffectArgumentList arguments,
                        @NotNull ConditionList conditions,
+                       @NotNull MutatorList mutators,
+                       @NotNull FilterList filters,
                        boolean elementOwnChain) {
         super(plugin);
         this.uuid = uuid;
@@ -53,6 +59,8 @@ public class EffectBlock extends ElementLike {
         this.triggers = triggers;
         this.arguments = arguments;
         this.conditions = conditions;
+        this.mutators = mutators;
+        this.filters = filters;
         this.elementOwnChain = elementOwnChain;
 
         supportDelay = true;

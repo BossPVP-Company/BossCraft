@@ -5,8 +5,10 @@ import com.bosspvp.api.skills.conditions.ConditionsRegistry;
 import com.bosspvp.api.skills.effects.EffectsRegistry;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentsRegistry;
 import com.bosspvp.api.skills.effects.executors.ChainExecutorRegistry;
+import com.bosspvp.api.skills.filters.FilterRegistry;
 import com.bosspvp.api.skills.holder.HolderManager;
 import com.bosspvp.api.skills.holder.HolderUpdaterListener;
+import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
@@ -64,6 +66,18 @@ public interface SkillsManager {
      */
     @NotNull ChainExecutorRegistry getChainExecutorsRegistry();
 
+    /**
+     * Get the filter registry.
+     *
+     * @return The filter registry.
+     */
+    @NotNull FilterRegistry getFilterRegistry();
+    /**
+     * Get the mutator registry.
+     *
+     * @return The mutator registry.
+     */
+    @NotNull MutatorRegistry getMutatorRegistry();
     /**
      * Get the holder manager.
      *

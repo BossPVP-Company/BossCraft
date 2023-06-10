@@ -7,7 +7,9 @@ import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
 import com.bosspvp.api.skills.effects.event.EffectDisableEvent;
 import com.bosspvp.api.skills.effects.event.EffectEnableEvent;
+import com.bosspvp.api.skills.filters.FilterList;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
+import com.bosspvp.api.skills.mutators.MutatorList;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -27,9 +29,10 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
     private EffectArgumentList arguments;
     @Getter
     private ConditionList conditions;
-    //@TODO
-    /*  override val mutators: MutatorList,
-    override val filters: FilterList*/
+    @Getter
+    private MutatorList mutators;
+    @Getter
+    private FilterList filters;
 
     private UUID uuid = UUID.randomUUID();
     @Getter
@@ -39,7 +42,9 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
                         @NotNull Config config,
                         @NotNull T compileData,
                         @NotNull EffectArgumentList arguments,
-                        @NotNull ConditionList conditions){
+                        @NotNull ConditionList conditions,
+                        @NotNull MutatorList mutators,
+                        @NotNull FilterList filters) {
         super(plugin);
         this.effect = effect;
         this.supportDelay = effect.isSupportsDelay();
@@ -47,6 +52,8 @@ public class ChainElement<T> extends ElementLike implements Compilable.Compiled<
         this.compileData = compileData;
         this.arguments = arguments;
         this.conditions = conditions;
+        this.mutators = mutators;
+        this.filters = filters;
     }
 
     public void enable(Player player,

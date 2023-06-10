@@ -6,13 +6,17 @@ import com.bosspvp.api.skills.conditions.ConditionsRegistry;
 import com.bosspvp.api.skills.effects.EffectsRegistry;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentsRegistry;
 import com.bosspvp.api.skills.effects.executors.ChainExecutorRegistry;
+import com.bosspvp.api.skills.filters.FilterRegistry;
 import com.bosspvp.api.skills.holder.HolderManager;
+import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
 import com.bosspvp.core.skills.conditions.BossConditionsRegistry;
 import com.bosspvp.core.skills.effects.BossEffectsRegistry;
 import com.bosspvp.core.skills.effects.arguments.BossEffectArgumentsRegistry;
 import com.bosspvp.core.skills.effects.executors.BossChainExecutorRegistry;
+import com.bosspvp.core.skills.filters.BossFilterRegistry;
+import com.bosspvp.core.skills.mutators.BossMutatorRegistry;
 import com.bosspvp.core.skills.triggers.BossTriggersRegistry;
 import com.bosspvp.core.skills.triggers.placeholders.BossTriggerPlaceholdersRegistry;
 import lombok.Getter;
@@ -37,6 +41,10 @@ public class BossSkillsManager implements SkillsManager {
     private ChainExecutorRegistry chainExecutorsRegistry;
     @Getter
     private EffectArgumentsRegistry effectArgumentsRegistry;
+    @Getter
+    private FilterRegistry filterRegistry;
+    @Getter
+    private MutatorRegistry mutatorRegistry;
     public BossSkillsManager(BossPlugin plugin) {
         this.plugin = plugin;
 
@@ -55,6 +63,8 @@ public class BossSkillsManager implements SkillsManager {
 
     @Override
     public void init() {
+        dispatchedTriggerFactory = new BossDTF();
+
         holderManager = new BossHolderManager(plugin);
         triggersRegistry = new BossTriggersRegistry(plugin);
         triggerPlaceholdersRegistry = new BossTriggerPlaceholdersRegistry(plugin);
@@ -62,6 +72,7 @@ public class BossSkillsManager implements SkillsManager {
         effectsRegistry = new BossEffectsRegistry(plugin);
         effectArgumentsRegistry = new BossEffectArgumentsRegistry(plugin);
         chainExecutorsRegistry = new BossChainExecutorRegistry(plugin);
-        dispatchedTriggerFactory = new BossDTF();
+        filterRegistry = new BossFilterRegistry(plugin);
+        mutatorRegistry = new BossMutatorRegistry(plugin);
     }
 }

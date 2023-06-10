@@ -4,7 +4,6 @@ import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholder;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
-import com.bosspvp.api.skills.triggers.placeholders.types.*;
 import com.bosspvp.core.skills.triggers.placeholders.types.*;
 import org.jetbrains.annotations.NotNull;
 

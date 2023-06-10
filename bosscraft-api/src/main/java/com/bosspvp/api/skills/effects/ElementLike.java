@@ -1,6 +1,5 @@
 package com.bosspvp.api.skills.effects;
 
-import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
@@ -9,6 +8,8 @@ import com.bosspvp.api.skills.ConfigurableElement;
 import com.bosspvp.api.skills.conditions.ConditionList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentResponse;
+import com.bosspvp.api.skills.filters.FilterList;
+import com.bosspvp.api.skills.mutators.MutatorList;
 import com.bosspvp.api.skills.triggers.DispatchedTrigger;
 import lombok.Getter;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,9 +23,8 @@ public abstract class ElementLike implements ConfigurableElement {
 
     public abstract EffectArgumentList getArguments();
     public abstract ConditionList getConditions();
-    //@TODO
-    /*abstract val mutators: MutatorList
-    abstract val filters: FilterList*/
+    public abstract MutatorList getMutators();
+    public abstract FilterList getFilters();
 
 
 
@@ -66,44 +66,33 @@ public abstract class ElementLike implements ConfigurableElement {
                 0
         );
 
-        var data = trigger.data();
-        //@TODO
-        // Initial injection into mutators
-        //mutators.map { it.config }.forEach { it.addInjectablePlaceholder(trigger.placeholders) }
-
-        //val data = mutators.mutate(trigger.data)
+        getMutators().getList().stream().map(Compilable.Compiled::getConfig)
+                .forEach(it->it.addInjectablePlaceholder(trigger.placeholders()));
+        var data = getMutators().mutate(trigger.data());
 
         // Inject placeholders everywhere after mutation
-        trigger.generateTriggerPlaceholders(); //(data) - add this argument when mutators added;
-        //effects
+        trigger.generateTriggerPlaceholders();
+        //inject placeholders
         getArguments().getList().stream().map(Compilable.Compiled::getConfig)
                 .forEach(it->it.addInjectablePlaceholder(trigger.placeholders()));
-        //conditions
         getConditions().getList().stream().map(Compilable.Compiled::getConfig)
                 .forEach(it->it.addInjectablePlaceholder(trigger.placeholders()));
-        //@TODO mutators
-        //@TODO filters
+        getMutators().getList().stream().map(Compilable.Compiled::getConfig)
+                .forEach(it->it.addInjectablePlaceholder(trigger.placeholders()));
+        getFilters().getList().stream().map(Compilable.Compiled::getConfig)
+                .forEach(it->it.addInjectablePlaceholder(trigger.placeholders()));
         //-----------------
 
-        //@TODO
         // Filter
-       /* val filterResult = if (config.getBool("filters_before_mutation")) {
-            filters.isMet(trigger.data());
-        } else {
-            filters.isMet(data);
-        }
+        var filterResult = config.getBool("filters_before_mutation") ?
+                getFilters().isMet(trigger.data()) : getFilters().isMet(data);
 
         if (!filterResult) {
             return false;
         }
-
-       */
-        //@TODO copy
-        /*if (!shouldTrigger(trigger.copy(data = data))) {
+        if(!shouldTrigger(trigger.copyToBuilder().data(data).build())){
             return false;
-        }*/
-
-        //var (argumentsMet, met, notMet)
+        }
         EffectArgumentResponse response = getArguments().checkMet(this, trigger);
         // Only execute not met effects if the arguments were met.
         if (response.wasMet()) {
@@ -118,23 +107,10 @@ public abstract class ElementLike implements ConfigurableElement {
 
         final boolean[] didTrigger = {false};
 
-       /* fun trigger() {
-            // Set to true if triggered.
-            didTrigger = if (doTrigger(
-                    trigger.copy(
-                            // Mutate again here for each repeat.
-                            data = mutators.mutate(trigger.data)
-                    )
-            )
-            ) true else didTrigger
-
-            repeatCount += repeatIncrement;
-        }*/
-
         // Can't delay initial execution for things that modify events.
         if (delay == 0L) {
             for(int i = 0; i<repeatTimes; i++){
-                if(doTrigger(trigger)){
+                if(doTrigger(trigger.copyToBuilder().data(getMutators().mutate(data)).build())){
                     didTrigger[0] = true;
                 }
                 repeatCount[0] += repeatIncrement;
@@ -146,7 +122,7 @@ public abstract class ElementLike implements ConfigurableElement {
                 @Override
                 public void run() {
                     repeats++;
-                    if(doTrigger(trigger)){
+                    if(doTrigger(trigger.copyToBuilder().data(getMutators().mutate(data)).build())){
                         didTrigger[0] = true;
                     }
                     repeatCount[0] += repeatIncrement;

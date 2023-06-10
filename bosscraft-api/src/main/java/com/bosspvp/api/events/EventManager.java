@@ -1,6 +1,7 @@
 package com.bosspvp.api.events;
 
 import com.bosspvp.api.BossPlugin;
+import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +13,8 @@ import java.util.Set;
  * Manages BossPlugin event listeners
  */
 public interface EventManager {
+
+    void callEvent(@NotNull Event event);
 
     /**
      * Register event listener
