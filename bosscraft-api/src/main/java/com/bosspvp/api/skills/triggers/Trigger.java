@@ -50,12 +50,11 @@ public abstract class Trigger implements Listener, Registrable {
         var dispatch = plugin.getSkillsManager().getDispatchedTriggerFactory().create(player, this, data);
         if(dispatch==null) return;
         dispatch.generateTriggerPlaceholders(data);
-        //@TODO later, not required rn
-        /*val dispatchEvent = TriggerDispatchEvent(player, dispatch)
-        Bukkit.getPluginManager().callEvent(dispatchEvent)
-        if (dispatchEvent.isCancelled) {
-            return
-        }*/
+        var dispatchEvent = new TriggerDispatchEvent(player, dispatch);
+        plugin.getEventManager().callEvent(dispatchEvent);
+        if (dispatchEvent.isCancelled()) {
+            return;
+        }
 
         var effects = forceHolders==null?
                 holderManager.getPreviousState(player) :
