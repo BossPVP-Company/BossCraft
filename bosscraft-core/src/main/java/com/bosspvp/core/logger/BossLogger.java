@@ -11,6 +11,7 @@ public class BossLogger extends Logger {
     private final BossPlugin plugin;
     public BossLogger(BossPlugin plugin) {
         super(plugin.getName(), null);
+        this.setParent(Bukkit.getLogger());
         this.plugin = plugin;
     }
 
