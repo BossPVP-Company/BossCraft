@@ -3,6 +3,7 @@ package com.bosspvp.core.skills;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.conditions.ConditionsRegistry;
+import com.bosspvp.api.skills.counters.CountersRegistry;
 import com.bosspvp.api.skills.effects.EffectsRegistry;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentsRegistry;
 import com.bosspvp.api.skills.effects.executors.ChainExecutorRegistry;
@@ -12,6 +13,8 @@ import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
 import com.bosspvp.core.skills.conditions.BossConditionsRegistry;
+import com.bosspvp.core.skills.counters.BossCountersRegistry;
+import com.bosspvp.core.skills.counters.CounterHandler;
 import com.bosspvp.core.skills.effects.BossEffectsRegistry;
 import com.bosspvp.core.skills.effects.arguments.BossEffectArgumentsRegistry;
 import com.bosspvp.core.skills.effects.executors.BossChainExecutorRegistry;
@@ -21,6 +24,10 @@ import com.bosspvp.core.skills.triggers.BossTriggersRegistry;
 import com.bosspvp.core.skills.triggers.placeholders.BossTriggerPlaceholdersRegistry;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class BossSkillsManager implements SkillsManager {
     @Getter
@@ -45,6 +52,8 @@ public class BossSkillsManager implements SkillsManager {
     private FilterRegistry filterRegistry;
     @Getter
     private MutatorRegistry mutatorRegistry;
+    @Getter
+    private CountersRegistry countersRegistry;
     public BossSkillsManager(BossPlugin plugin) {
         this.plugin = plugin;
 
@@ -74,5 +83,14 @@ public class BossSkillsManager implements SkillsManager {
         chainExecutorsRegistry = new BossChainExecutorRegistry(plugin);
         filterRegistry = new BossFilterRegistry(plugin);
         mutatorRegistry = new BossMutatorRegistry(plugin);
+        countersRegistry = new BossCountersRegistry(plugin);
+    }
+
+    @Override
+    public @NotNull List<Listener> loadListeners() {
+        return List.of(
+                new HolderUpdaterListener(getPlugin()),
+                new CounterHandler((BossCountersRegistry) countersRegistry)
+        );
     }
 }

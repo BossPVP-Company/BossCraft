@@ -1,6 +1,7 @@
-package com.bosspvp.api.skills.holder;
+package com.bosspvp.core.skills;
 
 import com.bosspvp.api.BossPlugin;
+import com.bosspvp.api.skills.holder.HolderManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

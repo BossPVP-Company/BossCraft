@@ -2,12 +2,12 @@ package com.bosspvp.api.skills;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.skills.conditions.ConditionsRegistry;
+import com.bosspvp.api.skills.counters.CountersRegistry;
 import com.bosspvp.api.skills.effects.EffectsRegistry;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentsRegistry;
 import com.bosspvp.api.skills.effects.executors.ChainExecutorRegistry;
 import com.bosspvp.api.skills.filters.FilterRegistry;
 import com.bosspvp.api.skills.holder.HolderManager;
-import com.bosspvp.api.skills.holder.HolderUpdaterListener;
 import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
@@ -86,6 +86,13 @@ public interface SkillsManager {
     @NotNull HolderManager getHolderManager();
 
     /**
+     * Get the counter registry.
+     *
+     * @return The counter registry.
+     */
+    @NotNull CountersRegistry getCountersRegistry();
+
+    /**
      * Get the dispatched trigger factory.
      *
      * @return The dispatched trigger factory.
@@ -98,11 +105,7 @@ public interface SkillsManager {
      *
      * @return The listeners.
      */
-    default @NotNull List<Listener> loadListeners(){
-        return List.of(
-                new HolderUpdaterListener(getPlugin())
-        );
-    }
+    @NotNull List<Listener> loadListeners();
 
     /**
      * Start the manager's tasks

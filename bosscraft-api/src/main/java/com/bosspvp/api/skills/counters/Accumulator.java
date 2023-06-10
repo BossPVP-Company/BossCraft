@@ -2,6 +2,6 @@ package com.bosspvp.api.skills.counters;
 
 import org.bukkit.entity.Player;
 
-interface Accumulator {
+public interface Accumulator {
     void accept(Player player, double count);
 }

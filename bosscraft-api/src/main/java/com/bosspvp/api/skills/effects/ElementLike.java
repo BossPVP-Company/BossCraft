@@ -73,6 +73,7 @@ public abstract class ElementLike implements ConfigurableElement {
         // Inject placeholders everywhere after mutation
         trigger.generateTriggerPlaceholders();
         //inject placeholders
+        config.addInjectablePlaceholder(trigger.placeholders());
         getArguments().getList().stream().map(Compilable.Compiled::getConfig)
                 .forEach(it->it.addInjectablePlaceholder(trigger.placeholders()));
         getConditions().getList().stream().map(Compilable.Compiled::getConfig)
