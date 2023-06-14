@@ -2,6 +2,7 @@ package com.bosspvp.api.utils;
 
 import com.bosspvp.api.placeholders.PlaceholderManager;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
+import com.bosspvp.api.tuples.PairRecord;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +76,22 @@ public class StringUtils {
         return out;
     }
 
+    /**
+     * Fast implementation of {@link String#replace(CharSequence, CharSequence)}
+     *
+     * @param input       The input string.
+     * @param placeholder The placeholder pair.
+     * @return The replaced string.
+     */
+    @NotNull
+    public static String replaceFast(@NotNull final String input,
+                                     @NotNull final List<PairRecord<String,String>> placeholder) {
+        String out = input;
+        for (PairRecord<String,String> pair : placeholder) {
+            out = replaceFast(input, pair.first(), pair.second());
+        }
+        return out;
+    }
 
     /**
      * Fast implementation of {@link String#replace(CharSequence, CharSequence)}
