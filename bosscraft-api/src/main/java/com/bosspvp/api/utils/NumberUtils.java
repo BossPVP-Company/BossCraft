@@ -2,11 +2,13 @@ package com.bosspvp.api.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class NumberUtils {
     private static final TreeMap<Integer, String> NUMERALS = new TreeMap<>();
+    private static DecimalFormat doubleFormatter = new DecimalFormat("0.00");
 
     static {
         NUMERALS.put(1000, "M");
@@ -23,7 +25,18 @@ public class NumberUtils {
         NUMERALS.put(4, "IV");
         NUMERALS.put(1, "I");
     }
+    /**
+     * Format double to string.
+     *
+     * @param toFormat The number to format.
+     * @return Formatted.
+     */
+    @NotNull
+    public static String format(final double toFormat) {
+        String formatted = doubleFormatter.format(toFormat);
 
+        return formatted.endsWith("00") ? String.valueOf((int) toFormat) : formatted;
+    }
     /**
      * Get Roman Numeral from number.
      *

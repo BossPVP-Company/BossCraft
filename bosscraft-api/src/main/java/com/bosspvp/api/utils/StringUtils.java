@@ -8,9 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * StringUtils
@@ -165,6 +167,28 @@ public class StringUtils {
     }
 
 
+    /**
+     * Better implementation of {@link Object#toString()}.
+     *
+     * @param object The object to convert.
+     * @return The nice string.
+     */
+    public static String toNiceString(Object object) {
+        if (object == null) {
+            return "null";
+        }
+        if (object instanceof Integer) {
+            return ((Integer) object).toString();
+        } else if (object instanceof String) {
+            return (String) object;
+        } else if (object instanceof Double) {
+            return NumberUtils.format((Double) object);
+        } else if (object instanceof Collection<?> c) {
+            return c.stream().map(StringUtils::toNiceString).collect(Collectors.joining(", "));
+        } else {
+            return String.valueOf(object);
+        }
+    }
 
     private StringUtils() {
         throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");
