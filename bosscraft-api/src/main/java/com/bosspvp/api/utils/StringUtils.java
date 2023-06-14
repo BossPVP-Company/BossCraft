@@ -88,7 +88,7 @@ public class StringUtils {
                                      @NotNull final List<PairRecord<String,String>> placeholder) {
         String out = input;
         for (PairRecord<String,String> pair : placeholder) {
-            out = replaceFast(input, pair.first(), pair.second());
+            out = replaceFast(out, pair.first(), pair.second());
         }
         return out;
     }
