@@ -93,7 +93,12 @@ public class BossConfig implements Config {
 
 
     @Override
-    public @Nullable BossConfig getSubsection(@NotNull String path){
+    public @NotNull Config getSubsection(@NotNull String path){
+        return Objects.requireNonNullElse(getSubsectionOrNull(path), new EmptyConfig(yamlHandle,injections));
+    }
+
+    @Override
+    public @Nullable Config getSubsectionOrNull(@NotNull String path) {
         ConfigurationSection section = handle.getConfigurationSection(path);
         if(section==null) return null;
         BossConfig out = new BossConfig(yamlHandle,section);

@@ -224,8 +224,11 @@ public interface Config extends InjectablePlaceholderList {
     List<Double> getDoubleListOrNull(@NotNull String path);
 
 
-    @Nullable
+    @NotNull
     Config getSubsection(@NotNull String path);
+
+    @Nullable
+    Config getSubsectionOrNull(@NotNull String path);
 
 
     default List<Config> getSubsectionList(@NotNull String path){
