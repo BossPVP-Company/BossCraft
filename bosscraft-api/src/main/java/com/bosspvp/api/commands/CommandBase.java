@@ -177,6 +177,17 @@ public interface CommandBase {
 
         return NotificationException.notifyFalse(condition,msg);
     }
+    /**
+     * throws NotificationException when collection#size() is less than sizeRequired
+     * @param collection the collection to check
+     * @param sizeRequired the size required
+     * @param msg The msg to send
+     */
+    default void notifyRequireSize(@NotNull List<?> collection,
+                                   int sizeRequired,
+                                   @NotNull String msg) throws NotificationException {
+        NotificationException.notifyRequireSize(collection,sizeRequired,msg);
+    }
 
 
     /**

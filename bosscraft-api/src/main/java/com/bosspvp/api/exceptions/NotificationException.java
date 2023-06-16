@@ -4,6 +4,7 @@ import com.bosspvp.api.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
@@ -79,6 +80,20 @@ public class NotificationException extends Exception{
                                       @NotNull String msg) throws NotificationException {
 
         if (!condition) notify(msg);
+
+        return true;
+    }
+    /**
+     * throws NotificationException when collection#size() is less than sizeRequired
+     * @param collection the collection to check
+     * @param sizeRequired the size required
+     * @param msg The msg to send
+     */
+    public static boolean notifyRequireSize(@NotNull Collection<?> collection,
+                                            int sizeRequired,
+                                            @NotNull String msg) throws NotificationException {
+
+        if (collection.size()<sizeRequired) notify(msg);
 
         return true;
     }
