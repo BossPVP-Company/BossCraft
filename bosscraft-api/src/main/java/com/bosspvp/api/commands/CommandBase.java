@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -183,7 +184,7 @@ public interface CommandBase {
      * @param sizeRequired the size required
      * @param msg The msg to send
      */
-    default void notifyRequireSize(@NotNull List<?> collection,
+    default void notifyRequireSize(@NotNull Collection<?> collection,
                                    int sizeRequired,
                                    @NotNull String msg) throws NotificationException {
         NotificationException.notifyRequireSize(collection,sizeRequired,msg);
