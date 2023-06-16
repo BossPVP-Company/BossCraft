@@ -37,11 +37,6 @@ public interface HolderManager {
      * @param provider the provider to register
      */
     void registerHolderProvider(HolderProvider provider);
-    /**
-     * Registers a holder provider
-     * @param provider the provider to register
-     */
-    void registerHolderProvider(Function<Player, Collection<ProvidedHolder>> provider);
 
     /**
      * Registers a player refresh function
