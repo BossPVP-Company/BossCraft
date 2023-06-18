@@ -103,8 +103,8 @@ public class StringUtils {
      */
     @NotNull
     public static String replaceFast(@NotNull final String input,
-                                        @NotNull final String target,
-                                        @NotNull final String replacement) {
+                                     @NotNull final String target,
+                                     @NotNull final String replacement) {
         int targetLength = target.length();
 
         // Count the number of original occurrences

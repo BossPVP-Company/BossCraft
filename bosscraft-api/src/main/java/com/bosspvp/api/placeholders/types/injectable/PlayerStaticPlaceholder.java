@@ -36,7 +36,7 @@ public class PlayerStaticPlaceholder implements InjectablePlaceholder {
     public PlayerStaticPlaceholder(@NotNull final String identifier,
                                    @NotNull final Function<@NotNull Player, @Nullable String> function) {
         this.identifier = "%" + identifier + "%";
-        this.pattern = Pattern.compile(identifier);
+        this.pattern = Pattern.compile(this.identifier);
         this.function = function;
     }
 
@@ -64,7 +64,10 @@ public class PlayerStaticPlaceholder implements InjectablePlaceholder {
                 )
         );
     }
-
+    @Override
+    public String toString() {
+        return "PlayerStaticPlaceholder[identifier=" + this.identifier + "]";
+    }
     @NotNull
     @Override
     public Pattern getPattern() {

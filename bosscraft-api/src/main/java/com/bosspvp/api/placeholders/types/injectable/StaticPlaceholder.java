@@ -28,7 +28,7 @@ public final class StaticPlaceholder implements InjectablePlaceholder {
     public StaticPlaceholder(@NotNull final String identifier,
                              @NotNull final Supplier<@Nullable String> function) {
         this.identifier = "%" + identifier + "%";
-        this.pattern = Pattern.compile(identifier, Pattern.LITERAL);
+        this.pattern = Pattern.compile(this.identifier, Pattern.LITERAL);
         this.function = function;
     }
 
@@ -46,6 +46,11 @@ public final class StaticPlaceholder implements InjectablePlaceholder {
                 this.identifier,
                 Objects.requireNonNullElse(this.getValue(this.identifier, context), "")
         );
+    }
+
+    @Override
+    public String toString() {
+        return "StaticPlaceholder[identifier=" + this.identifier + "]";
     }
 
     @NotNull
