@@ -27,6 +27,6 @@ public class EffectAttackSpeedMultiplier extends AttributeEffect {
     @Override
     protected double getValue(Config config,Player player) {
         //config.getDoubleFromExpression("multiplier", player) - 1
-        return config.getEvaluated("value", new PlaceholderContext(player,null, config, new ArrayList<>()));
+        return config.getEvaluated("value", new PlaceholderContext(player,null, null, new ArrayList<>()));
     }
 }

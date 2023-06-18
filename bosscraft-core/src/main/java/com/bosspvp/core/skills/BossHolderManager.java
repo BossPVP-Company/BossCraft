@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BossHolderManager implements HolderManager {
@@ -49,12 +48,7 @@ public class BossHolderManager implements HolderManager {
 
     @Override
     public void registerHolderProvider(HolderProvider provider){
-
         holderProviders.add(provider);
-    }
-    @Override
-    public void registerHolderProvider(Function<Player, Collection<ProvidedHolder>> provider){
-        registerHolderProvider((HolderProvider) provider::apply);
     }
 
     @Override
@@ -70,7 +64,7 @@ public class BossHolderManager implements HolderManager {
 
     @Override
     public Collection<ProvidedHolder> getPlayerHolders(Player player){
-        return holderCache.get(player.getUniqueId(), (key) -> {
+        return holderCache.get( player.getUniqueId(), (key) -> {
             Collection<ProvidedHolder> holders = new ArrayList<>();
             for (HolderProvider provider : holderProviders) {
                 Collection<ProvidedHolder> holder = provider.provide(player);

@@ -3,8 +3,11 @@ package com.bosspvp.core.config;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
+import com.bosspvp.api.placeholders.InjectablePlaceholderList;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
+import com.bosspvp.api.utils.StringUtils;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -126,7 +129,10 @@ public class BossConfig implements Config {
     public double getEvaluated(@NotNull String path, @NotNull PlaceholderContext context) {
         String text = getStringOrNull(path);
         if(text==null) return 0;
-        return BossAPI.getInstance().evaluate(text,context);
+
+        PlaceholderContext context1 = context.withInjectableContext(this);
+        Bukkit.getLogger().info(context1.getInjectableContext().getPlaceholderInjections().toString());
+        return BossAPI.getInstance().evaluate(text,context1);
     }
 
     @Override

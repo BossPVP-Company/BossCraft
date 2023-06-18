@@ -26,6 +26,6 @@ public class EffectArmor extends AttributeEffect {
     @Override
     protected double getValue(Config config, Player player) {
         return config.getEvaluated("value",
-                new PlaceholderContext(player,null, config, new ArrayList<>()));
+                new PlaceholderContext(player,null, null, new ArrayList<>()));
     }
 }
