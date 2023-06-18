@@ -5,6 +5,7 @@ import com.bosspvp.api.placeholders.InjectablePlaceholder;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,6 +99,16 @@ public class EmptyConfig implements Config {
     @Override
     public double getEvaluated(@NotNull String path, @NotNull PlaceholderContext context) {
         return 0;
+    }
+
+    @Override
+    public @Nullable ItemStack getItemStackOrNull(@NotNull String path) {
+        return null;
+    }
+
+    @Override
+    public @Nullable List<ItemStack> getItemStackListOrNull(@NotNull String path) {
+        return null;
     }
 
     @Override
