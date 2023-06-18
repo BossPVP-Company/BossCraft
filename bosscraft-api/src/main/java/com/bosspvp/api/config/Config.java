@@ -5,7 +5,9 @@ import com.bosspvp.api.config.serialization.ConfigSerializer;
 import com.bosspvp.api.placeholders.InjectablePlaceholderList;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.utils.StringUtils;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -148,7 +150,9 @@ public interface Config extends InjectablePlaceholderList {
         String text = getStringOrNull(path);
         if(text == null) return null;
         if(context == null){
-            return StringUtils.format(text);
+            return StringUtils.formatWithPlaceholders(text,
+                    new PlaceholderContext(null,null, this, new ArrayList<>())
+            );
         }
         context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
         String formatted = StringUtils.formatWithPlaceholders(text,context);;
@@ -185,7 +189,9 @@ public interface Config extends InjectablePlaceholderList {
         List<String> list = getStringListOrNull(path);
         if(list == null) return null;
         if(context == null){
-            return StringUtils.format(list);
+            return StringUtils.formatWithPlaceholders(list,
+                    new PlaceholderContext(null,null, this, new ArrayList<>())
+            );
         }
         context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
         List<String> out = StringUtils.formatWithPlaceholders(
@@ -244,6 +250,23 @@ public interface Config extends InjectablePlaceholderList {
     double getEvaluated(@NotNull String path, @NotNull PlaceholderContext context);
 
 
+    @NotNull
+    default ItemStack getItemStack(@NotNull String path){
+        return Objects.requireNonNullElse(getItemStackOrNull(path), new ItemStack(Material.BEDROCK));
+    }
+    @NotNull
+    default ItemStack getItemStackOrDefault(@NotNull String path, @NotNull ItemStack def){
+        return Objects.requireNonNullElse(getItemStackOrNull(path), def);
+    }
+    @Nullable
+    ItemStack getItemStackOrNull(@NotNull String path);
+
+    @NotNull
+    default List<ItemStack> getItemStackList(@NotNull String path){
+        return Objects.requireNonNullElse(getItemStackListOrNull(path), new ArrayList<>());
+    }
+    @Nullable
+    List<ItemStack> getItemStackListOrNull(@NotNull String path);
 
 
     @NotNull

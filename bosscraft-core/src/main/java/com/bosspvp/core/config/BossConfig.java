@@ -2,14 +2,15 @@ package com.bosspvp.core.config;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
+import com.bosspvp.api.inventories.util.ItemBuilder;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
-import com.bosspvp.api.placeholders.InjectablePlaceholderList;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
-import com.bosspvp.api.utils.StringUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,6 +134,37 @@ public class BossConfig implements Config {
         PlaceholderContext context1 = context.withInjectableContext(this);
         Bukkit.getLogger().info(context1.getInjectableContext().getPlaceholderInjections().toString());
         return BossAPI.getInstance().evaluate(text,context1);
+    }
+
+    @Override
+    public @Nullable ItemStack getItemStackOrNull(@NotNull String path) {
+        Config config = getSubsectionOrNull(path);
+        return getItemStack(config);
+    }
+
+    @Override
+    public @Nullable List<ItemStack> getItemStackListOrNull(@NotNull String path) {
+        List<Config> configs = getSubsectionListOrNull(path);
+        if(configs==null) return null;
+        List<ItemStack> out = new ArrayList<>();
+        for(Config config : configs){
+            ItemStack stack = getItemStack(config);
+            if(stack==null) return null;
+            out.add(stack);
+        }
+        return out;
+    }
+    @Nullable
+    private ItemStack getItemStack(@Nullable Config config){
+        if(config==null || !config.hasPath("item")) return null;
+        ItemBuilder builder = new ItemBuilder(Objects.requireNonNullElse(
+                Material.matchMaterial(config.getString("material").toUpperCase()),
+                Material.BEDROCK
+        ));
+        if(config.hasPath("name")) builder.setName(config.getFormattedString("name"));
+        if(config.hasPath("lore")) builder.setLore(config.getFormattedStringList("lore"));
+        if(config.hasPath("amount")) builder.setAmount(config.getInt("amount"));
+        return null;
     }
 
     @Override
