@@ -46,9 +46,12 @@ public abstract class AttributeEffect extends Effect<Compilable.NoCompileData> {
         if (attributeInstance == null) {
             return;
         }
+        //messy I know
         String modifierName = "bosspvp:" + getId() + " - " + identifiers.key().getKey() + " (" + holder.getHolder().getId() + ")";
         clean(attributeInstance, modifierName);
-        attributeInstance.addModifier(new AttributeModifier(identifiers.uuid(), modifierName, getValue(config, player), operation));
+        AttributeModifier modifier = new AttributeModifier(identifiers.uuid(), modifierName, getValue(config, player), operation);
+        attributeInstance.removeModifier(modifier);
+        attributeInstance.addModifier(modifier);
     }
 
     @Override
