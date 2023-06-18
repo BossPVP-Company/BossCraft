@@ -158,7 +158,7 @@ public class BossConfig implements Config {
     private ItemStack getItemStack(@Nullable Config config){
         if(config==null || !config.hasPath("item")) return null;
         ItemBuilder builder = new ItemBuilder(Objects.requireNonNullElse(
-                Material.matchMaterial(config.getString("material").toUpperCase()),
+                Material.matchMaterial(config.getString("item").toUpperCase()),
                 Material.BEDROCK
         ));
         if(config.hasPath("name")) builder.setName(config.getFormattedString("name"));
