@@ -193,13 +193,10 @@ public interface Config extends InjectablePlaceholderList {
                     new PlaceholderContext(null,null, this, new ArrayList<>())
             );
         }
-        context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
-        List<String> out = StringUtils.formatWithPlaceholders(
+        return StringUtils.formatWithPlaceholders(
                 list,
-                context
+                context.withInjectableContext(this)
         );
-        context.getInjectableContext().removeInjectablePlaceholder(getPlaceholderInjections());
-        return out;
     }
 
     @NotNull
@@ -229,6 +226,17 @@ public interface Config extends InjectablePlaceholderList {
     @Nullable
     List<Double> getDoubleListOrNull(@NotNull String path);
 
+
+    @NotNull
+    default Material getMaterial(@NotNull String path) {
+        return getMaterialOrDefault(path, Material.BEDROCK);
+    }
+    @NotNull
+    default Material getMaterialOrDefault(@NotNull String path, @NotNull Material def) {
+        return Objects.requireNonNullElse(getMaterialOrNull(path), def);
+    }
+    @Nullable
+    Material getMaterialOrNull(@NotNull String path);
 
     @NotNull
     Config getSubsection(@NotNull String path);

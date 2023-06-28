@@ -8,14 +8,12 @@ import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.effects.*;
 import com.bosspvp.api.skills.effects.executors.ChainExecutor;
 import com.bosspvp.api.skills.filters.FilterList;
-import com.bosspvp.core.skills.effects.types.EffectIgnite;
-import com.bosspvp.core.skills.effects.types.attribute.EffectArmor;
-import com.bosspvp.core.skills.effects.types.attribute.EffectArmorToughness;
-import com.bosspvp.core.skills.effects.types.attribute.EffectAttackSpeedMultiplier;
-import com.bosspvp.core.skills.effects.types.attribute.EffectBonusHealth;
+import com.bosspvp.core.skills.effects.types.*;
+import com.bosspvp.core.skills.effects.types.attribute.*;
 import com.bosspvp.api.skills.triggers.Trigger;
 import com.bosspvp.api.skills.violation.ConfigViolation;
 import com.bosspvp.api.skills.violation.ViolationContext;
+import com.bosspvp.core.skills.effects.types.multiplier.EffectXpMultiplier;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -270,6 +268,12 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
         register(new EffectBonusHealth(plugin));
         register(new EffectArmorToughness(plugin));
         register(new EffectAttackSpeedMultiplier(plugin));
+        register(new EffectMovementSpeedMultiplier(plugin));
+        register(new EffectDamageMultiplier(plugin));
+        register(new EffectXpMultiplier(plugin));
+        register(new EffectDamageTwice(plugin));
+        register(new EffectParticleAnimation(plugin));
+        register(new EffectSendMessage(plugin));
     }
 
 

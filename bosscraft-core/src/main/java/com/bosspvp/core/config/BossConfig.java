@@ -95,6 +95,12 @@ public class BossConfig implements Config {
         return out;
     }
 
+    @Override
+    public @Nullable Material getMaterialOrNull(@NotNull String path) {
+        String mat = getStringOrNull(path);
+        if(mat==null) return null;
+        return Material.matchMaterial(mat.toUpperCase());
+    }
 
     @Override
     public @NotNull Config getSubsection(@NotNull String path){
@@ -103,27 +109,55 @@ public class BossConfig implements Config {
 
     @Override
     public @Nullable Config getSubsectionOrNull(@NotNull String path) {
-        ConfigurationSection section = handle.getConfigurationSection(path);
-        if(section==null) return null;
-        BossConfig out = new BossConfig(yamlHandle,section);
-        out.addInjectablePlaceholder(injections);
-        return out;
+        Object obj = handle.get(path);
+        if(obj==null) return null;
+        if(obj instanceof ConfigurationSection section){
+            BossConfig out = new BossConfig(yamlHandle,section);
+            out.addInjectablePlaceholder(injections);
+            return out;
+        }else if(obj instanceof Map<?,?> map){
+            YamlConfiguration configuration = new YamlConfiguration();
+            Utils.applyMapToConfig(configuration, map);
+            BossConfig out = new BossConfig(yamlHandle,configuration);
+            out.addInjectablePlaceholder(injections);
+            return out;
+        }
+        return null;
     }
 
     @Override
     public @Nullable List<Config> getSubsectionListOrNull(@NotNull String path) {
         Object obj = handle.get(path);
         if(obj==null) return null;
-        if(!(obj instanceof ConfigurationSection mainSection)) return null;
-        List<ConfigurationSection> list = mainSection.getKeys(false).stream()
-                .map(mainSection::getConfigurationSection).filter(Objects::nonNull).toList();
-        List<Config> out = new ArrayList<>();
-        list.forEach(it->{
-            BossConfig config = new BossConfig(yamlHandle,it);
-            config.addInjectablePlaceholder(injections);
-            out.add(config);
-        });
-        return out;
+        if(obj instanceof ConfigurationSection mainSection){
+            List<ConfigurationSection> list = mainSection.getKeys(false).stream()
+                    .map(mainSection::getConfigurationSection).filter(Objects::nonNull).toList();
+            List<Config> out = new ArrayList<>();
+            list.forEach(it->{
+                BossConfig config = new BossConfig(yamlHandle,it);
+                config.addInjectablePlaceholder(injections);
+                out.add(config);
+            });
+            return out;
+        }else if(obj instanceof ArrayList<?> list){
+            try {
+                ArrayList<LinkedHashMap<String, Object>> sections = (ArrayList<LinkedHashMap<String, Object>>) list;
+                List<Config> out = new ArrayList<>();
+                sections.forEach(it->{
+                    YamlConfiguration configuration = new YamlConfiguration();
+                    Utils.applyMapToConfig(configuration, it);
+                    BossConfig config = new BossConfig(yamlHandle,configuration);
+                    config.addInjectablePlaceholder(injections);
+                    out.add(config);
+                });
+                return out;
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+        return null;
     }
 
     @Override
@@ -132,7 +166,6 @@ public class BossConfig implements Config {
         if(text==null) return 0;
 
         PlaceholderContext context1 = context.withInjectableContext(this);
-        Bukkit.getLogger().info(context1.getInjectableContext().getPlaceholderInjections().toString());
         return BossAPI.getInstance().evaluate(text,context1);
     }
 

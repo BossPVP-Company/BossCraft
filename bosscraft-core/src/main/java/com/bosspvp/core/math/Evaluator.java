@@ -19,6 +19,7 @@ public class Evaluator {
     }
 
     public double evaluate(String expression, PlaceholderContext context){
+        if(expression.isBlank()) return 0.0;
         return Crunch.compileExpression(PlaceholderManager.translatePlaceholders(expression,context),
                         environment
                 )

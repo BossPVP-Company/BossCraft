@@ -113,7 +113,12 @@ public record TriggerData(
         return new Builder();
     }
     public static class Builder{
-        private ProvidedHolder holder;
+        private ProvidedHolder holder = new SimpleProvidedHolder(
+                new SimpleHolder("blank",
+                        new ConditionList(new ArrayList<>()),
+                        new EffectList(new ArrayList<>())
+                )
+        );
 
         private Player player;
         private LivingEntity victim;
@@ -124,7 +129,7 @@ public record TriggerData(
         private Vector velocity;
         private ItemStack item;
         private String text;
-        private double value;
+        private double value = 1.0;
 
         public Builder holder(ProvidedHolder holder){
             this.holder = holder;

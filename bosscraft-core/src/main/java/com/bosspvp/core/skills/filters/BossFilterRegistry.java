@@ -8,9 +8,7 @@ import com.bosspvp.api.skills.filters.FilterBlock;
 import com.bosspvp.api.skills.filters.FilterList;
 import com.bosspvp.api.skills.filters.FilterRegistry;
 import com.bosspvp.api.skills.violation.ViolationContext;
-import com.bosspvp.core.skills.filters.types.FilterBlocks;
-import com.bosspvp.core.skills.filters.types.FilterPlayerName;
-import com.bosspvp.core.skills.filters.types.FilterVictimName;
+import com.bosspvp.core.skills.filters.types.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,6 +67,10 @@ public class BossFilterRegistry extends Registry<Filter<?, ?>> implements Filter
         register(new FilterBlocks(plugin));
         register(new FilterVictimName(plugin));
         register(new FilterPlayerName(plugin));
+        register(new FilterPlayerPlaced(plugin));
+        register(new FilterFullyGrown(plugin));
+        register(new FilterFromSpawner(plugin));
+        register(new FilterItems(plugin));
     }
 
 

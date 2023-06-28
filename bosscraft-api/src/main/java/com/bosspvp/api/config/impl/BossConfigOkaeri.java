@@ -3,6 +3,7 @@ package com.bosspvp.api.config.impl;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.config.Config;
 import eu.okaeri.configs.OkaeriConfig;
+import eu.okaeri.configs.annotation.Exclude;
 import eu.okaeri.configs.validator.okaeri.OkaeriValidator;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,6 +16,7 @@ import java.lang.reflect.Field;
  * Config supporting Okaeri lib
  */
 public class BossConfigOkaeri extends OkaeriConfig {
+    @Exclude
     private Config config;
 
 
@@ -42,7 +44,11 @@ public class BossConfigOkaeri extends OkaeriConfig {
             Field configField = configurer.getClass().getDeclaredField("config");
             configField.setAccessible(true);
             YamlConfiguration conf = (YamlConfiguration) configField.get(configurer);
+            //For an unknown for me reason, the okaeri changes the path separator to char symbol 29
+            //That caused the YamlConfiguration to ignore '.' in the path
+            conf.options().pathSeparator('.');
             this.config = BossAPI.getInstance().createDelegatedConfig(conf,conf);
+
         }catch (Exception e){
             e.printStackTrace();
         }

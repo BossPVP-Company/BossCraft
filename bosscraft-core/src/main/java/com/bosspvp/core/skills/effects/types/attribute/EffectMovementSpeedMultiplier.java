@@ -11,22 +11,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class EffectAttackSpeedMultiplier extends AttributeEffect {
-    public EffectAttackSpeedMultiplier(@NotNull BossPlugin plugin) {
+public class EffectMovementSpeedMultiplier extends AttributeEffect {
+
+
+    public EffectMovementSpeedMultiplier(@NotNull BossPlugin plugin) {
         super(
                 plugin,
-                "attack_speed_multiplier",
-                Attribute.GENERIC_ATTACK_SPEED,
+                "movement_speed_multiplier",
+                Attribute.GENERIC_MOVEMENT_SPEED,
                 AttributeModifier.Operation.MULTIPLY_SCALAR_1
         );
         setArguments(it->{
-            it.require("multiplier","The amount of attack speed to add/remove.");
+            it.require("multiplier","You must specify the movement speed multiplier!");
         });
     }
 
     @Override
-    protected double getValue(Config config,Player player) {
-        //config.getDoubleFromExpression("multiplier", player) - 1
-        return config.getEvaluated("value", new PlaceholderContext(player,null, null, new ArrayList<>()));
+    protected double getValue(Config config, Player player) {
+        return config.getEvaluated("multiplier",
+                new PlaceholderContext(player, null, null, new ArrayList<>())
+        ) - 1;
     }
 }

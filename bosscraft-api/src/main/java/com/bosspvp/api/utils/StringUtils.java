@@ -3,14 +3,22 @@ package com.bosspvp.api.utils;
 import com.bosspvp.api.placeholders.PlaceholderManager;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.tuples.PairRecord;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,6 +36,18 @@ public class StringUtils {
     );
     public static boolean HEX_COLOR_SUPPORT;
 
+    private static final Cache<String, Component> LEGACY_TO_COMPONENT = Caffeine.newBuilder()
+            .expireAfterAccess(10, TimeUnit.SECONDS)
+            .build();
+
+    private static final Cache<Component, String> COMPONENT_TO_LEGACY = Caffeine.newBuilder()
+            .expireAfterAccess(10, TimeUnit.SECONDS)
+            .build();
+    private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer.builder()
+            .character('\u00a7')
+            .useUnusualXRepeatedCharacterHexFormat()
+            .hexColors()
+            .build();
     static {
         try {
             ChatColor.class.getDeclaredMethod("of", String.class);
@@ -93,6 +113,28 @@ public class StringUtils {
         return out;
     }
 
+
+    /**
+     * Convert legacy (bukkit) text to Component.
+     *
+     * @param legacy The legacy text.
+     * @return The component.
+     */
+    @NotNull
+    public static Component toComponent(@Nullable final String legacy) {
+        return LEGACY_TO_COMPONENT.get(legacy == null ? "" : legacy, LEGACY_COMPONENT_SERIALIZER::deserialize);
+    }
+
+    /**
+     * Convert Component to legacy (bukkit) text.
+     *
+     * @param component The component.
+     * @return The legacy text.
+     */
+    @NotNull
+    public static String toLegacy(@NotNull final Component component) {
+        return COMPONENT_TO_LEGACY.get(component, LEGACY_COMPONENT_SERIALIZER::serialize);
+    }
     /**
      * Fast implementation of {@link String#replace(CharSequence, CharSequence)}
      *
@@ -142,7 +184,126 @@ public class StringUtils {
         result.append(input, start, inputLength);
         return result.toString();
     }
+    /**
+     * Line wrap a list of strings while preserving formatting.
+     *
+     * @param input      The input list.
+     * @param lineLength The length of each line.
+     * @return The wrapped list.
+     */
+    @NotNull
+    public static List<String> lineWrap(@NotNull final List<String> input,
+                                        final int lineLength) {
+        return lineWrap(input, lineLength, true);
+    }
 
+    /**
+     * Line wrap a list of strings while preserving formatting.
+     *
+     * @param input          The input list.
+     * @param lineLength     The length of each line.
+     * @param preserveMargin If the string has a margin, add it to the next line.
+     * @return The wrapped list.
+     */
+    @NotNull
+    public static List<String> lineWrap(@NotNull final List<String> input,
+                                        final int lineLength,
+                                        final boolean preserveMargin) {
+        return input.stream()
+                .flatMap(line -> lineWrap(line, lineLength, preserveMargin).stream())
+                .toList();
+    }
+
+    /**
+     * Line wrap a string while preserving formatting.
+     *
+     * @param input      The input list.
+     * @param lineLength The length of each line.
+     * @return The wrapped list.
+     */
+    @NotNull
+    public static List<String> lineWrap(@NotNull final String input,
+                                        final int lineLength) {
+        return lineWrap(input, lineLength, true);
+    }
+
+    /**
+     * Line wrap a string while preserving formatting.
+     *
+     * @param input          The input string.
+     * @param lineLength     The length of each line.
+     * @param preserveMargin If the string has a margin, add it to the start of each line.
+     * @return The wrapped string.
+     */
+    @NotNull
+    public static List<String> lineWrap(@NotNull final String input,
+                                        final int lineLength,
+                                        final boolean preserveMargin) {
+        int margin = preserveMargin ? getMargin(input) : 0;
+        TextComponent space = Component.text(" ");
+
+        Component asComponent = toComponent(input);
+
+        // The component contains the text as its children, so the child components
+        // are accessed like this:
+        List<TextComponent> children = new ArrayList<>();
+
+        if (asComponent instanceof TextComponent) {
+            children.add((TextComponent) asComponent);
+        }
+
+        for (Component child : asComponent.children()) {
+            children.add((TextComponent) child);
+        }
+
+        // Start by splitting the component into individual characters.
+        List<TextComponent> letters = new ArrayList<>();
+        for (TextComponent child : children) {
+            for (char c : child.content().toCharArray()) {
+                letters.add(Component.text(c).mergeStyle(child));
+            }
+        }
+
+        List<Component> lines = new ArrayList<>();
+        List<TextComponent> currentLine = new ArrayList<>();
+        boolean isFirstLine = true;
+
+        for (TextComponent letter : letters) {
+            if (currentLine.size() > lineLength && letter.content().isBlank()) {
+                lines.add(Component.join(JoinConfiguration.noSeparators(), currentLine));
+                currentLine.clear();
+                isFirstLine = false;
+            } else {
+                // Add margin if starting a new line.
+                if (currentLine.isEmpty() && !isFirstLine) {
+                    if (preserveMargin) {
+                        for (int i = 0; i < margin; i++) {
+                            currentLine.add(space);
+                        }
+                    }
+                }
+
+                currentLine.add(letter);
+            }
+        }
+
+        // Push last line.
+        lines.add(Component.join(JoinConfiguration.noSeparators(), currentLine));
+
+        // Convert back to legacy strings.
+        return lines.stream().map(StringUtils::toLegacy)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get a string's margin.
+     *
+     * @param input The input string.
+     * @return The margin.
+     */
+    public static int getMargin(@NotNull final String input) {
+        return input.indexOf(input.trim());
+    }
     public static String createProgressBar(final char character,
                                            final int bars,
                                            final double progress,

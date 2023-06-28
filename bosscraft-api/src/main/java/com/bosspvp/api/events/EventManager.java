@@ -41,7 +41,7 @@ public interface EventManager {
      *
      * @return the listeners set
      */
-    Set<Listener> getRegisteredListeners();
+    @NotNull Set<Listener> getRegisteredListeners();
 
     /**
      * Get the plugin.

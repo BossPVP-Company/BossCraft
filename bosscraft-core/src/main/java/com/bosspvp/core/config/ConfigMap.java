@@ -10,39 +10,113 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-/**
- * Returned on config subsection not found
- */
-public class EmptyConfig implements Config {
+public class ConfigMap implements Config {
     private List<InjectablePlaceholder> injections;
     private YamlConfiguration yamlHandle;
-    public EmptyConfig(YamlConfiguration yamlHandle, List<InjectablePlaceholder> injections){
+
+    private ConcurrentHashMap<String, Object> values;
+
+    public ConfigMap(Map<String,?> map, YamlConfiguration yamlHandle, List<InjectablePlaceholder> injections){
         this.yamlHandle = yamlHandle;
         this.injections = injections;
+        this.values = new ConcurrentHashMap<>(map);
     }
+
     @Override
     public boolean hasPath(@NotNull String path) {
-        return false;
+
+        return get(path) != null;
     }
 
     @Override
     public @NotNull Set<String> getKeys(boolean deep) {
-        return new HashSet<>();
+        return deep ? new HashSet<>(recurseKeys(new HashSet<>(), "")) : values.keySet();
     }
 
     @Override
+    public List<String> recurseKeys(@NotNull Set<String> current, @NotNull String root){
+        List<String> list = new ArrayList<>();
+        for(String key : getKeys(false)){
+            list.add(root + key);
+            Object found = get(key);
+
+            if(found instanceof Config){
+                list.addAll(((Config) found).recurseKeys(current, root + key + "."));
+            }
+
+        }
+
+        return list;
+    }
+    @Override
     public @Nullable Object get(@NotNull String path) {
-        return null;
+        String nearestPath = path.split("\\.")[0];
+        if(path.contains(".")){
+            String remainingPath = path.replaceFirst(nearestPath + "\\.", "");
+            if(remainingPath.isEmpty()){
+                return null;
+            }
+            Object first = values.get(nearestPath);
+            if(first instanceof Config){
+                return ((Config) first).get(remainingPath);
+            }
+            if(first instanceof Map<?,?> map){
+                try {
+                    return new ConfigMap((Map<String, ?>) map, yamlHandle, injections).get(remainingPath);
+                }catch (ClassCastException e){
+                    return first;
+                }
+            }
+        }
+        return values.get(nearestPath);
+
     }
 
     @Override
     public void set(@NotNull String path, @Nullable Object obj) {
+        String nearestPath = path.split("\\.")[0];
+        if(path.contains(".")){
+            String remainingPath = path.replaceFirst(nearestPath + "\\.", "");
+            if(remainingPath.isEmpty()){
+                return;
+            }
+            Config section = getSubsectionOrNull(nearestPath);
+            ConfigurationSection yamlConfiguration;
+            if(section == null){
+                yamlConfiguration = new YamlConfiguration();
+            }else{
+                yamlConfiguration = section.getHandle();
+            }
+            yamlConfiguration.set(remainingPath, obj);
+            values.put(nearestPath, yamlConfiguration);
+        }
+        /* val nearestPath = path.split(".")[0]
 
+        if (path.contains(".")) {
+            val remainingPath = path.removePrefix("${nearestPath}.")
+
+            if (remainingPath.isEmpty()) {
+                return
+            }
+
+            var section = getSubsectionOrNull(nearestPath) // Creates a section if null, therefore it can be set.
+            if(section==null){
+                section = AtumConfigSection(type)
+            }
+            section.set(remainingPath, obj)
+            values[nearestPath] = section // Set the value
+            return
+        }
+
+        if (obj == null) {
+            values.remove(nearestPath)
+        } else {
+            values[nearestPath] = obj.constrainConfigTypes(type)
+        }*/
     }
 
     @Override
@@ -92,7 +166,7 @@ public class EmptyConfig implements Config {
 
     @Override
     public @NotNull Config getSubsection(@NotNull String path) {
-        return new EmptyConfig(yamlHandle,injections);
+        return null;
     }
 
     @Override
@@ -148,16 +222,5 @@ public class EmptyConfig implements Config {
     @Override
     public @NotNull List<InjectablePlaceholder> getPlaceholderInjections() {
         return injections;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(!(obj instanceof EmptyConfig other)) return false;
-        return yamlHandle.equals(other.getYamlHandle());
-    }
-
-    @Override
-    public int hashCode() {
-        return yamlHandle.hashCode();
     }
 }

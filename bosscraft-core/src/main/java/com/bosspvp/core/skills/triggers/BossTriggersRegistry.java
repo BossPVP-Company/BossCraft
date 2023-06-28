@@ -6,9 +6,7 @@ import com.bosspvp.api.skills.triggers.Trigger;
 import com.bosspvp.api.skills.triggers.TriggerGroup;
 import com.bosspvp.api.skills.triggers.TriggerParameter;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
-import com.bosspvp.core.skills.triggers.types.TriggerClickEntity;
-import com.bosspvp.core.skills.triggers.types.TriggerConsume;
-import com.bosspvp.core.skills.triggers.types.TriggerMove;
+import com.bosspvp.core.skills.triggers.types.*;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,6 +71,15 @@ public class BossTriggersRegistry extends Registry<Trigger> implements TriggersR
         register(new TriggerConsume(plugin));
         register(new TriggerClickEntity(plugin));
         register(new TriggerClickEntity(plugin));
+        register(new TriggerMineBlock(plugin));
+        register(new TriggerCatchFish(plugin));
+        register(new TriggerEnchantItem(plugin));
+        register(new TriggerKill(plugin));
+        register(new TriggerTakeDamage(plugin));
+        register(new TriggerBrew(plugin));
+        register(new TriggerBrewIngredient(plugin));
+        register(new TriggerBowAttack(plugin));
+        register(new TriggerTridentAttack(plugin));
     }
 }
 

@@ -7,6 +7,8 @@ import com.bosspvp.api.skills.effects.arguments.EffectArgument;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentBlock;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentList;
 import com.bosspvp.api.skills.effects.arguments.EffectArgumentsRegistry;
+import com.bosspvp.core.skills.effects.arguments.types.ArgumentChance;
+import com.bosspvp.core.skills.effects.arguments.types.ArgumentPrice;
 import com.bosspvp.core.skills.effects.arguments.types.ArgumentRequire;
 import com.bosspvp.api.skills.violation.ViolationContext;
 import lombok.Getter;
@@ -20,6 +22,8 @@ public class BossEffectArgumentsRegistry extends Registry<EffectArgument<?>> imp
     public BossEffectArgumentsRegistry(@NotNull BossPlugin plugin){
         this.plugin = plugin;
         register(new ArgumentRequire(plugin));
+        register(new ArgumentChance(plugin));
+        register(new ArgumentPrice(plugin));
     }
 
     @Override

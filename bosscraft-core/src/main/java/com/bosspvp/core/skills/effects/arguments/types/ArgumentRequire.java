@@ -14,8 +14,8 @@ public class ArgumentRequire extends EffectArgument<Compilable.NoCompileData> {
 
     @Override
     public boolean isMet(@NotNull ConfigurableElement element, @NotNull DispatchedTrigger trigger, Compilable.@NotNull NoCompileData compileData) {
-        return element.getConfig().
-                getEvaluated("require",
+        return element.getConfig().getSubsection("args")
+                .getEvaluated("require",
                         trigger.data().toPlaceholderContext(element.getConfig())
                 ) == 1.0;
     }

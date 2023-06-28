@@ -31,7 +31,7 @@ public class BossEventManager implements EventManager{
     }
 
     @Override
-    public Set<Listener> getRegisteredListeners() {
+    public @NotNull Set<Listener> getRegisteredListeners() {
         return registry;
     }
 
