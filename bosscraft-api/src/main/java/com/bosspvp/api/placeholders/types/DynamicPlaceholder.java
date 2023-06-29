@@ -36,7 +36,7 @@ public class DynamicPlaceholder implements RegistrablePlaceholder {
                               @NotNull final Pattern pattern,
                               @NotNull final Function<@NotNull String, @Nullable String> function) {
         this.plugin = plugin;
-        this.pattern = Pattern.compile("%" + plugin.getName().toLowerCase()+"_"+pattern + "%");
+        this.pattern = pattern;
         this.function = function;
     }
 

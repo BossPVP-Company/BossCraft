@@ -36,7 +36,7 @@ public class PlayerPlaceholder implements RegistrablePlaceholder{
                              @NotNull final String identifier,
                              @NotNull final Function<@NotNull Player, @Nullable String> function) {
         this.plugin = plugin;
-        this.pattern = Pattern.compile("%"+plugin.getName().toLowerCase()+"_"+identifier+"%");
+        this.pattern = Pattern.compile(identifier);
         this.function = function;
     }
 

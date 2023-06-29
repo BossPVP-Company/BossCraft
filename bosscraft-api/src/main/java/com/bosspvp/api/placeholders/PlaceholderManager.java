@@ -59,7 +59,7 @@ public class PlaceholderManager {
      * @param placeholder The arguments to register.
      */
     public static void registerPlaceholder(@NotNull final RegistrablePlaceholder placeholder) {
-        Set<RegistrablePlaceholder> pluginPlaceholders = new HashSet<>(REGISTERED_PLACEHOLDERS.get(placeholder.getPlugin()));
+        Set<RegistrablePlaceholder> pluginPlaceholders = new HashSet<>(REGISTERED_PLACEHOLDERS.getOrDefault(placeholder.getPlugin(), new HashSet<>()));
         pluginPlaceholders.add(placeholder);
         REGISTERED_PLACEHOLDERS.put(placeholder.getPlugin(), ImmutableSet.copyOf(pluginPlaceholders));
     }
@@ -98,12 +98,13 @@ public class PlaceholderManager {
                 }
             }
             if(f) continue;
-            String[] parts = textToReplace.split("_",2);
+            String[] parts = textToReplace.replace("%","").split("_",2);
+
             if(parts.length == 2) {
                 BossPlugin plugin = api.getPluginByName(parts[0]);
                 if(plugin == null) continue;
-                for (RegistrablePlaceholder placeholder : REGISTERED_PLACEHOLDERS.get(plugin)) {
-                    if (textToReplace.matches(placeholder.getPattern().pattern())) {
+                for (RegistrablePlaceholder placeholder : REGISTERED_PLACEHOLDERS.getOrDefault(plugin,new HashSet<>())) {
+                    if (placeholder.getPattern().matcher(parts[1]).matches()) {
                         String replacement = placeholder.getValue(parts[1], context);
                         if(replacement == null) break;
                         translated = StringUtils.replaceFast(
@@ -115,6 +116,7 @@ public class PlaceholderManager {
                     }
                 }
             }
+
         }
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null) {
             translated = PlaceholderAPI.setPlaceholders(context.getPlayer(), translated);

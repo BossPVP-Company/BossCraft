@@ -12,6 +12,7 @@ public interface RegistrablePlaceholder extends Placeholder{
      */
     @NotNull
     default RegistrablePlaceholder register() {
+        PlaceholderManager.registerPlaceholder(this);
         return this;
     }
 

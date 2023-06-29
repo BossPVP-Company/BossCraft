@@ -37,7 +37,7 @@ public class PlayerDynamicPlaceholder implements RegistrablePlaceholder {
                                     @NotNull final Pattern pattern,
                                     @NotNull final BiFunction<@NotNull String, @NotNull Player, @Nullable String> function) {
         this.plugin = plugin;
-        this.pattern = Pattern.compile("%"+plugin.getName().toLowerCase()+"_"+pattern.pattern()+"%");
+        this.pattern = Pattern.compile(pattern.pattern());
         this.function = function;
     }
 
