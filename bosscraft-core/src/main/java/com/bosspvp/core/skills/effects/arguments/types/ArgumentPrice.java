@@ -19,10 +19,11 @@ public class ArgumentPrice extends EffectArgument<Compilable.NoCompileData> {
 
     @Override
     public boolean isMet(@NotNull ConfigurableElement element, @NotNull DispatchedTrigger trigger, @NotNull NoCompileData compileData) {
-        Config section = element.getConfig().getSubsection("args");
+        Config section = element.getConfig().getSubsection("price");
+
         var price = Prices.create(
-                section.getString("price.value"),
-                section.getString("price.type"),
+                section.getString("value"),
+                section.getString("type"),
                 trigger.data().toPlaceholderContext(section)
         );
         return price.canAfford(trigger.player());
@@ -30,10 +31,10 @@ public class ArgumentPrice extends EffectArgument<Compilable.NoCompileData> {
 
     @Override
     public void ifMet(@NotNull ConfigurableElement element, @NotNull DispatchedTrigger trigger, @NotNull NoCompileData compileData) {
-        Config section = element.getConfig().getSubsection("args");
+        Config section = element.getConfig().getSubsection("price");
         var price = Prices.create(
-                section.getString("price.value"),
-                section.getString("price.type"),
+                section.getString("value"),
+                section.getString("type"),
                 trigger.data().toPlaceholderContext(section)
         );
         price.pay(trigger.player());
@@ -45,10 +46,10 @@ public class ArgumentPrice extends EffectArgument<Compilable.NoCompileData> {
         if(!configYml.getBool("cannot-afford-price.message-enabled")) return;
         Config langYml = getPlugin().getLangYml().asConfig();
 
-        Config section = element.getConfig().getSubsection("args");
+        Config section = element.getConfig().getSubsection("price");
         var price = Prices.create(
-                section.getString("price.value"),
-                section.getString("price.type"),
+                section.getString("value"),
+                section.getString("type"),
                 trigger.data().toPlaceholderContext(section)
         );
         var display = section.getString("price.display")
