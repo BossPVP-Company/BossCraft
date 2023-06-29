@@ -8,7 +8,6 @@ import com.bosspvp.api.skills.triggers.TriggerData;
 import com.bosspvp.api.skills.triggers.TriggerParameter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -27,14 +26,11 @@ public class EffectSendMessage extends Effect<Compilable.NoCompileData> {
 
     @Override
     protected boolean onTrigger(Config config, TriggerData data, NoCompileData compileData) {
-        getPlugin().getLogger().info("EffectSendMessage.onTrigger");
         if(data.player()==null) return false;
         List<String> messages = config.getFormattedStringListOrNull("message", data.toPlaceholderContext(config));
         if(messages==null || messages.isEmpty()) messages = List.of(config.getFormattedString("message",data.toPlaceholderContext(config)));
         messages = messages.stream().map(it->it.replace("%player%",data.player().getName())).toList();
         data.player().sendMessage(messages.toArray(new String[0]));
-        getPlugin().getLogger().info("EffectSendMessage.onTrigger " + Arrays.toString(messages.toArray(new String[0])));
-
         //@TODO
         /*  val actionBar = config.getBool("action_bar")
 

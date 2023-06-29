@@ -62,7 +62,7 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
         // I'm not sure yet whether it is really needed. I'll leave it for now.
         Config config = cfg;
 
-        Config args = config.getSubsection("args");
+        Config args = config.getSubsectionOrNull("args");
         if(args==null){
             plugin.getLogger().warning("Effect block is missing args section.");
             return null;

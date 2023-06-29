@@ -189,15 +189,22 @@ public class BossConfig implements Config {
     }
     @Nullable
     private ItemStack getItemStack(@Nullable Config config){
-        if(config==null || !config.hasPath("item")) return null;
-        ItemBuilder builder = new ItemBuilder(Objects.requireNonNullElse(
-                Material.matchMaterial(config.getString("item").toUpperCase()),
-                Material.BEDROCK
-        ));
+        if(config==null || (!config.hasPath("item") && !config.hasPath("icon"))) return null;
+
+        ItemBuilder builder;
+        if(config.hasPath("icon")){
+            builder = new ItemBuilder(Material.PLAYER_HEAD)
+                    .makeCustomSkull(config.getString("icon").split(":")[1]);
+        }else {
+            builder = new ItemBuilder(Objects.requireNonNullElse(
+                    Material.matchMaterial(config.getString("item").toUpperCase()),
+                    Material.BEDROCK
+            ));
+        }
         if(config.hasPath("name")) builder.setName(config.getFormattedString("name"));
         if(config.hasPath("lore")) builder.setLore(config.getFormattedStringList("lore"));
         if(config.hasPath("amount")) builder.setAmount(config.getInt("amount"));
-        return null;
+        return builder.toItemStack();
     }
 
     @Override
