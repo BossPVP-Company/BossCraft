@@ -10,6 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A component for level rewards
+ * Use {@link #initialize(List, int)} inside the constructor!
+ * I separated that method from the constructor to allow the
+ * child class to set its variables affecting on abstract classes
+ */
 public abstract class LevelComponent extends GuiPage {
     private char[] progressionOrder = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
@@ -22,6 +28,9 @@ public abstract class LevelComponent extends GuiPage {
                           int maxLevel) {
         super(pattern.get(0).toCharArray().length,pattern.size(),-1);
 
+    }
+
+    protected void initialize(List<String> pattern, int maxLevel){
         var progressionSlots = new HashMap<Integer, Integer>();
 
         var x = 0;
