@@ -16,6 +16,10 @@ public class BossScheduler implements Scheduler {
     public BukkitTask runLater(long delay, @NotNull Runnable runnable) {
         return Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
     }
+    @Override
+    public BukkitTask runLaterAsync(long delay, @NotNull Runnable runnable) {
+        return Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay);
+    }
 
     @Override
     public BukkitTask runTimer(long delay, long repeat, @NotNull Runnable runnable) {

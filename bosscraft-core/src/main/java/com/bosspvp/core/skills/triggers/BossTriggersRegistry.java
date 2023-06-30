@@ -80,6 +80,8 @@ public class BossTriggersRegistry extends Registry<Trigger> implements TriggersR
         register(new TriggerBrewIngredient(plugin));
         register(new TriggerBowAttack(plugin));
         register(new TriggerTridentAttack(plugin));
+        register(new TriggerDamageItem(plugin));
+        register(new TriggerTakeEntityDamage(plugin));
     }
 }
 

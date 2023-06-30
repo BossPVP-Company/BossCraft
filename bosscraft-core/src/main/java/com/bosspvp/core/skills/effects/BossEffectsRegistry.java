@@ -14,6 +14,7 @@ import com.bosspvp.api.skills.triggers.Trigger;
 import com.bosspvp.api.skills.violation.ConfigViolation;
 import com.bosspvp.api.skills.violation.ViolationContext;
 import com.bosspvp.core.skills.effects.types.multiplier.EffectXpMultiplier;
+import com.bosspvp.core.skills.effects.types.particles.EffectVisualEffect;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -272,8 +273,14 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
         register(new EffectDamageMultiplier(plugin));
         register(new EffectXpMultiplier(plugin));
         register(new EffectDamageTwice(plugin));
-        register(new EffectParticleAnimation(plugin));
+        register(new EffectVisualEffect(plugin));
         register(new EffectSendMessage(plugin));
+        register(new EffectCancelEvent(plugin));
+        register(new EffectAddHolder(plugin));
+        register(new EffectMultiplyDrops(plugin));
+        register(new EffectPotionEffect(plugin));
+        register(new EffectDropRandomItem(plugin));
+        register(new EffectRegenMultiplier(plugin));
     }
 
 

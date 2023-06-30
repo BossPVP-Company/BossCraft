@@ -12,6 +12,7 @@ import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,6 +101,12 @@ public interface SkillsManager {
     @NotNull DispatchedTriggerFactory getDispatchedTriggerFactory();
 
 
+    /**
+     * Get the visual effect registry.
+     *
+     * @return The visual effect registry.
+     */
+    @NotNull VisualEffectsRegistry getVisualEffectsRegistry();
     /**
      * Load the listeners.
      *

@@ -12,6 +12,7 @@ import com.bosspvp.api.skills.holder.HolderManager;
 import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
 import com.bosspvp.core.skills.conditions.BossConditionsRegistry;
 import com.bosspvp.core.skills.counters.BossCountersRegistry;
 import com.bosspvp.core.skills.counters.CounterHandler;
@@ -22,6 +23,7 @@ import com.bosspvp.core.skills.filters.BossFilterRegistry;
 import com.bosspvp.core.skills.mutators.BossMutatorRegistry;
 import com.bosspvp.core.skills.triggers.BossTriggersRegistry;
 import com.bosspvp.core.skills.triggers.placeholders.BossTriggerPlaceholdersRegistry;
+import com.bosspvp.core.skills.visualeffects.BossVisualEffectsRegistry;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -54,6 +56,8 @@ public class BossSkillsManager implements SkillsManager {
     private MutatorRegistry mutatorRegistry;
     @Getter
     private CountersRegistry countersRegistry;
+    @Getter
+    private VisualEffectsRegistry visualEffectsRegistry;
     public BossSkillsManager(BossPlugin plugin) {
         this.plugin = plugin;
 
@@ -84,7 +88,9 @@ public class BossSkillsManager implements SkillsManager {
         filterRegistry = new BossFilterRegistry(plugin);
         mutatorRegistry = new BossMutatorRegistry(plugin);
         countersRegistry = new BossCountersRegistry(plugin);
+        visualEffectsRegistry = new BossVisualEffectsRegistry(plugin);
     }
+
 
     @Override
     public @NotNull List<Listener> loadListeners() {

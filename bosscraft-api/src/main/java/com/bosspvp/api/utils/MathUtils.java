@@ -1,4 +1,5 @@
 package com.bosspvp.api.utils;
+import org.bukkit.util.Vector;
 import redempt.crunch.Crunch;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,6 +16,7 @@ public class MathUtils {
      */
     private static final double[] SIN_LOOKUP = new double[65536];
 
+    static public final double degreesToRadians = Math.PI / 180;
 
     static {
 
@@ -105,8 +107,25 @@ public class MathUtils {
 
         return Crunch.compileExpression(expression).evaluate();
     }
-
-
+    public static Vector vectorFromAngle(double angle){
+        Vector vector=new Vector(0,0,0);
+        vector.setX(fastCos(angle));
+        vector.setY(fastSin(angle));
+        return vector;
+    }
+    public static double angleFromVector(Vector vector){
+        return Math.atan2(vector.getY(),vector.getX());
+    }
+    public static double getMagnitude(Vector vector){
+        return Math.sqrt(Math.pow(vector.getX(),2)+Math.pow(vector.getY(),2)+Math.pow(vector.getZ(),2));
+    }
+    public static Vector setMagnitude(Vector vector, double newMagnitude){
+        double currentMagnitude=getMagnitude(vector);
+        vector.setX(vector.getX()*newMagnitude/currentMagnitude);
+        vector.setY(vector.getY()*newMagnitude/currentMagnitude);
+        vector.setZ(vector.getZ()*newMagnitude/currentMagnitude);
+        return vector;
+    }
     private MathUtils() {
         throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");
     }

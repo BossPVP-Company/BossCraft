@@ -71,6 +71,9 @@ public class BossFilterRegistry extends Registry<Filter<?, ?>> implements Filter
         register(new FilterFullyGrown(plugin));
         register(new FilterFromSpawner(plugin));
         register(new FilterItems(plugin));
+        register(new FilterDamageCause(plugin));
+        register(new FilterPotionEffect(plugin));
+        register(new FilterOnlyBosses(plugin));
     }
 
 

@@ -21,6 +21,16 @@ public interface Scheduler {
     BukkitTask runLater(long delay,
                         @NotNull Runnable runnable);
 
+    /**
+     * Run the task after a specified tick delay async.
+     *
+     * @param delay      The amount of ticks to wait before the first execution.
+     * @param runnable   The task to run.
+     * @return The created {@link BukkitTask}.
+     */
+    BukkitTask runLaterAsync(long delay,
+                             @NotNull Runnable runnable);
+
 
     /**
      * Run the task repeatedly on a timer.
