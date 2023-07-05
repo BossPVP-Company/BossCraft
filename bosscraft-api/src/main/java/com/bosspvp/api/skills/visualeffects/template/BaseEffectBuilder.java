@@ -65,6 +65,10 @@ public class BaseEffectBuilder implements VisualEffectBuilder {
     public @NotNull <T> VisualEffectBuilder runManually(boolean flag) {
         return setVariable("runManually", flag);
     }
+    @Override
+    public @NotNull <T> VisualEffectBuilder runAsync(boolean flag) {
+        return setVariable("async", flag);
+    }
 
     @Override
     @NotNull public <T> VisualEffectBuilder setVariable(@NotNull String key,@NotNull T value) {

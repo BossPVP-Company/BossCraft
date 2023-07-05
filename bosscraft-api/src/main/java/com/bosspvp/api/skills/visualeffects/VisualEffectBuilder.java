@@ -19,6 +19,7 @@ public interface VisualEffectBuilder {
     @NotNull  <T> VisualEffectBuilder setDisplayRange(int value);
 
     @NotNull  <T> VisualEffectBuilder runManually(boolean flag);
+    @NotNull  <T> VisualEffectBuilder runAsync(boolean flag);
 
     @NotNull <T> VisualEffectBuilder setVariable(@NotNull String key,@NotNull  T value);
     @NotNull HashMap<String, VisualEffectVariable<?>> getVariables();

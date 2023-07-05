@@ -6,10 +6,7 @@ import com.bosspvp.api.skills.visualeffects.VisualEffect;
 import com.bosspvp.api.skills.visualeffects.VisualEffectBuilder;
 import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
 import com.bosspvp.api.skills.visualeffects.template.BaseEffectBuilder;
-import com.bosspvp.core.skills.visualeffects.types.DynamicCircle;
-import com.bosspvp.core.skills.visualeffects.types.Helix;
-import com.bosspvp.core.skills.visualeffects.types.SingleParticle;
-import com.bosspvp.core.skills.visualeffects.types.SnowFlake;
+import com.bosspvp.core.skills.visualeffects.types.*;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,11 +33,16 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
         registerEffectBuilder(new BaseEffectBuilder("snow_flake",
                 ()->new SnowFlake(this))
         );
+        registerEffectBuilder(new BaseEffectBuilder("entity_trail",
+                ()->new EntityTrail(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("super_shape_2d",
+                ()->new SuperShape2D(this))
+        );
     }
     @Override
     public @Nullable VisualEffectBuilder getEffectBuilder(@NotNull String id) {
-        //@TODO
-        return null;
+        return effectBuilders.get(id.toLowerCase());
     }
 
     @Override
@@ -99,7 +101,7 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
     }
 
     @Override
-    public void cancelEffectTask(@NotNull String id) {
+    public void cancelEffect(@NotNull String id) {
         for(var effect : runningEffects.keySet()) {
             if(effect.getId().equals(id)) {
                 effect.cancel(false);
@@ -115,15 +117,9 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
     }
 
     @Override
-    public @NotNull List<VisualEffect> getEffectsByParentTaskID(@NotNull String id) {
+    public @NotNull List<VisualEffect> getEffectsByParentId(@NotNull String id) {
         /*runningEffects.keys.filter { it.id == id }.toMutableList()*/
         return runningEffects.keySet().stream().filter(effect -> effect.getId().equals(id)).toList();
-    }
-
-    @Override
-    public Registry<VisualEffect> getRegistry() {
-        //@TODO
-        return null;
     }
 
     @Override

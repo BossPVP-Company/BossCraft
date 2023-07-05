@@ -34,7 +34,7 @@ public interface VisualEffectsManager {
      * @param effect The effect
      * @return The effect task id
      */
-    VisualEffectTask startEffect(@NotNull VisualEffect effect);
+    String startEffect(@NotNull VisualEffect effect);
 
     /**
      * Finish an effect
@@ -44,11 +44,11 @@ public interface VisualEffectsManager {
     void finishEffect(@NotNull VisualEffect effect);
 
     /**
-     * cancel effect task with specified id.
+     * cancel effects with specified id.
      *
      * @param id An effect task id
      */
-    void cancelEffectTask(@NotNull String id);
+    void cancelEffect(@NotNull String id);
 
     /**
      * cancel all effects attached to this manager
@@ -62,16 +62,8 @@ public interface VisualEffectsManager {
      * @return list of effects
      */
     @NotNull
-    VisualEffectTask getEffectTask(@NotNull String id);
+    List<VisualEffect> getEffectsByParentId(@NotNull String id);
 
-
-
-    /**
-     * Get the registry.
-     *
-     * @return The registry.
-     */
-    Registry<VisualEffect> getRegistry();
 
     /**
      * Get the plugin.

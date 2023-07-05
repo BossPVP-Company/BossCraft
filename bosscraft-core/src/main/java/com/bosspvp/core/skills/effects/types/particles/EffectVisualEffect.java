@@ -34,7 +34,7 @@ public class EffectVisualEffect extends Effect<Compilable.NoCompileData> {
     @Override
     protected boolean onTrigger(Config config, TriggerData data, NoCompileData compileData) {
         if(data.location()==null || data.location().getWorld()==null) return false;
-        VisualEffectsManager manager = getPlugin().getSkillsManager().getVisualEffectsRegistry();
+        VisualEffectsManager manager = getPlugin().getSkillsManager().getVisualEffectsManager();
         VisualEffectBuilder effectBuilder = manager
                 .getEffectBuilder(config.getString("type").toLowerCase());
         if(effectBuilder==null) return false;

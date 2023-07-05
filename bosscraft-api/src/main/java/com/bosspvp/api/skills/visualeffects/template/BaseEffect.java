@@ -26,7 +26,7 @@ public abstract class BaseEffect implements VisualEffect {
     private final VisualEffectsManager effectsRegistry;
 
     @Getter
-    boolean isAsync;
+    boolean isAsync = true;
 
     @Getter
     private BaseEffect copy;
@@ -382,6 +382,9 @@ public abstract class BaseEffect implements VisualEffect {
             }
             case "runManually" ->{
                 runningManually = (boolean) value;
+            }
+            case "async" ->{
+                isAsync = (boolean) value;
             }
             default -> {
                 if(variables.containsKey(key)){

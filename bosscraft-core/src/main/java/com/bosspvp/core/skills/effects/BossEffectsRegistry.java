@@ -296,6 +296,8 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
         register(new EffectDontConsumeXpChance(plugin));
         register(new EffectDontConsumeLapisChance(plugin));
         register(new EffectBrewTimeMultiplier(plugin));
+        register(new EffectRunCommand(plugin));
+        register(new EffectRunPlayerCommand(plugin));
     }
 
 

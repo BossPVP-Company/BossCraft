@@ -106,7 +106,7 @@ public interface SkillsManager {
      *
      * @return The visual effect registry.
      */
-    @NotNull VisualEffectsManager getVisualEffectsRegistry();
+    @NotNull VisualEffectsManager getVisualEffectsManager();
     /**
      * Load the listeners.
      *
