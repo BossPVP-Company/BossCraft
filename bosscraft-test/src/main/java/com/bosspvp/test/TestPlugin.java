@@ -10,6 +10,7 @@ import com.bosspvp.api.skills.holder.HolderProvider;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import com.bosspvp.api.skills.holder.provided.SimpleProvidedHolder;
 import com.bosspvp.core.BossAPIImpl;
+import com.bosspvp.core.events.listeners.EntityDeathListener;
 import com.bosspvp.test.commands.CommandTest;
 import com.bosspvp.test.config.ConfigFileOkaeri;
 import com.bosspvp.test.config.category.CategoryTest;
@@ -18,12 +19,14 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class TestPlugin extends BossPlugin {
     //instance
@@ -46,18 +49,15 @@ public class TestPlugin extends BossPlugin {
     protected void handleEnable() {
         getGuiController().enableUpdater(true);
         getSkillsManager().getHolderManager().registerHolderProvider(
-                new HolderProvider() {
-                    @Override
-                    public Collection<ProvidedHolder> provide(Player player) {
-                        Holder holder = categoryTest.getSkillsHolder(player);
-                        if(holder == null) {
-                            return null;
-                        }
-                        ProvidedHolder providedHolder = new SimpleProvidedHolder(
-                                holder
-                        );
-                        return Collections.singletonList(providedHolder);
+                player -> {
+                    Holder holder = categoryTest.getSkillsHolder(player);
+                    if(holder == null) {
+                        return null;
                     }
+                    ProvidedHolder providedHolder = new SimpleProvidedHolder(
+                            holder
+                    );
+                    return Collections.singletonList(providedHolder);
                 }
         );
 
@@ -96,6 +96,14 @@ public class TestPlugin extends BossPlugin {
         return List.of(new CommandTest(this));
     }
 
+
+    //HAS To BE ADDED FOR CORE PLUGIN
+    @Override
+    protected List<Listener> loadListeners() {
+        return List.of(
+                new EntityDeathListener(this)
+        );
+    }
 
     //load implementation.
     // The plugin which loads an API has to be enabled first

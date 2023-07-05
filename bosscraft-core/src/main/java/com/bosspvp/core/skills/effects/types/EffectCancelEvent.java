@@ -20,7 +20,7 @@ public class EffectCancelEvent extends Effect<Compilable.NoCompileData> {
     }
     @Override
     protected boolean onTrigger(Config config, TriggerData data, NoCompileData compileData) {
-
+        getPlugin().getLogger().info("EffectCancelEvent triggered");
         if(data.event()==null) {
             return false;
         }

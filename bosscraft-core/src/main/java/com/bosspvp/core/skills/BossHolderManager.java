@@ -2,6 +2,7 @@ package com.bosspvp.core.skills;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
+import com.bosspvp.api.skills.effects.EffectBlock;
 import com.bosspvp.api.skills.holder.HolderManager;
 import com.bosspvp.api.skills.holder.HolderProvider;
 import com.bosspvp.api.skills.holder.event.HolderDisableEvent;
@@ -111,6 +112,12 @@ public class BossHolderManager implements HolderManager {
         updateHolders(player);
         updateEffects(player);
     }
+
+    @Override
+    public void purgePreviousHolders(@NotNull Player player) {
+        previousHolders.remove(player.getUniqueId());
+    }
+
     @Override
     public void updateHolders(@NotNull Player player){
         holderCache.invalidate(player.getUniqueId());
@@ -121,7 +128,7 @@ public class BossHolderManager implements HolderManager {
         if(before == null){
             before = Collections.emptyList();
         }
-        var after = getActiveEffects(player,getPlayerHolders(player));
+        var after = compileActiveEffects(player,getPlayerHolders(player));
 
         List<ProvidedEffectBlock> afterF = new ArrayList<>();
         for(List<ProvidedEffectBlock> l : after.stream().map(ProvidedEffectBlockList::flatten).toList()){
@@ -152,7 +159,7 @@ public class BossHolderManager implements HolderManager {
         }
     }
     @Override
-    public List<ProvidedEffectBlockList> getActiveEffects(@NotNull Player player, @NotNull Collection<ProvidedHolder> holders){
+    public List<ProvidedEffectBlockList> compileActiveEffects(@NotNull Player player, @NotNull Collection<ProvidedHolder> holders){
         var blocks = new ArrayList<ProvidedEffectBlockList>();
         for(var holder : holders){
             if(holder.getHolder().getConditionList().areMet(player, holder)){
@@ -161,6 +168,18 @@ public class BossHolderManager implements HolderManager {
         }
         return blocks;
     }
+
+    @Override
+    public List<ProvidedEffectBlockList> getProvidedActiveEffects(@NotNull Player player) {
+        return previousStates.get(player.getUniqueId());
+    }
+
+    @Override
+    public List<EffectBlock> getActiveEffects(@NotNull Player player) {
+        return flattenedPreviousStates.get(player.getUniqueId())
+                .stream().map(ProvidedEffectBlock::effect).toList();
+    }
+
     @Override
     public List<InjectablePlaceholder> generatePlaceholders(ProvidedHolder holder, Player player){
         return holderPlaceholderProviders.stream().flatMap((it) -> it.apply(holder, player).stream()).toList();

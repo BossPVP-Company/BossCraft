@@ -57,6 +57,12 @@ public record TriggerData(
                 1.0
             );
     }
+    public ItemStack getFoundItem(){
+        if(holder.getProvider() instanceof ItemStack out){
+            return out;
+        }
+        return item;
+    }
     public PlaceholderContext toPlaceholderContext(@NotNull Config config) {
         List<AdditionalPlayer> additionalPlayers = new ArrayList<>();
         if(victim()!=null && victim() instanceof Player victimP){

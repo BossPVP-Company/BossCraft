@@ -21,7 +21,8 @@ public class FileUtils {
         if(files==null || files.length==0) return new ArrayList<>();
         List<Pair<String,File>> result = new ArrayList<>();
         for (File file : files) {
-            if (file.isDirectory() && recursive) {
+            if (file.isDirectory()) {
+                if(!recursive) continue;
                 result.addAll(loadFiles(file,true));
                 continue;
             }

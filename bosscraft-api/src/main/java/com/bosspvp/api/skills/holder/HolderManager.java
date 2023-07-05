@@ -2,6 +2,7 @@ package com.bosspvp.api.skills.holder;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.placeholders.InjectablePlaceholder;
+import com.bosspvp.api.skills.effects.EffectBlock;
 import com.bosspvp.api.skills.holder.event.HolderDisableEvent;
 import com.bosspvp.api.skills.holder.event.HolderEnableEvent;
 import com.bosspvp.api.skills.holder.event.HolderProvideEvent;
@@ -62,6 +63,8 @@ public interface HolderManager {
      * @param player the player to refresh the holders of
      */
     void refreshHolders(@NotNull Player player);
+
+    void purgePreviousHolders(@NotNull Player player);
     /**
      * Updates the holders of a player
      * @param player the player to update the holders of
@@ -72,13 +75,17 @@ public interface HolderManager {
      * @param player the player to update the effects of
      */
     void updateEffects(@NotNull Player player);
+
+
     /**
-     * Gets the active effects of a player
+     * Compile the active effects of a player
      * @param player the player
      * @return the effects
      */
-    List<ProvidedEffectBlockList> getActiveEffects(@NotNull Player player, @NotNull Collection<ProvidedHolder> holders);
+    List<ProvidedEffectBlockList> compileActiveEffects(@NotNull Player player, @NotNull Collection<ProvidedHolder> holders);
 
+    List<ProvidedEffectBlockList> getProvidedActiveEffects(@NotNull Player player);
+    List<EffectBlock> getActiveEffects(@NotNull Player player);
     /**
      * Generates the placeholders for a holder
      * @param holder the holder

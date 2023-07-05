@@ -6,12 +6,14 @@ import com.bosspvp.api.events.EventManager;
 import com.bosspvp.api.gui.GuiController;
 import com.bosspvp.api.gui.menu.MenuBuilder;
 import com.bosspvp.api.gui.slot.SlotBuilder;
+import com.bosspvp.api.misc.drops.DropQueue;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.schedule.Scheduler;
 import com.bosspvp.api.skills.SkillsManager;
 import com.bosspvp.api.skills.triggers.DispatchedTriggerFactory;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +63,14 @@ public interface BossAPI {
     @NotNull
     Logger createLogger(@NotNull BossPlugin plugin);
 
+    /**
+     * Create drop queue
+     *
+     * @param player The player
+     * @return The drop queue.
+     */
+    @NotNull
+    DropQueue createDropQueue(Player player);
 
     /**
      * Create slot builder

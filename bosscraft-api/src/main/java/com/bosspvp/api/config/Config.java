@@ -119,6 +119,10 @@ public interface Config extends InjectablePlaceholderList {
     default boolean getBool(@NotNull String path) {
         return Objects.requireNonNullElse(getBoolOrNull(path), false);
     }
+
+    default Boolean getBoolOrDefault(@NotNull String path, boolean def){
+        return Objects.requireNonNullElse(getBoolOrNull(path), def);
+    }
     @Nullable
     Boolean getBoolOrNull(@NotNull String path);
 
@@ -154,9 +158,9 @@ public interface Config extends InjectablePlaceholderList {
                     new PlaceholderContext(null,null, this, new ArrayList<>())
             );
         }
-        context.getInjectableContext().addInjectablePlaceholder(getPlaceholderInjections());
-        String formatted = StringUtils.formatWithPlaceholders(text,context);;
-        context.getInjectableContext().removeInjectablePlaceholder(getPlaceholderInjections());
+        String formatted = StringUtils.formatWithPlaceholders(text,context.withInjectableContext(
+                this
+        ));;
         return formatted;
     }
     @NotNull
@@ -237,6 +241,13 @@ public interface Config extends InjectablePlaceholderList {
     }
     @Nullable
     Material getMaterialOrNull(@NotNull String path);
+
+    @NotNull
+    default List<Material> getMaterialList(@NotNull String path) {
+        return Objects.requireNonNullElse(getMaterialListOrNull(path),new ArrayList<>());
+    }
+    @Nullable
+    List<Material> getMaterialListOrNull(@NotNull String path);
 
     @NotNull
     Config getSubsection(@NotNull String path);

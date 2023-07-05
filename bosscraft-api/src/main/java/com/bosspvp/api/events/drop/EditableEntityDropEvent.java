@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class EditableEntityDropEvent extends EditableDropEvent {
     private EntityDeathEvent event;
-    private final List<Function<ItemStack,Integer>> modifiers;
+    private final List<Function<ItemStack,DropResult>> modifiers;
     //private val modifiers = mutableListOf<DropModifier>()
     public EditableEntityDropEvent(EntityDeathEvent event) {
         super();
@@ -18,22 +18,22 @@ public class EditableEntityDropEvent extends EditableDropEvent {
     }
 
     @Override
-    void addModifier(Function<ItemStack, Integer> modifier) {
+    public void addModifier(Function<ItemStack, DropResult> modifier) {
         modifiers.add(modifier);
     }
 
     @Override
-    List<ItemStack> getOriginalItems() {
+    public List<ItemStack> getOriginalItems() {
         return event.getDrops();
     }
 
     @Override
-    List<DropResult> getItems() {
+    public List<DropResult> getItems() {
         return getOriginalItems().stream().map(itemStack -> modify(modifiers, itemStack)).toList();
     }
 
     @Override
-    void removeItem(ItemStack item) {
+    public void removeItem(ItemStack item) {
         event.getDrops().remove(item);
     }
 

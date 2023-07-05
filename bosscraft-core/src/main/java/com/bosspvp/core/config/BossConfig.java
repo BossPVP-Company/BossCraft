@@ -22,7 +22,7 @@ public class BossConfig implements Config {
     @Getter
     private ConfigurationSection handle;
 
-    private List<InjectablePlaceholder> injections = new ArrayList<>();
+    private Collection<InjectablePlaceholder> injections = Collections.synchronizedCollection(new ArrayList<>());
 
     public BossConfig(YamlConfiguration yamlHandle,
                       ConfigurationSection handle){
@@ -100,6 +100,19 @@ public class BossConfig implements Config {
         String mat = getStringOrNull(path);
         if(mat==null) return null;
         return Material.matchMaterial(mat.toUpperCase());
+    }
+
+    @Override
+    public @Nullable List<Material> getMaterialListOrNull(@NotNull String path) {
+        var list = getStringListOrNull(path);
+        if(list==null) return null;
+        List<Material> out = new ArrayList<>();
+        for(String mat : list){
+            Material material = Material.matchMaterial(mat.toUpperCase());
+            if(material==null) continue;
+            out.add(material);
+        }
+        return out;
     }
 
     @Override
@@ -209,7 +222,10 @@ public class BossConfig implements Config {
 
     @Override
     public void addInjectablePlaceholder(@NotNull Iterable<InjectablePlaceholder> placeholders) {
-        placeholders.forEach(it->injections.add(it));
+        placeholders.forEach(it->{
+            if(it==null) return;
+            injections.add(it);
+        });
     }
 
     @Override
@@ -223,7 +239,7 @@ public class BossConfig implements Config {
     }
 
     @Override
-    public @NotNull List<InjectablePlaceholder> getPlaceholderInjections() {
+    public @NotNull Collection<InjectablePlaceholder> getPlaceholderInjections() {
         return injections;
     }
 

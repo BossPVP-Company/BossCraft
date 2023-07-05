@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public class EditableBlockDropEvent extends EditableDropEvent {
     private BlockDropItemEvent event;
-    private final List<Function<ItemStack,Integer>> modifiers;
+    private final List<Function<ItemStack,DropResult>> modifiers;
     public EditableBlockDropEvent(BlockDropItemEvent event) {
         super();
         this.event = event;
@@ -19,22 +19,22 @@ public class EditableBlockDropEvent extends EditableDropEvent {
     }
 
     @Override
-    void addModifier(Function<ItemStack, Integer> modifier) {
+    public void addModifier(Function<ItemStack, DropResult> modifier) {
         modifiers.add(modifier);
     }
 
     @Override
-    List<ItemStack> getOriginalItems() {
+    public List<ItemStack> getOriginalItems() {
         return event.getItems().stream().map(Item::getItemStack).toList();
     }
 
     @Override
-    List<DropResult> getItems() {
+    public List<DropResult> getItems() {
         return getOriginalItems().stream().map(itemStack -> modify(modifiers, itemStack)).toList();
     }
 
     @Override
-    void removeItem(ItemStack item) {
+    public void removeItem(ItemStack item) {
         event.getItems().removeIf(it->it.getItemStack().equals(item));
     }
 

@@ -14,20 +14,20 @@ public abstract class EditableDropEvent extends Event implements Cancellable {
     private static HandlerList handlerList = new HandlerList();
 
 
-    public DropResult modify(Collection<Function<ItemStack,Integer>> modifiers,
+    public DropResult modify(Collection<Function<ItemStack,DropResult>> modifiers,
                              ItemStack itemStack){
         int xp = 0;
-        for(Function<ItemStack,Integer> entry : modifiers){
-            xp += entry.apply(itemStack);
+        for(Function<ItemStack,DropResult> entry : modifiers){
+            xp += entry.apply(itemStack).xp();
         }
         return new DropResult(itemStack,xp);
 
     }
 
-    abstract void addModifier(Function<ItemStack,Integer> modifier);
-    abstract List<ItemStack> getOriginalItems();
-    abstract List<DropResult> getItems();
-    abstract void removeItem(ItemStack itemStack);
+    public abstract void addModifier(Function<ItemStack,DropResult> modifier);
+    public abstract List<ItemStack> getOriginalItems();
+    public abstract List<DropResult> getItems();
+    public abstract void removeItem(ItemStack itemStack);
 
 
     @Override

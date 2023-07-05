@@ -59,7 +59,7 @@ public abstract class Trigger implements Listener, Registrable {
 
         var effects = forceHolders==null?
                 holderManager.getPreviousState(player) :
-                holderManager.getActiveEffects(player,forceHolders);
+                holderManager.compileActiveEffects(player,forceHolders);
 
         for (var entry : effects) {
             var withHolder = data.copyToBuilder().holder(entry.holder()).build();

@@ -57,9 +57,9 @@ public class MergedInjectableContext implements InjectablePlaceholderList {
     }
 
     @Override
-    public @NotNull List<InjectablePlaceholder> getPlaceholderInjections() {
-        List<InjectablePlaceholder> base = baseContext.getPlaceholderInjections();
-        List<InjectablePlaceholder> additional = additionalContext.getPlaceholderInjections();
+    public @NotNull Collection<InjectablePlaceholder> getPlaceholderInjections() {
+        Collection<InjectablePlaceholder> base = baseContext.getPlaceholderInjections();
+        Collection<InjectablePlaceholder> additional = additionalContext.getPlaceholderInjections();
 
         List<InjectablePlaceholder> injections = new ArrayList<>(base.size() + additional.size() + extraInjections.size());
 

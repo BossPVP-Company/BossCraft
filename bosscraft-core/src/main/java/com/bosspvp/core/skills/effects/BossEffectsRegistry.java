@@ -13,6 +13,11 @@ import com.bosspvp.core.skills.effects.types.attribute.*;
 import com.bosspvp.api.skills.triggers.Trigger;
 import com.bosspvp.api.skills.violation.ConfigViolation;
 import com.bosspvp.api.skills.violation.ViolationContext;
+import com.bosspvp.core.skills.effects.types.chance.EffectDontConsumeLapisChance;
+import com.bosspvp.core.skills.effects.types.chance.EffectDontConsumeXpChance;
+import com.bosspvp.core.skills.effects.types.multiplier.EffectHungerMultiplier;
+import com.bosspvp.core.skills.effects.types.multiplier.EffectPotionDurationMultiplier;
+import com.bosspvp.core.skills.effects.types.multiplier.EffectReelSpeedMultiplier;
 import com.bosspvp.core.skills.effects.types.multiplier.EffectXpMultiplier;
 import com.bosspvp.core.skills.effects.types.particles.EffectVisualEffect;
 import lombok.Getter;
@@ -281,6 +286,16 @@ public class BossEffectsRegistry extends Registry<Effect<?>> implements EffectsR
         register(new EffectPotionEffect(plugin));
         register(new EffectDropRandomItem(plugin));
         register(new EffectRegenMultiplier(plugin));
+        register(new EffectHungerMultiplier(plugin));
+        register(new EffectBleed(plugin));
+        register(new EffectRepairItem(plugin));
+        register(new EffectRemovePotionEffect(plugin));
+        register(new EffectPotionDurationMultiplier(plugin));
+        register(new EffectClearInvulnerability(plugin));
+        register(new EffectReelSpeedMultiplier(plugin));
+        register(new EffectDontConsumeXpChance(plugin));
+        register(new EffectDontConsumeLapisChance(plugin));
+        register(new EffectBrewTimeMultiplier(plugin));
     }
 
 

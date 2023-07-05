@@ -2,6 +2,7 @@ package com.bosspvp.core.skills.effects.types;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.config.Config;
+import com.bosspvp.api.misc.drops.DropQueue;
 import com.bosspvp.api.skills.effects.Effect;
 import com.bosspvp.api.skills.triggers.TriggerData;
 import com.bosspvp.api.skills.triggers.TriggerParameter;
@@ -29,7 +30,14 @@ public class EffectDropRandomItem extends Effect<List<ItemStack>> {
         var location = data.location();
         if(location == null) return false;
         var item = compileData.get((int) (Math.random() * compileData.size()));
-        location.getWorld().dropItem(location, item);
+        if(data.player()!=null){
+            DropQueue.create(data.player())
+                    .addItem(item)
+                    .setLocation(location)
+                    .push();
+        }else {
+            location.getWorld().dropItem(location, item);
+        }
         return true;
     }
 

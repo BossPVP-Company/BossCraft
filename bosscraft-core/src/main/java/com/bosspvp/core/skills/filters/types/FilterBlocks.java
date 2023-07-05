@@ -17,10 +17,7 @@ public class FilterBlocks extends Filter<Compilable.NoCompileData, Collection<St
     protected boolean isMet(TriggerData data, Collection<String> value, NoCompileData compileData) {
         var block = data.block();
         if(block==null) return true;
-        for(var s : value) {
-            if(block.getType().name().equalsIgnoreCase(s)) return true;
-        }
-        return false;
+        return value.stream().anyMatch(s->block.getType().name().equalsIgnoreCase(s));
     }
 
     @Override

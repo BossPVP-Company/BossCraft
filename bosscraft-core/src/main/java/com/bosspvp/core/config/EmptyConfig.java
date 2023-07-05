@@ -10,18 +10,15 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Returned on config subsection not found
  */
 public class EmptyConfig implements Config {
-    private List<InjectablePlaceholder> injections;
+    private Collection<InjectablePlaceholder> injections;
     private YamlConfiguration yamlHandle;
-    public EmptyConfig(YamlConfiguration yamlHandle, List<InjectablePlaceholder> injections){
+    public EmptyConfig(YamlConfiguration yamlHandle, Collection<InjectablePlaceholder> injections){
         this.yamlHandle = yamlHandle;
         this.injections = injections;
     }
@@ -91,6 +88,11 @@ public class EmptyConfig implements Config {
     }
 
     @Override
+    public @Nullable List<Material> getMaterialListOrNull(@NotNull String path) {
+        return null;
+    }
+
+    @Override
     public @NotNull Config getSubsection(@NotNull String path) {
         return new EmptyConfig(yamlHandle,injections);
     }
@@ -132,7 +134,10 @@ public class EmptyConfig implements Config {
 
     @Override
     public void addInjectablePlaceholder(@NotNull Iterable<InjectablePlaceholder> placeholders) {
-        placeholders.forEach(it->injections.add(it));
+        placeholders.forEach(it->{
+            if(it==null) return;
+            injections.add(it);
+        });
     }
 
     @Override
@@ -146,7 +151,7 @@ public class EmptyConfig implements Config {
     }
 
     @Override
-    public @NotNull List<InjectablePlaceholder> getPlaceholderInjections() {
+    public @NotNull Collection<InjectablePlaceholder> getPlaceholderInjections() {
         return injections;
     }
 

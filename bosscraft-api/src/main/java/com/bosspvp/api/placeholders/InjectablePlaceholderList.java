@@ -3,6 +3,7 @@ package com.bosspvp.api.placeholders;
 import com.bosspvp.api.placeholders.types.injectable.StaticPlaceholder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface InjectablePlaceholderList {
@@ -51,5 +52,5 @@ public interface InjectablePlaceholderList {
      * @return Injected placeholders.
      */
     @NotNull
-    List<InjectablePlaceholder> getPlaceholderInjections();
+    Collection<InjectablePlaceholder> getPlaceholderInjections();
 }
