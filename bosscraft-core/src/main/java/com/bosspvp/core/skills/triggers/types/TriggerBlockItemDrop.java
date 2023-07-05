@@ -22,6 +22,7 @@ public class TriggerBlockItemDrop extends Trigger {
         super(plugin, "block_item_drop", Set.of(
                 TriggerParameter.PLAYER,
                 TriggerParameter.BLOCK,
+                TriggerParameter.MATERIAL,
                 TriggerParameter.EVENT,
                 TriggerParameter.LOCATION
         ));
@@ -29,7 +30,7 @@ public class TriggerBlockItemDrop extends Trigger {
     @EventHandler(ignoreCancelled = true)
     public void handle(BlockDropItemEvent event){
         Player player = event.getPlayer();
-        var block = event.getBlockState().getBlock();
+        var block = event.getBlock();
         if(player.getGameMode() == org.bukkit.GameMode.CREATIVE
                 || player.getGameMode() == org.bukkit.GameMode.SPECTATOR) return;
         if(event.getBlockState() instanceof org.bukkit.block.Container) return;
@@ -44,6 +45,7 @@ public class TriggerBlockItemDrop extends Trigger {
                 TriggerData.builder()
                         .player(player)
                         .block(block)
+                        .material(event.getBlockState().getType())
                         .location(block.getLocation())
                         .event(editableEvent)
                         .value(originalDrops.stream().mapToInt(ItemStack::getAmount).sum())

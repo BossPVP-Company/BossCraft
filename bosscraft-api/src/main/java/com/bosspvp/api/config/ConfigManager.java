@@ -39,7 +39,7 @@ public interface ConfigManager {
     void saveConfig(@NotNull String id);
 
     /**
-     * get config added to the manager
+     * getEffectBuilder config added to the manager
      * or null if not found
      * @param id The name of a config
      * @return this
@@ -70,7 +70,7 @@ public interface ConfigManager {
     void reloadConfigCategory(@NotNull String id);
 
     /**
-     * get config category added to the manager
+     * getEffectBuilder config category added to the manager
      * or null if not found
      * @param id The id
      * @return The config category

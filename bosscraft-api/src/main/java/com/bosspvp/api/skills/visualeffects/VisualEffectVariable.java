@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public interface VisualEffectVariable<T> extends Cloneable {
     /**
-     * get the saved value
+     * getEffectBuilder the saved value
      *
      * @return The value
      */

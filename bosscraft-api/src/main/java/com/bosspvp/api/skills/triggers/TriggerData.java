@@ -9,6 +9,7 @@ import com.bosspvp.api.skills.holder.SimpleHolder;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
 import com.bosspvp.api.skills.holder.provided.SimpleProvidedHolder;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -29,6 +30,8 @@ public record TriggerData(
         @Nullable Player player,
         @Nullable LivingEntity victim,
         @Nullable Block block,
+
+        @Nullable Material material,
         @Nullable Event event,
         @Nullable Location location,
         @Nullable Projectile projectile,
@@ -45,6 +48,7 @@ public record TriggerData(
                                 new EffectList(new ArrayList<>())
                         )
                 ),
+                null,
                 null,
                 null,
                 null,
@@ -83,6 +87,7 @@ public record TriggerData(
                 .player(player())
                 .victim(victim())
                 .block(block())
+                .material(material())
                 .event(event())
                 .item(item())
                 .location(location())
@@ -99,6 +104,7 @@ public record TriggerData(
                 player,
                 victim,
                 block,
+                material,
                 event,
                 location,
                 projectile,
@@ -129,6 +135,8 @@ public record TriggerData(
         private Player player;
         private LivingEntity victim;
         private Block block;
+
+        private Material material;
         private Event event;
         private Location location;
         private Projectile projectile;
@@ -151,6 +159,10 @@ public record TriggerData(
         }
         public Builder block(Block block){
             this.block = block;
+            return this;
+        }
+        public Builder material(Material material){
+            this.material = material;
             return this;
         }
         public Builder event(Event event){
@@ -187,6 +199,7 @@ public record TriggerData(
                     player,
                     victim,
                     block,
+                    material,
                     event,
                     location,
                     projectile,

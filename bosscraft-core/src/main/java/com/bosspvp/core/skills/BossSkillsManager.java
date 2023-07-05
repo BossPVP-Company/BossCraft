@@ -12,7 +12,7 @@ import com.bosspvp.api.skills.holder.HolderManager;
 import com.bosspvp.api.skills.mutators.MutatorRegistry;
 import com.bosspvp.api.skills.triggers.TriggersRegistry;
 import com.bosspvp.api.skills.triggers.placeholders.TriggerPlaceholdersRegistry;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
 import com.bosspvp.core.skills.conditions.BossConditionsRegistry;
 import com.bosspvp.core.skills.counters.BossCountersRegistry;
 import com.bosspvp.core.skills.counters.CounterHandler;
@@ -23,7 +23,7 @@ import com.bosspvp.core.skills.filters.BossFilterRegistry;
 import com.bosspvp.core.skills.mutators.BossMutatorRegistry;
 import com.bosspvp.core.skills.triggers.BossTriggersRegistry;
 import com.bosspvp.core.skills.triggers.placeholders.BossTriggerPlaceholdersRegistry;
-import com.bosspvp.core.skills.visualeffects.BossVisualEffectsRegistry;
+import com.bosspvp.core.skills.visualeffects.BossVisualEffectsManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -57,14 +57,14 @@ public class BossSkillsManager implements SkillsManager {
     @Getter
     private CountersRegistry countersRegistry;
     @Getter
-    private VisualEffectsRegistry visualEffectsRegistry;
+    private VisualEffectsManager visualEffectsManager;
     public BossSkillsManager(BossPlugin plugin) {
         this.plugin = plugin;
 
     }
 
     @Override
-    public void startTasks() {
+    public void reload() {
         getPlugin().getScheduler().runTimer(20, 20, () -> {
             HolderManager holderManager = getHolderManager();
             for (var player : Bukkit.getOnlinePlayers()) {
@@ -88,7 +88,7 @@ public class BossSkillsManager implements SkillsManager {
         filterRegistry = new BossFilterRegistry(plugin);
         mutatorRegistry = new BossMutatorRegistry(plugin);
         countersRegistry = new BossCountersRegistry(plugin);
-        visualEffectsRegistry = new BossVisualEffectsRegistry(plugin);
+        visualEffectsManager = new BossVisualEffectsManager(plugin);
     }
 
 

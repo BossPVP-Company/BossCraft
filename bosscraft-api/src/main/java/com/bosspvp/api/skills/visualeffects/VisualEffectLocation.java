@@ -13,7 +13,7 @@ import java.util.Set;
 public interface VisualEffectLocation {
 
     /**
-     * get original location (i.e starting loc)
+     * getEffectBuilder original location (i.e starting loc)
      *
      * @return The location
      */
@@ -21,7 +21,7 @@ public interface VisualEffectLocation {
     Location getOrigin();
 
     /**
-     * get targeted entity
+     * getEffectBuilder targeted entity
      *
      * @return The entity
      */
@@ -29,7 +29,7 @@ public interface VisualEffectLocation {
     Entity getTargetEntity();
 
     /**
-     * get current effect location
+     * getEffectBuilder current effect location
      *
      * @return The location
      */

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ValueLimit<T> extends Cloneable{
     /**
-     * get the max value
+     * getEffectBuilder the max value
      *
      * @return The value
      */
@@ -12,7 +12,7 @@ public interface ValueLimit<T> extends Cloneable{
     T getMax();
 
     /**
-     * get the min value
+     * getEffectBuilder the min value
      *
      * @return The value
      */

@@ -1,13 +1,18 @@
-package com.bosspvp.api.skills.visualeffects.types;
+package com.bosspvp.core.skills.visualeffects.types;
 
+import com.bosspvp.api.skills.visualeffects.VisualEffect;
+import com.bosspvp.api.skills.visualeffects.VisualEffectBuilder;
 import com.bosspvp.api.skills.visualeffects.VisualEffectLocation;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffect;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SingleParticle extends BaseEffect {
-    public SingleParticle(@NotNull VisualEffectsRegistry effectsManager, @NotNull VisualEffectLocation origin, long period, int iterations) {
-        super(effectsManager, origin,period,iterations);
+    public SingleParticle(@NotNull VisualEffectsManager effectsManager) {
+        super(effectsManager);
     }
 
     @Override
@@ -25,4 +30,5 @@ public class SingleParticle extends BaseEffect {
     protected void onClone(BaseEffect cloned) {
 
     }
+
 }

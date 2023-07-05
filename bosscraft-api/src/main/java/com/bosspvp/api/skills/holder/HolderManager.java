@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public interface HolderManager {
     /**
      * Gets the previous state of the player
-     * @param player the player to get the previous state of
+     * @param player the player to getEffectBuilder the previous state of
      * @return the previous state of the player
      */
     List<ProvidedEffectBlockList> getPreviousState(Player player);
@@ -53,7 +53,7 @@ public interface HolderManager {
 
     /**
      * Gets the holders of a player
-     * @param player the player to get the holders of
+     * @param player the player to getEffectBuilder the holders of
      * @return the holders of the player
      */
     Collection<ProvidedHolder> getPlayerHolders(Player player);

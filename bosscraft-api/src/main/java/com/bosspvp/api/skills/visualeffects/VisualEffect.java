@@ -10,8 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
 
 public interface VisualEffect extends Cloneable, Registrable {
 
@@ -66,7 +64,7 @@ public interface VisualEffect extends Cloneable, Registrable {
     int getIterations();
 
     /**
-     * get the amount of effect repeats.
+     * getEffectBuilder the amount of effect repeats.
      * <p></p>
      * The repeated effect is a different object but with
      * the same id and parameters
@@ -75,7 +73,7 @@ public interface VisualEffect extends Cloneable, Registrable {
     int getRepeats();
 
     /**
-     * get the effect repeat delay specified by the amount of run() calls.
+     * getEffectBuilder the effect repeat delay specified by the amount of run() calls.
      * <p></p>
      * for example: delay 10 means after 10 iterations, the effect will be repeated.
      * <p></p>
@@ -87,7 +85,7 @@ public interface VisualEffect extends Cloneable, Registrable {
     int getRepeatDelay();
 
     /**
-     * get the second location of an effect (for specific effect types)
+     * getEffectBuilder the second location of an effect (for specific effect types)
      *
      * @return the effect location
      */
@@ -195,15 +193,15 @@ public interface VisualEffect extends Cloneable, Registrable {
 
 
     /**
-     * get effects manager the effect attached to
+     * getEffectBuilder effects manager the effect attached to
      *
      * @return The effects manager
      */
     @NotNull
-    VisualEffectsRegistry getEffectsRegistry();
+    VisualEffectsManager getEffectsRegistry();
 
     /**
-     * get effect id
+     * getEffectBuilder effect id
      *
      * @return The effect id
      */

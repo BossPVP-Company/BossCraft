@@ -7,15 +7,14 @@ import com.bosspvp.api.skills.effects.Effect;
 import com.bosspvp.api.skills.triggers.TriggerData;
 import com.bosspvp.api.skills.triggers.TriggerParameter;
 import com.bosspvp.api.skills.visualeffects.VisualEffect;
+import com.bosspvp.api.skills.visualeffects.VisualEffectBuilder;
 import com.bosspvp.api.skills.visualeffects.VisualEffectVariable;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffectLocation;
-import com.bosspvp.api.skills.visualeffects.types.DynamicCircle;
-import com.bosspvp.api.skills.visualeffects.types.Helix;
-import com.bosspvp.api.skills.visualeffects.types.SingleParticle;
-import com.bosspvp.api.skills.visualeffects.types.SnowFlake;
-import com.bosspvp.api.utils.ParticleUtils;
-import org.bukkit.Color;
-import org.bukkit.Particle;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffectLocation;
+import com.bosspvp.core.skills.visualeffects.types.DynamicCircle;
+import com.bosspvp.core.skills.visualeffects.types.Helix;
+import com.bosspvp.core.skills.visualeffects.types.SingleParticle;
+import com.bosspvp.core.skills.visualeffects.types.SnowFlake;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -35,48 +34,27 @@ public class EffectVisualEffect extends Effect<Compilable.NoCompileData> {
     @Override
     protected boolean onTrigger(Config config, TriggerData data, NoCompileData compileData) {
         if(data.location()==null || data.location().getWorld()==null) return false;
-        VisualEffect effect;
-        switch (config.getString("type").toLowerCase()){
-            case "helix" ->{
-                effect = new Helix(
-                        getPlugin().getSkillsManager().getVisualEffectsRegistry(),
-                        new BaseEffectLocation(data.location().clone()),
-                        new BaseEffectLocation(data.location().clone()),
-                        config.getIntOrDefault("period",1),
-                        config.getIntOrDefault("iterations",1)
-                );
-            }
-            case "snow_flake" ->{
-                effect = new SnowFlake(
-                        getPlugin().getSkillsManager().getVisualEffectsRegistry(),
-                        new BaseEffectLocation(data.location()),
-                        config.getIntOrDefault("period",1),
-                        config.getIntOrDefault("iterations",1)
-                );
-            }
-            case "dynamic_circle" -> {
-                effect = new DynamicCircle(
-                        getPlugin().getSkillsManager().getVisualEffectsRegistry(),
-                        new BaseEffectLocation(data.location()),
-                        config.getIntOrDefault("period",1),
-                        config.getIntOrDefault("iterations",1)
-                );
-            }
-            default -> {
-                effect = new SingleParticle(
-                        getPlugin().getSkillsManager().getVisualEffectsRegistry(),
-                        new BaseEffectLocation(data.location()),
-                        config.getIntOrDefault("period",1),
-                        config.getIntOrDefault("iterations",1)
-                );
-            }
-        }
-        for(Map.Entry<String, VisualEffectVariable<?>> varPath : effect.getVariables().entrySet()){
+        VisualEffectsManager manager = getPlugin().getSkillsManager().getVisualEffectsRegistry();
+        VisualEffectBuilder effectBuilder = manager
+                .getEffectBuilder(config.getString("type").toLowerCase());
+        if(effectBuilder==null) return false;
+        effectBuilder
+                .setOrigin(new BaseEffectLocation(data.location().clone()))
+                .setTarget(new BaseEffectLocation(data.location().clone()))
+                .setDelay(config.getIntOrDefault("delay",0))
+                .setPeriod(config.getIntOrDefault("period",1))
+                .setIterations(config.getIntOrDefault("iterations",1))
+                .setRepeats(config.getIntOrDefault("repeats",0))
+                .setRepeatDelay(config.getIntOrDefault("repeatDelay",0))
+                .setDisplayRange(config.getIntOrDefault("displayRange",100))
+                .runManually(config.getBool("runManually"));
+
+        for(Map.Entry<String, VisualEffectVariable<?>> varPath : effectBuilder.getVariables().entrySet()){
             if(config.hasPath(varPath.getKey())){
                 varPath.getValue().setValueFromString(config.getString(varPath.getKey()));
             }
         }
-        getPlugin().getSkillsManager().getVisualEffectsRegistry().startEffect(effect);
+        manager.startEffect(effectBuilder.build(manager));
         return true;
     }
 

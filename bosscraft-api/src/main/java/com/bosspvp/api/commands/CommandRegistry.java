@@ -85,14 +85,14 @@ public class CommandRegistry {
         PluginManager pluginManager = Bukkit.getPluginManager();
         Field commandMapField = pluginManager.getClass().getDeclaredField("commandMap");
         commandMapField.setAccessible(true);
-        return (SimpleCommandMap) commandMapField.get(pluginManager);
+        return (SimpleCommandMap) commandMapField.getEffectBuilder(pluginManager);
     }
 
     @SuppressWarnings("unchecked")
     private Map<String, Command> getKnownCommands(SimpleCommandMap commandMap) throws NoSuchFieldException, IllegalAccessException {
         Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
         knownCommandsField.setAccessible(true);
-        return (Map<String, Command>) knownCommandsField.get(commandMap);
+        return (Map<String, Command>) knownCommandsField.getEffectBuilder(commandMap);
     }
 
     private void unregisterOldCommands(BossCommand baseCommand, SimpleCommandMap commandMap, Map<String, Command> knownCommands) {

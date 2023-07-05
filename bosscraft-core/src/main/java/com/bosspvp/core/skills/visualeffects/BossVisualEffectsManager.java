@@ -3,7 +3,13 @@ package com.bosspvp.core.skills.visualeffects;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.visualeffects.VisualEffect;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
+import com.bosspvp.api.skills.visualeffects.VisualEffectBuilder;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffectBuilder;
+import com.bosspvp.core.skills.visualeffects.types.DynamicCircle;
+import com.bosspvp.core.skills.visualeffects.types.Helix;
+import com.bosspvp.core.skills.visualeffects.types.SingleParticle;
+import com.bosspvp.core.skills.visualeffects.types.SnowFlake;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,22 +17,35 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-public class BossVisualEffectsRegistry implements VisualEffectsRegistry {
+public class BossVisualEffectsManager implements VisualEffectsManager {
     private BossPlugin plugin;
+    private HashMap<String,VisualEffectBuilder> effectBuilders = new HashMap<>();
     private HashMap<VisualEffect, BukkitTask> runningEffects = new HashMap<>();
 
-    public BossVisualEffectsRegistry(BossPlugin plugin) {
+    public BossVisualEffectsManager(BossPlugin plugin) {
         this.plugin = plugin;
+        registerEffectBuilder(new BaseEffectBuilder("dynamic_circle",
+                ()->new DynamicCircle(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("helix",
+                ()->new Helix(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("single_particle",
+                ()->new SingleParticle(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("snow_flake",
+                ()->new SnowFlake(this))
+        );
     }
     @Override
-    public @Nullable VisualEffect get(@NotNull String id) {
+    public @Nullable VisualEffectBuilder getEffectBuilder(@NotNull String id) {
         //@TODO
         return null;
     }
 
     @Override
-    public void register(@NotNull VisualEffect triggerGroup) {
-        //@TODO
+    public void registerEffectBuilder(@NotNull VisualEffectBuilder effectBuilder) {
+        effectBuilders.put(effectBuilder.getId(), effectBuilder);
     }
 
     @Override
@@ -80,7 +99,7 @@ public class BossVisualEffectsRegistry implements VisualEffectsRegistry {
     }
 
     @Override
-    public void cancelEffectsByTaskID(@NotNull String id) {
+    public void cancelEffectTask(@NotNull String id) {
         for(var effect : runningEffects.keySet()) {
             if(effect.getId().equals(id)) {
                 effect.cancel(false);
@@ -89,7 +108,7 @@ public class BossVisualEffectsRegistry implements VisualEffectsRegistry {
     }
 
     @Override
-    public void cancelAllEffects() {
+    public void cancelAllEffectTasks() {
             for(var effect : runningEffects.keySet()) {
                 effect.cancel(false);
             }

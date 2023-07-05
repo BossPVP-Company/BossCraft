@@ -1,4 +1,4 @@
-package com.bosspvp.api.skills.visualeffects.impl;
+package com.bosspvp.api.skills.visualeffects.template;
 
 import com.bosspvp.api.skills.visualeffects.ValueLimit;
 import lombok.Getter;

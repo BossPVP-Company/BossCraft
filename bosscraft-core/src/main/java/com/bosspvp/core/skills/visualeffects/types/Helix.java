@@ -1,14 +1,13 @@
-package com.bosspvp.api.skills.visualeffects.types;
+package com.bosspvp.core.skills.visualeffects.types;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.visualeffects.VisualEffectLocation;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffect;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffectVariable;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffectVariable;
 import com.bosspvp.api.utils.MathUtils;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,26 +48,15 @@ public class Helix extends BaseEffect {
      *
      * @param effectsManager <i>Sets manager where effect runnable will be saved<i/>
      *                       <p><p/>
-     * @param period         <i>Sets update rate (in Ticks)<i/>
-     *                       <p><p/>
-     * @param iterations     <i>Sets amount of run() calls.<i/>
-     *                       <p></p>
-     *                       <i>'-1' -> uses runTask() than runTaskTimer()<i/>
-     *                       <p></p>
-     *                       <i>'-2' -> infinite, can be stopped only manually.<i/>
      * @apiNote parameters examples:
      * <ul>
      *     <li>Standard: <b>thickness:</b> 0.06; <b>radius:</b> 0.8; <b>radiusFunctionIncrementer:</b> 0.5; <b>ParticleDrawPerTick:</b> 4</li>
      *     <li>2D Helix: <b>thickness:</b> 0.06; <b>radius:</b> 0.8; <b>radiusFunctionIncrementer:</b> 0.5; <b>ParticleDrawPerTick:</b> 4; <b>rotationX:</b> 0; <b>rotationZ:</b> 90</li>
      * </ul>
      */
-    public Helix(@NotNull VisualEffectsRegistry effectsManager,
-                 @NotNull VisualEffectLocation origin,
-                 @NotNull VisualEffectLocation target,
-                 long period,
-                 int iterations) {
+    public Helix(@NotNull VisualEffectsManager effectsManager) {
 
-        super(effectsManager,origin,target,period,iterations);
+        super(effectsManager);
 
         getVariables().put("settings.radius",radius);
         getVariables().put("settings.particleDrawPerTick",particleDrawPerTick);
@@ -142,4 +130,5 @@ public class Helix extends BaseEffect {
     protected void onClone(BaseEffect cloned) {
 
     }
+
 }

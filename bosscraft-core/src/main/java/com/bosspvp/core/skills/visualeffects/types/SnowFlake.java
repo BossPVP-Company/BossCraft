@@ -1,12 +1,10 @@
-package com.bosspvp.api.skills.visualeffects.types;
+package com.bosspvp.core.skills.visualeffects.types;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
-import com.bosspvp.api.skills.visualeffects.VisualEffectLocation;
-import com.bosspvp.api.skills.visualeffects.VisualEffectVariable;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffect;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffectVariable;
+import com.bosspvp.api.skills.visualeffects.*;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffectVariable;
 import com.bosspvp.api.utils.MathUtils;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -65,13 +63,6 @@ public class SnowFlake extends BaseEffect {
      *
      * @param effectsManager <i>Sets manager where effect runnable will be saved<i/>
      *                       <p><p/>
-     * @param period         <i>Sets update rate (in Ticks)<i/>
-     *                       <p><p/>
-     * @param iterations     <i>Sets amount of run() calls.<i/>
-     *                       <p></p>
-     *                       <i>'-1' -> uses runTask() than runTaskTimer()<i/>
-     *                       <p></p>
-     *                       <i>'-2' -> infinite, can be stopped only manually.<i/>
      * @apiNote parameters examples:
      * <ul>
      *     <li>Standard: <b>thickness:</b> 0.6; <b>size:</b> 10; <b>snowFlakeRotation:</b> 90;0;0</li>
@@ -79,8 +70,8 @@ public class SnowFlake extends BaseEffect {
      *     <li>SnowFLake with 4 parts: <b>partRotation:</b> 90</li>
      * </ul>
      */
-    public SnowFlake(VisualEffectsRegistry effectsManager, VisualEffectLocation origin, int period, int iterations) {
-        super(effectsManager, origin, period, iterations);
+    public SnowFlake(VisualEffectsManager effectsManager) {
+        super(effectsManager);
 
         getVariables().put("settings.snowFlakeRotation",snowFlakeRotation);
         getVariables().put("settings.partRotation",partRotation);
@@ -196,4 +187,5 @@ public class SnowFlake extends BaseEffect {
     protected void onClone(BaseEffect cloned) {
 
     }
+
 }

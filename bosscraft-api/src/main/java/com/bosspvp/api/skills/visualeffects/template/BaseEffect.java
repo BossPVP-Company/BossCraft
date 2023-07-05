@@ -1,11 +1,11 @@
-package com.bosspvp.api.skills.visualeffects.impl;
+package com.bosspvp.api.skills.visualeffects.template;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.visualeffects.VisualEffect;
 import com.bosspvp.api.skills.visualeffects.VisualEffectLocation;
 import com.bosspvp.api.skills.visualeffects.VisualEffectVariable;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
 import com.bosspvp.api.tuples.PairRecord;
 import com.bosspvp.api.utils.ParticleUtils;
 import lombok.Getter;
@@ -16,7 +16,6 @@ import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public abstract class BaseEffect implements VisualEffect {
@@ -24,7 +23,7 @@ public abstract class BaseEffect implements VisualEffect {
     private String id = UUID.randomUUID().toString();
     @Getter
     @NotNull
-    private final VisualEffectsRegistry effectsRegistry;
+    private final VisualEffectsManager effectsRegistry;
 
     @Getter
     boolean isAsync;
@@ -121,25 +120,9 @@ public abstract class BaseEffect implements VisualEffect {
     @Getter
     private HashMap<String, VisualEffectVariable<?>> variables;
 
-    public BaseEffect(@NotNull VisualEffectsRegistry effectsManager,
-                      @NotNull VisualEffectLocation origin,
-                      @Nullable VisualEffectLocation target,
-                      long period,
-                      int iterations) {
+    public BaseEffect(@NotNull VisualEffectsManager effectsManager) {
         this.effectsRegistry = effectsManager;
-        this.origin = origin;
-        this.target = target;
-        this.period = period;
-        this.iterations = iterations;
-
         loadVariables();
-    }
-
-    public BaseEffect(@NotNull VisualEffectsRegistry effectsManager, @NotNull VisualEffectLocation origin) {
-        this(effectsManager, origin, 1, 0);
-    }
-    public BaseEffect(@NotNull VisualEffectsRegistry effectsManager, @NotNull VisualEffectLocation origin, long period, int iterations) {
-        this(effectsManager, origin, null, period, iterations);
     }
 
     @Override
@@ -372,9 +355,40 @@ public abstract class BaseEffect implements VisualEffect {
 
     @Override
     public <T> void setVariable(String key, T value) {
-        if (variables.containsKey(key)) {
-            VisualEffectVariable<T> variable = (VisualEffectVariable<T>) variables.get(key);
-            variable.setValue(value);
+        switch (key){
+            case "origin" ->{
+                origin = (VisualEffectLocation) value;
+            }
+            case "target" ->{
+                target = (VisualEffectLocation) value;
+            }
+            case "delay" ->{
+                delay = (long) value;
+            }
+            case "period" ->{
+                period = (long) value;
+            }
+            case "iterations" ->{
+                iterations = (int) value;
+            }
+            case "repeats" ->{
+                repeats = (int) value;
+            }
+            case "repeatDelay" ->{
+                repeatDelay = (int) value;
+            }
+            case "displayRange" ->{
+                displayRange = (int) value;
+            }
+            case "runManually" ->{
+                runningManually = (boolean) value;
+            }
+            default -> {
+                if(variables.containsKey(key)){
+                    VisualEffectVariable<T> variable = (VisualEffectVariable<T>) variables.get(key);
+                    variable.setValue(value);
+                }
+            }
         }
     }
 

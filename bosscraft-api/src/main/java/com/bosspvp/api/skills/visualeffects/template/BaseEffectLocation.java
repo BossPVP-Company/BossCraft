@@ -1,4 +1,4 @@
-package com.bosspvp.api.skills.visualeffects.impl;
+package com.bosspvp.api.skills.visualeffects.template;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;

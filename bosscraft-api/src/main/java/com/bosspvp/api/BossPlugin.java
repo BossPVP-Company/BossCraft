@@ -184,7 +184,7 @@ public abstract class BossPlugin extends JavaPlugin {
         if(guiController.isUpdaterEnabled()){
             guiController.enableUpdater(true);
         }
-        skillsManager.startTasks();
+        skillsManager.reload();
     }
 
     /**

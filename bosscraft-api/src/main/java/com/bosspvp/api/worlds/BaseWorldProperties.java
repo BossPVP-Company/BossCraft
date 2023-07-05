@@ -9,7 +9,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
 
 //made it protected cause otherwise BaseWorld class
-// won't be able to get access to constructor
+// won't be able to getEffectBuilder access to constructor
 
 @NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
 @Data

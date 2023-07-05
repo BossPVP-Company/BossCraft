@@ -1,14 +1,13 @@
-package com.bosspvp.api.skills.visualeffects.types;
+package com.bosspvp.core.skills.visualeffects.types;
 
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.skills.visualeffects.VisualEffectLocation;
-import com.bosspvp.api.skills.visualeffects.VisualEffectsRegistry;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffect;
-import com.bosspvp.api.skills.visualeffects.impl.BaseEffectVariable;
+import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
+import com.bosspvp.api.skills.visualeffects.template.BaseEffectVariable;
 import com.bosspvp.api.utils.MathUtils;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,30 +16,30 @@ import java.util.ArrayList;
 public class DynamicCircle extends BaseEffect {
 
     private BaseEffectVariable<Double> radius = new BaseEffectVariable<>(0.5,
-            (it)-> BossAPI.getInstance().evaluate(it,
-                    new PlaceholderContext(null,null,null,new ArrayList<>())
+            (it) -> BossAPI.getInstance().evaluate(it,
+                    new PlaceholderContext(null, null, null, new ArrayList<>())
             )
     );
 
-    private  BaseEffectVariable<Double> radiusAdd  = new BaseEffectVariable<>(0.0,
-            (it)-> BossAPI.getInstance().evaluate(it,
-                    new PlaceholderContext(null,null,null,new ArrayList<>())
+    private BaseEffectVariable<Double> radiusAdd = new BaseEffectVariable<>(0.0,
+            (it) -> BossAPI.getInstance().evaluate(it,
+                    new PlaceholderContext(null, null, null, new ArrayList<>())
             )
     );
-    private  BaseEffectVariable<Double> radiusMultiply  = new BaseEffectVariable<>(1.0,
-            (it)-> BossAPI.getInstance().evaluate(it,
-                    new PlaceholderContext(null,null,null,new ArrayList<>())
+    private BaseEffectVariable<Double> radiusMultiply = new BaseEffectVariable<>(1.0,
+            (it) -> BossAPI.getInstance().evaluate(it,
+                    new PlaceholderContext(null, null, null, new ArrayList<>())
             )
     );
 
-    private  BaseEffectVariable<Double> YAdd  = new BaseEffectVariable<>(0.0,
-            (it)-> BossAPI.getInstance().evaluate(it,
-                    new PlaceholderContext(null,null,null,new ArrayList<>())
+    private BaseEffectVariable<Double> YAdd = new BaseEffectVariable<>(0.0,
+            (it) -> BossAPI.getInstance().evaluate(it,
+                    new PlaceholderContext(null, null, null, new ArrayList<>())
             )
     );
-    private BaseEffectVariable<Vector> rotation = new BaseEffectVariable<>(new Vector(), (it)->{
+    private BaseEffectVariable<Vector> rotation = new BaseEffectVariable<>(new Vector(), (it) -> {
         String[] split = it.split(";");
-        return new Vector(Double.parseDouble(split[0]),Double.parseDouble(split[1]),Double.parseDouble(split[2]));
+        return new Vector(Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
     });
     private double currentY = 0;
 
@@ -50,7 +49,6 @@ public class DynamicCircle extends BaseEffect {
     private double noiseSpeed = 0.05;
 
 
-
     private boolean noise = false;
     private double timer = 0;
 
@@ -58,26 +56,15 @@ public class DynamicCircle extends BaseEffect {
      * Displays a Dynamic Circle
      *
      * @param effectsManager <i>Sets manager where effect runnable will be saved<i/>
-     *                       <p><p/>
-     * @param period         <i>Sets update rate (in Ticks)<i/>
-     *                       <p><p/>
-     * @param iterations     <i>Sets amount of run() calls.<i/>
-     *                       <p></p>
-     *                       <i>'-1' -> uses runTask() than runTaskTimer()<i/>
-     *                       <p></p>
-     *                       <i>'-2' -> infinite, can be stopped only manually.<i/>
      * @apiNote parameters examples:
      * <ul>
      *     <li>Explosion: <b>thickness:</b> 0.1; <b>radius:</b> 0.3; <b>radiusMultiplier:</b> 1.3; <b>iterations:</b> 10</li>
      *     <li>Cool effect: <b>thickness:</b> 0.1; <b>radius:</b> 0.3; <b>radiusMultiplier:</b> 1.15; <b>iterations:</b> 30; <b>noisePointMultiplier:</b> 0.2; <b>repeats:</b> -1; <b>repeatDelay:</b> -1</li>
      * </ul>
      */
-    public DynamicCircle(@NotNull VisualEffectsRegistry effectsManager,
-                         @NotNull VisualEffectLocation origin,
-                         long period,
-                         int iterations) {
+    public DynamicCircle(@NotNull VisualEffectsManager effectsManager) {
 
-        super(effectsManager, origin, period, iterations);
+        super(effectsManager);
         getVariables().put("settings.radius.value", radius);
         getVariables().put("settings.radius.add", radiusAdd);
         getVariables().put("settings.radius.multiply", radiusMultiply);
@@ -195,4 +182,5 @@ public class DynamicCircle extends BaseEffect {
     public void setNoiseEnabled(boolean value) {
         noise = value;
     }
+
 }

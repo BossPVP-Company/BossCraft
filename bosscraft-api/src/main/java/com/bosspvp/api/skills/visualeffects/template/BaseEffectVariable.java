@@ -1,10 +1,8 @@
-package com.bosspvp.api.skills.visualeffects.impl;
+package com.bosspvp.api.skills.visualeffects.template;
 
 import com.bosspvp.api.skills.visualeffects.VisualEffectVariable;
 import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.function.Function;

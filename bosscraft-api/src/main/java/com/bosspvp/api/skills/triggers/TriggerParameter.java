@@ -6,6 +6,7 @@ public enum TriggerParameter {
     PLAYER,
     VICTIM,
     BLOCK,
+    MATERIAL,
     EVENT,
     LOCATION(VICTIM, PLAYER),
     PROJECTILE,
