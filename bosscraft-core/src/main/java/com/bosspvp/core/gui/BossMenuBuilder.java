@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BossMenuBuilder implements MenuBuilder {
-    private HashMap<Integer, List<GuiComponent>> components = new HashMap<>();
+    private HashMap<Integer, GuiComponent[]> components = new HashMap<>();
 
     private final BossPlugin plugin;
     private String title = "Empty title";
@@ -37,12 +37,12 @@ public class BossMenuBuilder implements MenuBuilder {
     public @NotNull MenuBuilder addComponent(int position,
                                              @NotNull GuiLayer guiLayer,
                                              @NotNull GuiComponent component) {
-        List<GuiComponent> list = components.get(position);
+        GuiComponent[] list = components.get(position);
         if(list==null){
             //to have empty layers
-            list = Arrays.stream(new GuiComponent[GuiLayer.values().length]).collect(Collectors.toList());
+            list = new GuiComponent[GuiLayer.values().length];
         }
-        list.add(guiLayer.getLayer(),component);
+        list[guiLayer.getLayer()] = component;
         components.put(position, list);
         return this;
     }

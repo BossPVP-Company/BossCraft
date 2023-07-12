@@ -8,6 +8,7 @@ import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
 import com.bosspvp.api.skills.visualeffects.template.BaseEffectVariable;
 import com.bosspvp.api.utils.MathUtils;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,12 +73,16 @@ public class Helix extends BaseEffect {
             return;
         }
         Location startLocation = getOrigin().updateLocation();
+        if(getTarget() == null) {
+            cancel(false);
+            return;
+        }
         Location endLocation = getTarget().updateLocation();
 
         if(!initialized) {
             particles = (int) (Math.PI * radius.getValue() * 2 / thickness.getValue());
-            step=Math.PI*2/particles;
-            stepY=startLocation.distance(endLocation)/particles;
+            step = Math.PI*2/particles;
+            stepY = startLocation.distance(endLocation)/particles;
             initialized=true;
         }
         draw(startLocation);
@@ -88,10 +93,14 @@ public class Helix extends BaseEffect {
     private void draw(Location start) {
         Vector v = new Vector();
         double radius;
+
+        //for faster access in a loop
+        Particle particle = getParticleType().getValue();
         double radiusFunctionIncrementer=this.radiusFunctionIncrementer.getValue();
         double radiusOrigin=this.radius.getValue();
         Vector rotation=this.rotation.getValue();
         boolean rotationEnabled=rotation.getX()!=0||rotation.getY()!=0||rotation.getZ()!=0;
+
         int i_step=currentDrawStep*particleDrawPerTick.getValue();
         for (int i = 0; i < particleDrawPerTick.getValue(); i++) {
             radius=radiusOrigin* MathUtils.fastSin(Math.PI*i_step/particles+radiusFunctionIncrementer);
@@ -99,22 +108,22 @@ public class Helix extends BaseEffect {
             v.setZ(radius*MathUtils.fastCos(step*i_step));
             v.setY(i_step*stepY);
             if(rotationEnabled){
-                v.rotateAroundX(rotation.getX() *  MathUtils.degreesToRadians);
-                v.rotateAroundY(rotation.getY() *  MathUtils.degreesToRadians);
-                v.rotateAroundZ(rotation.getZ() *  MathUtils.degreesToRadians);
+                MathUtils.rotateAroundX(v,rotation.getX() *  MathUtils.degreesToRadians);
+                MathUtils.rotateAroundY(v,rotation.getY() *  MathUtils.degreesToRadians);
+                MathUtils.rotateAroundZ(v,rotation.getZ() *  MathUtils.degreesToRadians);
             }
-            displayParticle(getParticleType().getValue(), start.add(v));
+            displayParticle(particle, start.add(v));
             start.subtract(v);
 
             v.setX(radius*MathUtils.fastSin(step*i_step-Math.PI));
             v.setZ(radius*MathUtils.fastCos(step*i_step-Math.PI));
             v.setY(i_step*stepY);
             if(rotationEnabled){
-                v.rotateAroundX(rotation.getX() *  MathUtils.degreesToRadians);
-                v.rotateAroundY(rotation.getY() *  MathUtils.degreesToRadians);
-                v.rotateAroundZ(rotation.getZ() *  MathUtils.degreesToRadians);
+                MathUtils.rotateAroundX(v,rotation.getX() *  MathUtils.degreesToRadians);
+                MathUtils.rotateAroundY(v,rotation.getY() *  MathUtils.degreesToRadians);
+                MathUtils.rotateAroundZ(v,rotation.getZ() *  MathUtils.degreesToRadians);
             }
-            displayParticle(getParticleType().getValue(), start.add(v));
+            displayParticle(particle, start.add(v));
             start.subtract(v);
             i_step++;
         }

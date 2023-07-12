@@ -49,12 +49,12 @@ public class EffectVisualEffect extends Effect<Compilable.NoCompileData> {
                 .setDisplayRange(config.getIntOrDefault("displayRange",100))
                 .runManually(config.getBool("runManually"));
 
-        for(Map.Entry<String, VisualEffectVariable<?>> varPath : effectBuilder.getVariables().entrySet()){
-            if(config.hasPath(varPath.getKey())){
-                varPath.getValue().setValueFromString(config.getString(varPath.getKey()));
+        for(String varPath : effectBuilder.getExistingVariables()){
+            if(config.hasPath(varPath)){
+                effectBuilder.setVariable(varPath,config.getString(varPath));
             }
         }
-        manager.startEffect(effectBuilder.build(manager));
+        manager.startEffect(effectBuilder.build());
         return true;
     }
 

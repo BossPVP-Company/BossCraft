@@ -5,6 +5,7 @@ import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
 import com.bosspvp.api.skills.visualeffects.template.BaseEffectVariable;
 import com.bosspvp.api.utils.MathUtils;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 public class SuperShape2D extends BaseEffect {
@@ -17,7 +18,7 @@ public class SuperShape2D extends BaseEffect {
     private BaseEffectVariable<Double> PiMultiply = new BaseEffectVariable<>(2.2, Double::parseDouble);
 
     private BaseEffectVariable<Double> radius = new BaseEffectVariable<>(0.5, Double::parseDouble);
-    private BaseEffectVariable<Double> radiusAdd = new BaseEffectVariable<>(0.0, Double::parseDouble);
+    private BaseEffectVariable<Double> radiusIncrementer = new BaseEffectVariable<>(0.0, Double::parseDouble);
     private BaseEffectVariable<Double> radiusMultiply = new BaseEffectVariable<>(1.0, Double::parseDouble);
 
     private BaseEffectVariable<Vector> rotation = new BaseEffectVariable<>(new Vector(),
@@ -43,30 +44,37 @@ public class SuperShape2D extends BaseEffect {
      * Displays a 2D Shape via superShape formula
      *
      * @param effectsManager <i>Sets manager where effect runnable will be saved<i/>
+     * @apiNote parameters examples:
+     * <ul>
+     *     <li>3 Rings: <b>n1:</b> 0.15; <b>n2:</b> 0.1; <b>n3:</b> 1.8; <b>m:</b> 1.2; <b>a:</b> 1; <b>b:</b> 1; <b>piMultiply:</b> 12</li>
+     *     <li>Science logo: <b>n1:</b> 0.7; <b>n2:</b> 2; <b>n3:</b> 0.01; <b>m:</b> 4.5; <b>a:</b> 1; <b>b:</b> 1; <b>piMultiply:</b> 8</li>
+     * </ul>
      */
     public SuperShape2D(VisualEffectsManager effectsManager) {
 
         super(effectsManager);
 
-        getVariables().put("settings.n1", n1);
-        getVariables().put("settings.n2", n2);
-        getVariables().put("settings.n3", n3);
-        getVariables().put("settings.amountOfAngles", amountOfAngles);
-        getVariables().put("settings.scaleA", scaleA);
-        getVariables().put("settings.scaleB", scaleB);
-        getVariables().put("settings.PiMultiply", PiMultiply);
-        getVariables().put("settings.radius", radius);
-        getVariables().put("settings.radiusAdd", radiusAdd);
-        getVariables().put("settings.radiusMultiply", radiusMultiply);
+        getVariables().put("settings.shape.n1", n1);
+        getVariables().put("settings.shape.n2", n2);
+        getVariables().put("settings.shape.n3", n3);
+        getVariables().put("settings.shape.amountOfAngles", amountOfAngles);
+        getVariables().put("settings.shape.scaleA", scaleA);
+        getVariables().put("settings.shape.scaleB", scaleB);
+        getVariables().put("settings.shape.PiMultiply", PiMultiply);
+        getVariables().put("settings.radius.value", radius);
+        getVariables().put("settings.radius.incrementer", radiusIncrementer);
+        getVariables().put("settings.radius.multiplier", radiusMultiply);
         getVariables().put("settings.rotation", rotation);
-        getVariables().put("settings.drawAnimated", drawAnimated);
-        getVariables().put("settings.drawStepsPerTick", drawStepsPerTick);
+        getVariables().put("settings.animated", drawAnimated);
+        getVariables().put("settings.stepsPerTick", drawStepsPerTick);
         getVariables().put("settings.brushesAmount", brushesAmount);
     }
     @Override
     public void onRun() {
+        //for faster access in a loop
+        Particle particle = getParticleType().getValue();
         double radius = this.radius.getValue();
-        double radiusAdd = this.radiusAdd.getValue();
+        double radiusAdd = this.radiusIncrementer.getValue();
         double radiusMultiply = this.radiusMultiply.getValue();
         double PiMultiply = this.PiMultiply.getValue();
         int particles = this.particles;
@@ -81,7 +89,7 @@ public class SuperShape2D extends BaseEffect {
             step = Math.PI*PiMultiply/particles;
             initialized = true;
         }
-        Location location = getOrigin().getCurrentLocation();
+        Location location = getOrigin().updateLocation();
 
         if(radiusMultiply!=1.0||radiusAdd!=0 || PiMultiply!=1.0) {
             radius = (radius * radiusMultiply) + radiusAdd;
@@ -99,12 +107,12 @@ public class SuperShape2D extends BaseEffect {
                     vector.setX(formula * MathUtils.fastSin(step * (currentDrawStep+brushStep*brush)));
                     vector.setZ(formula * MathUtils.fastCos(step * (currentDrawStep+brushStep*brush)));
                     vector.setY(1);
-                    if (rotation != null) {
-                        vector.rotateAroundX(rotation.getX() * MathUtils.degreesToRadians);
-                        vector.rotateAroundY(rotation.getY() * MathUtils.degreesToRadians);
-                        vector.rotateAroundZ(rotation.getZ() * MathUtils.degreesToRadians);
+                    if (rotation.getX()!=0||rotation.getY()!=0||rotation.getZ()!=0) {
+                        MathUtils.rotateAroundX(vector,rotation.getX() * MathUtils.degreesToRadians);
+                        MathUtils.rotateAroundY(vector,rotation.getY() * MathUtils.degreesToRadians);
+                        MathUtils.rotateAroundZ(vector,rotation.getZ() * MathUtils.degreesToRadians);
                     }
-                    displayParticle(getParticleType().getValue(), location.add(vector));
+                    displayParticle(particle, location.add(vector));
                     location.subtract(vector);
                     currentDrawStep++;
                 }
@@ -118,12 +126,12 @@ public class SuperShape2D extends BaseEffect {
                 vector.setX(formula * MathUtils.fastSin(step * i));
                 vector.setZ(formula * MathUtils.fastCos(step * i));
                 vector.setY(1);
-                if (rotation != null) {
-                    vector.rotateAroundX(rotation.getX() * MathUtils.degreesToRadians);
-                    vector.rotateAroundY(rotation.getY() * MathUtils.degreesToRadians);
-                    vector.rotateAroundZ(rotation.getZ() * MathUtils.degreesToRadians);
+                if (rotation.getX()!=0||rotation.getY()!=0||rotation.getZ()!=0) {
+                    MathUtils.rotateAroundX(vector,rotation.getX() * MathUtils.degreesToRadians);
+                    MathUtils.rotateAroundY(vector,rotation.getY() * MathUtils.degreesToRadians);
+                    MathUtils.rotateAroundZ(vector,rotation.getZ() * MathUtils.degreesToRadians);
                 }
-                displayParticle(getParticleType().getValue(), location.add(vector));
+                displayParticle(particle, location.add(vector));
                 location.subtract(vector);
             }
         }

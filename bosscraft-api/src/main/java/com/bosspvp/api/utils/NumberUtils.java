@@ -45,6 +45,18 @@ public class NumberUtils {
      */
     @NotNull
     public static String toNumeral(final int number) {
+        return toNumeral(number, -1);
+    }
+    /**
+     * Get Roman Numeral from number.
+     *
+     * @param number The number to convert.
+     * @param romanNumberLimit The number after which it will be returned as arabic
+     * @return The number, converted to a roman numeral.
+     */
+    @NotNull
+    public static String toNumeral(final int number, int romanNumberLimit) {
+        if(number > romanNumberLimit && romanNumberLimit != -1) return String.valueOf(number);
         if (number >= 1 && number <= 4096) {
             int l = NUMERALS.floorKey(number);
             if (number == l) {

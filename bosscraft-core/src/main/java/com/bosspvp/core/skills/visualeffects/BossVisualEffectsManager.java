@@ -1,7 +1,6 @@
 package com.bosspvp.core.skills.visualeffects;
 
 import com.bosspvp.api.BossPlugin;
-import com.bosspvp.api.registry.Registry;
 import com.bosspvp.api.skills.visualeffects.VisualEffect;
 import com.bosspvp.api.skills.visualeffects.VisualEffectBuilder;
 import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
@@ -18,31 +17,9 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
     private BossPlugin plugin;
     private HashMap<String,VisualEffectBuilder> effectBuilders = new HashMap<>();
     private HashMap<VisualEffect, BukkitTask> runningEffects = new HashMap<>();
-
-    public BossVisualEffectsManager(BossPlugin plugin) {
-        this.plugin = plugin;
-        registerEffectBuilder(new BaseEffectBuilder("dynamic_circle",
-                ()->new DynamicCircle(this))
-        );
-        registerEffectBuilder(new BaseEffectBuilder("helix",
-                ()->new Helix(this))
-        );
-        registerEffectBuilder(new BaseEffectBuilder("single_particle",
-                ()->new SingleParticle(this))
-        );
-        registerEffectBuilder(new BaseEffectBuilder("snow_flake",
-                ()->new SnowFlake(this))
-        );
-        registerEffectBuilder(new BaseEffectBuilder("entity_trail",
-                ()->new EntityTrail(this))
-        );
-        registerEffectBuilder(new BaseEffectBuilder("super_shape_2d",
-                ()->new SuperShape2D(this))
-        );
-    }
     @Override
     public @Nullable VisualEffectBuilder getEffectBuilder(@NotNull String id) {
-        return effectBuilders.get(id.toLowerCase());
+        return effectBuilders.get(id);
     }
 
     @Override
@@ -56,7 +33,7 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
             getPlugin().getLogger().info("EffectsManager: Tried to start an effect which is already active");
             return null;
         }
-        var s = getPlugin().getScheduler();
+        var scheduler = getPlugin().getScheduler();
         if(effect.getPeriod() < 1) {
             getPlugin().getLogger().info("EffectsManager: Period can not be less than 1!");
             return null;
@@ -76,15 +53,15 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
         BukkitTask task;
         if(effect.getIterations() == 1 && effect.getDelay() > 0){
             if(effect.isAsync()) {
-                task = s.runLaterAsync(effect.getDelay(),effect::run);
+                task = scheduler.runLaterAsync(effect.getDelay(),effect::run);
             } else {
-                task = s.runLater(effect.getDelay(),effect::run);
+                task = scheduler.runLater(effect.getDelay(),effect::run);
             }
         } else {
             if(effect.isAsync()) {
-                task = s.runTimerAsync(effect.getDelay(), effect.getPeriod(), effect::run);
+                task = scheduler.runTimerAsync(effect.getDelay(), effect.getPeriod(), effect::run);
             } else {
-                task = s.runTimer(effect.getDelay(), effect.getPeriod(), effect::run);
+                task = scheduler.runTimer(effect.getDelay(), effect.getPeriod(), effect::run);
             }
         }
         runningEffects.put(effect, task);
@@ -125,5 +102,34 @@ public class BossVisualEffectsManager implements VisualEffectsManager {
     @Override
     public @NotNull BossPlugin getPlugin() {
         return plugin;
+    }
+
+
+    public BossVisualEffectsManager(BossPlugin plugin) {
+        this.plugin = plugin;
+        registerEffectBuilder(new BaseEffectBuilder("dynamic_circle",
+                ()->new DynamicCircle(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("helix",
+                ()->new Helix(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("single_particle",
+                ()->new SingleParticle(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("snow_flake",
+                ()->new SnowFlake(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("entity_trail",
+                ()->new EntityTrail(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("super_shape_2d",
+                ()->new SuperShape2D(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("straight_line",
+                ()->new StraightLine(this))
+        );
+        registerEffectBuilder(new BaseEffectBuilder("fractal_tree",
+                ()->new FractalTree(this))
+        );
     }
 }

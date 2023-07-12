@@ -7,6 +7,7 @@ import com.bosspvp.api.skills.Compilable;
 import com.bosspvp.api.skills.effects.Effect;
 import com.bosspvp.api.skills.effects.Identifiers;
 import com.bosspvp.api.skills.holder.provided.ProvidedHolder;
+import com.bosspvp.api.tuples.PairRecord;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ChanceMultiplierEffect extends Effect<Compilable.NoCompileData> {
-    private HashMap<UUID, List<HashMap<UUID, Supplier<Double>>>> modifiers;
+    private HashMap<UUID, List<PairRecord<UUID, Supplier<Double>>>> modifiers;
     public ChanceMultiplierEffect(@NotNull BossPlugin plugin, @NotNull String id) {
         super(plugin, id);
         modifiers = new HashMap<>();
@@ -27,41 +28,39 @@ public class ChanceMultiplierEffect extends Effect<Compilable.NoCompileData> {
         });
     }
 
+
     @Override
     protected void onEnable(Player player, Config config, Identifiers identifiers, ProvidedHolder holder, NoCompileData compileData) {
-        List<HashMap<UUID, Supplier<Double>>> list = modifiers.get(player.getUniqueId());
+        List<PairRecord<UUID, Supplier<Double>>> list = modifiers.get(player.getUniqueId());
         if(list == null) {
             list = new ArrayList<>();
         }
-        list.add(new HashMap<>() {{
-            put(identifiers.uuid(), () -> config.getEvaluated("multiplier",
-                    new PlaceholderContext(player, null, null, new ArrayList<>())
-            ));
-        }});
+        list.add(new PairRecord<>(identifiers.uuid(), () -> config.getEvaluated("chance",
+                new PlaceholderContext(player, null, null, new ArrayList<>())
+        )));
         modifiers.put(player.getUniqueId(), list);
     }
 
     @Override
     protected void onDisable(Player player, Identifiers identifiers, ProvidedHolder holder) {
-        List<HashMap<UUID, Supplier<Double>>> list = modifiers.get(player.getUniqueId());
+        List<PairRecord<UUID, Supplier<Double>>> list = modifiers.get(player.getUniqueId());
         if(list == null) {
             return;
         }
-        list.removeIf(it -> it.containsKey(identifiers.uuid()));
+        list.removeIf(it -> it.first().equals(identifiers.uuid()));
         modifiers.put(player.getUniqueId(), list);
     }
 
     protected boolean passesChance(Player player){
         double chance = 1.0;
-        List<HashMap<UUID, Supplier<Double>>> list = modifiers.get(player.getUniqueId());
+        List<PairRecord<UUID, Supplier<Double>>> list = modifiers.get(player.getUniqueId());
         if(list == null) {
-            return true;
+            return false;
         }
-        for(HashMap<UUID, Supplier<Double>> map : list) {
-            for(Supplier<Double> supplier : map.values()) {
-                chance *= (100 - supplier.get()) / 100;
-            }
+        for(PairRecord<UUID, Supplier<Double>> entry : list) {
+            chance *= (100 - entry.second().get()) / 100;
         }
-        return Math.random() > chance;
+        double random = Math.random();
+        return random > chance;
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +22,22 @@ public class FilterItems extends Filter<Collection<Material>, Collection<String>
 
     @Override
     public Collection<String> getValue(Config config, TriggerData data, String key) {
-        return config.getStringList(key);
+        List<String> list = new ArrayList<>();
+
+        for(String s : config.getStringList(key)){
+            if(s.startsWith("*")){
+                String preMaterial = s.split("\\*")[1].toUpperCase();
+                for(Material material : Material.values()){
+                    if(material.name().contains(preMaterial)){
+                        list.add(material.name());
+                    }
+                }
+                continue;
+            }
+            list.add(s.toUpperCase());
+        }
+
+        return list;
     }
 
     @Override

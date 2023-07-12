@@ -32,11 +32,9 @@ public abstract class BaseEffect implements VisualEffect {
     private BaseEffect copy;
 
     @Getter
-    @NotNull
-    private VisualEffectLocation origin;
+    private VisualEffectLocation origin = new BaseEffectLocation(new Location(null,0,0,0));
     @Getter
-    @Nullable
-    private VisualEffectLocation target;
+    private VisualEffectLocation target = new BaseEffectLocation(new Location(null,0,0,0));
 
     @Getter
     private boolean finished;
@@ -234,104 +232,6 @@ public abstract class BaseEffect implements VisualEffect {
         runningManually = manually;
     }
 
-    /**
-     * set repeat delay
-     */
-    public void setRepeatDelay(int value) {
-        repeatDelay = value;
-        repeatDelayCount = value;
-    }
-
-    /**
-     * set amount of effect repeats.
-     */
-    public void setRepeats(int value) {
-        repeats = value;
-
-    }
-
-    /**
-     * sets thickness that in most cases determines vector step,
-     * per which particles will be displayed
-     */
-    public void setThickness(VisualEffectVariable<Double> value) {
-        thickness = value;
-    }
-
-    /**
-     * set default particle type
-     */
-    public final void setParticleType(VisualEffectVariable<Particle> value) {
-        particleType = value;
-
-    }
-
-    /**
-     * set default color of displaying particles
-     */
-    public void setParticleColor(VisualEffectVariable<Color> color) {
-        particleColor = color;
-
-    }
-
-    /**
-     * set default particle material
-     */
-    public final void setParticleMaterial(VisualEffectVariable<Material> value) {
-        particleMaterial = value;
-
-    }
-
-    /**
-     * set default particle count
-     */
-    public final void setParticleCount(VisualEffectVariable<Integer> value) {
-        particleCount = value;
-
-    }
-
-    /**
-     * set default particle speed
-     */
-    public final void setParticleSpeed(VisualEffectVariable<Float> value) {
-        particleSpeed = value;
-
-    }
-
-    /**
-     * set default particle offsetX
-     */
-    public final void setParticleOffsetX(VisualEffectVariable<Double> value) {
-        particleOffsetX = value;
-
-    }
-
-    /**
-     * set default particle offsetY
-     */
-    public final void setParticleOffsetY(VisualEffectVariable<Double> value) {
-        particleOffsetY = value;
-
-    }
-
-    /**
-     * set default particle offsetZ
-     */
-    public final void setParticleOffsetZ(VisualEffectVariable<Double> value) {
-        particleOffsetZ = value;
-
-    }
-
-    /**
-     * set display range of effect
-     * default: 100
-     */
-    public final void setDisplayRange(double value) {
-        displayRange = value;
-
-    }
-
-
     private void loadVariables() {
         variables = new HashMap<>();
         variables.put("thickness", thickness);
@@ -344,10 +244,9 @@ public abstract class BaseEffect implements VisualEffect {
         variables.put("particle.offset.y", particleOffsetY);
         variables.put("particle.offset.z", particleOffsetZ);
 
-        for(PairRecord<String,VisualEffectVariable<?>> variable : origin.getVariables()){
-            variables.put("origin."+variable.first(),variable.second());
+        for (PairRecord<String, VisualEffectVariable<?>> variable : origin.getVariables()) {
+            variables.put("origin." + variable.first(), variable.second());
         }
-        if(target == null) return;
         for(PairRecord<String,VisualEffectVariable<?>> variable : target.getVariables()){
             variables.put("target."+variable.first(),variable.second());
         }
@@ -358,9 +257,15 @@ public abstract class BaseEffect implements VisualEffect {
         switch (key){
             case "origin" ->{
                 origin = (VisualEffectLocation) value;
+                for(PairRecord<String,VisualEffectVariable<?>> variable : origin.getVariables()){
+                    variables.put("origin."+variable.first(),variable.second());
+                }
             }
             case "target" ->{
                 target = (VisualEffectLocation) value;
+                for(PairRecord<String,VisualEffectVariable<?>> variable : target.getVariables()){
+                    variables.put("target."+variable.first(),variable.second());
+                }
             }
             case "delay" ->{
                 delay = (long) value;
@@ -387,6 +292,7 @@ public abstract class BaseEffect implements VisualEffect {
                 isAsync = (boolean) value;
             }
             default -> {
+                getEffectsRegistry().getPlugin().getLogger().info("Setting variable "+key+" to "+value);
                 if(variables.containsKey(key)){
                     VisualEffectVariable<T> variable = (VisualEffectVariable<T>) variables.get(key);
                     variable.setValue(value);

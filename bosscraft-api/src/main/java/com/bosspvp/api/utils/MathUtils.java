@@ -1,5 +1,6 @@
 package com.bosspvp.api.utils;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import redempt.crunch.Crunch;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -125,6 +126,37 @@ public class MathUtils {
         vector.setY(vector.getY()*newMagnitude/currentMagnitude);
         vector.setZ(vector.getZ()*newMagnitude/currentMagnitude);
         return vector;
+    }
+
+    @NotNull
+    public static Vector rotateAroundX(@NotNull Vector vector, double angle) {
+        double angleCos = fastCos(angle);
+        double angleSin = fastSin(angle);
+
+        double y = angleCos * vector.getY() - angleSin * vector.getZ();
+        double z = angleSin * vector.getY() + angleCos * vector.getZ();
+        return vector.setY(y).setZ(z);
+    }
+
+
+    @NotNull
+    public static Vector rotateAroundY(@NotNull Vector vector, double angle) {
+        double angleCos = fastCos(angle);
+        double angleSin = fastSin(angle);
+
+        double x = angleCos * vector.getX() + angleSin * vector.getZ();
+        double z = -angleSin * vector.getX() + angleCos * vector.getZ();
+        return vector.setX(x).setZ(z);
+    }
+
+    @NotNull
+    public static Vector rotateAroundZ(@NotNull Vector vector, double angle) {
+        double angleCos = fastCos(angle);
+        double angleSin = fastSin(angle);
+
+        double x = angleCos * vector.getX() - angleSin * vector.getY();
+        double y = angleSin * vector.getX() + angleCos * vector.getY();
+        return vector.setX(x).setY(y);
     }
     private MathUtils() {
         throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");

@@ -3,6 +3,7 @@ package com.bosspvp.api.gui.menu;
 import com.bosspvp.api.BossAPI;
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.gui.slot.GuiSlot;
+import com.bosspvp.api.tuples.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;

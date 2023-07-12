@@ -26,7 +26,7 @@ public abstract class LevelComponent extends GuiPage {
 
     public LevelComponent(List<String> pattern,
                           int maxLevel) {
-        super(pattern.get(0).toCharArray().length,pattern.size(),-1);
+        super(pattern.get(0).toCharArray().length, pattern.size(),-1);
 
     }
 
@@ -35,17 +35,15 @@ public abstract class LevelComponent extends GuiPage {
 
         var x = 0;
         for (String row : pattern) {
-            x++;
             var y = 0;
-            for (char c : row.toCharArray()) {
-                y++;
-                if (c == '0') {
+            for (char element : row.toCharArray()) {
+                if (element == '0') {
                     continue;
                 }
 
                 var pos = -1;
                 for (int i = 0; i < progressionOrder.length;i++) {
-                    if (c == progressionOrder[i]) {
+                    if (element == progressionOrder[i]) {
                         pos = i;
                         break;
                     }
@@ -55,7 +53,9 @@ public abstract class LevelComponent extends GuiPage {
                 }
 
                 progressionSlots.put(pos+1,x*row.toCharArray().length + y);
+                y++;
             }
+            x++;
         }
 
         levelsPerPage = progressionSlots.size();

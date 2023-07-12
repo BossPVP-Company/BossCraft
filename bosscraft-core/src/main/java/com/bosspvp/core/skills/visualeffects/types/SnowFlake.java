@@ -86,9 +86,9 @@ public class SnowFlake extends BaseEffect {
         Location location = getOrigin().updateLocation();
 
         if(!initialized){
-            snowflake= new ArrayList<>();
-            random=new Random(System.nanoTime());
-            initialized=true;
+            snowflake = new ArrayList<>();
+            random = new Random(System.nanoTime());
+            initialized = true;
         }
         draw(location);
     }
@@ -154,9 +154,9 @@ public class SnowFlake extends BaseEffect {
             if(reflect){
                 vec.setY(-vec.getY());
             }
-            vec.rotateAroundX(snowFlakeRotation.getValue().getX() + rotation.getX());
-            vec.rotateAroundY(snowFlakeRotation.getValue().getY() + rotation.getY());
-            vec.rotateAroundZ(snowFlakeRotation.getValue().getZ() + rotation.getZ());
+            MathUtils.rotateAroundX(vec,snowFlakeRotation.getValue().getX() + rotation.getX());
+            MathUtils.rotateAroundY(vec,snowFlakeRotation.getValue().getY() + rotation.getY());
+            MathUtils.rotateAroundZ(vec,snowFlakeRotation.getValue().getZ() + rotation.getZ());
             displayParticle(getParticleType().getValue(),loc.add(vec));
             loc.subtract(vec);
         }

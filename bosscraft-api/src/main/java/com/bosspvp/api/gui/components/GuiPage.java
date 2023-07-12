@@ -22,9 +22,9 @@ public abstract class GuiPage implements GuiComponent {
     @Getter @Setter
     private int maxPage;
 
-    public GuiPage(int columnsSize,int rowsSize, int maxPage){
+    public GuiPage(int columnsSize, int rowsSize, int maxPage){
+        this.columnsSize = columnsSize;
         this.rowsSize = rowsSize;
-        this.columnsSize=columnsSize;
         this.maxPage = maxPage;
     }
 

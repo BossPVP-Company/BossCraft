@@ -2,8 +2,10 @@ package com.bosspvp.core.gui;
 
 import com.bosspvp.api.BossPlugin;
 import com.bosspvp.api.gui.GuiComponent;
+import com.bosspvp.api.gui.GuiLayer;
 import com.bosspvp.api.gui.menu.GuiMenu;
 import com.bosspvp.api.gui.slot.GuiSlot;
+import com.bosspvp.api.tuples.Pair;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -13,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BossGuiMenu implements GuiMenu {
-    private HashMap<Integer, List<GuiComponent>> components;
+    private HashMap<Integer, GuiComponent[]> components;
     private List<GuiSlot> savedSlots = new ArrayList<>();
     @Getter
     private final BossPlugin plugin;
@@ -28,7 +30,7 @@ public class BossGuiMenu implements GuiMenu {
                        @NotNull Player viewer,
                        @NotNull String title,
                        int rows,
-                       @NotNull HashMap<Integer, List<GuiComponent>> components){
+                       @NotNull HashMap<Integer, GuiComponent[]> components){
         this.plugin = plugin;
         this.viewer = viewer;
         this.title = title;
@@ -39,42 +41,44 @@ public class BossGuiMenu implements GuiMenu {
 
     @Override
     public @NotNull List<GuiSlot> buildSlots() {
-        List<GuiSlot> slots = new ArrayList<>();
         GuiSlot[] out = new GuiSlot[rows*9];
-        for(int position : components.keySet()){
+        int[] outFilledLayers = new int[rows*9];
+        for(Map.Entry<Integer, GuiComponent[]> entry : components.entrySet()){
+            int position = entry.getKey();
             int row = position/9;
             int column = position - row*9;
-            List<GuiComponent> list = components.get(position);
+            GuiComponent[] list = entry.getValue();
             if(list == null) continue;
-            for(int i = list.size()-1; i>=0;i--){ //layers. Starts from foreground
-                GuiComponent component = list.get(i);
-                if(component==null) continue;
-                for(int columnStep = 0; columnStep<component.getColumnsSize();columnStep++){
+            for(int i = list.length - 1; i >= 0; i--){ //layers. Starts from foreground
+                GuiComponent component = list[i];
+                if(component == null) continue;
+                for(int columnStep = 0; columnStep < component.getColumnsSize(); columnStep++){
 
-                    for(int rowStep= 0; rowStep<component.getRowsSize();rowStep++){
+                    for(int rowStep = 0; rowStep < component.getRowsSize(); rowStep++){
                         //getting the menu pos
                         int var1 = (column + columnStep);
-                        if(var1>=9) continue; // out of bounds
+                        if(var1 >= 9) continue; // out of bounds
                         var1 = (row + rowStep);
-                        if(var1>=rows) continue; // out of bounds
-                        int menuPos = position + columnStep + rowStep*9;
+                        if(var1 >= rows) continue; // out of bounds
+                        int menuPos = position + columnStep + rowStep * 9;
 
-                        if(out[menuPos] != null) continue; //already filled this slot
+                        //already filled this with higher or same layer
+                        if(out[menuPos] != null && outFilledLayers[menuPos] > i) continue;
 
                         //getting the slot
                         GuiSlot slot = component.getSlotAt(rowStep,columnStep);
-                        out[menuPos] = slot;
-                        //@TODO change this mess (have no idea yet how to restructure GuiSlot for that)
                         if(slot==null) continue;
+                        //@TODO change this mess (have no idea yet how to restructure GuiSlot for that)
                         slot = slot.clone();
                         slot.setSlotPositions(menuPos);
-                        slots.add(slot);
+                        out[menuPos] = slot;
+                        outFilledLayers[menuPos] = i;
                     }
                 }
             }
         }
-        savedSlots = slots;
-        return slots;
+        savedSlots = Arrays.stream(out).filter(Objects::nonNull).toList();
+        return savedSlots;
     }
 
     @Override
@@ -97,6 +101,5 @@ public class BossGuiMenu implements GuiMenu {
         return savedSlots.stream().filter(it->it.isOnPlayerInventory()==playerInventory)
                 .collect(Collectors.toList());
     }
-
 
 }

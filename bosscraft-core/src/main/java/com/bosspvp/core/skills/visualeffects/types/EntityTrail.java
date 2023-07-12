@@ -27,22 +27,22 @@ public class EntityTrail extends BaseEffect {
             cancel(false);
             return;
         }
-        Location loc = entity.getLocation().subtract(entity.getVelocity());
-        int particles = (int)(loc.distance(entity.getLocation())/thickness.getValue());
+        Location entityLoc = entity.getLocation();
+        Vector entityVelocity = entity.getVelocity();
+        Location loc = entityLoc.subtract(entityVelocity);
+        int particles = (int)(loc.distance(entityLoc)/thickness.getValue());
 
         if(particles==0){
 
-            displayParticle(getParticleType().getValue(),entity.getLocation());
+            displayParticle(getParticleType().getValue(),entityLoc);
 
         }else {
-            Vector step =  new Vector(entity.getVelocity().getX()/particles,entity.getVelocity().getY()/particles,entity.getVelocity().getZ()/particles);
+            Vector step =  new Vector(entityVelocity.getX()/particles,entityVelocity.getY()/particles,entityVelocity.getZ()/particles);
             for(int i=0; i<particles; i++){
                 loc.add(step);
             }
         }
         ticksPassed++;
-
-
     }
 
 

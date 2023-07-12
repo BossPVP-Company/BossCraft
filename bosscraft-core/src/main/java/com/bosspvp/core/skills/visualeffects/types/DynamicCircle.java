@@ -7,7 +7,9 @@ import com.bosspvp.api.skills.visualeffects.VisualEffectsManager;
 import com.bosspvp.api.skills.visualeffects.template.BaseEffect;
 import com.bosspvp.api.skills.visualeffects.template.BaseEffectVariable;
 import com.bosspvp.api.utils.MathUtils;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,14 +44,6 @@ public class DynamicCircle extends BaseEffect {
         return new Vector(Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
     });
     private double currentY = 0;
-
-    private double noiseAmplitudeAdd = 0;
-    private double noiseAmplitudeMultiply = 1;
-    private double noisePointMultiplier = 0.5;
-    private double noiseSpeed = 0.05;
-
-
-    private boolean noise = false;
     private double timer = 0;
 
     /**
@@ -81,9 +75,12 @@ public class DynamicCircle extends BaseEffect {
 
         radius.setValue((radius.getValue() * radiusMultiply.getValue()) + radiusAdd.getValue());
 
+        //for faster access in a loop
         double radius = this.radius.getValue();
         Vector rotation = this.rotation.getValue();
         boolean rotationEnabled = rotation.getX() != 0 || rotation.getY() != 0 || rotation.getZ() != 0;
+        Particle particle = getParticleType().getValue();
+        Color color = getParticleColor().getValue();
 
         int particles = (int) (Math.PI * radius * 2 / thickness.getValue());
         double step = Math.PI * 2 / particles;
@@ -94,14 +91,13 @@ public class DynamicCircle extends BaseEffect {
             //set to 0, to make rotation weird:D
             vector.setY(1);
             if (rotationEnabled) {
-                vector.rotateAroundX(rotation.getX() * MathUtils.degreesToRadians);
-                vector.rotateAroundY(rotation.getY() * MathUtils.degreesToRadians);
-                vector.rotateAroundZ(rotation.getZ() * MathUtils.degreesToRadians);
+                MathUtils.rotateAroundX(vector,rotation.getX() * MathUtils.degreesToRadians);
+                MathUtils.rotateAroundY(vector,rotation.getY() * MathUtils.degreesToRadians);
+                MathUtils.rotateAroundZ(vector,rotation.getZ() * MathUtils.degreesToRadians);
             }
-            displayParticle(getParticleType().getValue(), location.add(vector), getParticleColor().getValue(), 1);
+            displayParticle(particle, location.add(vector), color, 1);
             location.subtract(vector);
         }
-        if (noise) timer += noiseSpeed;
     }
 
     @Override
@@ -112,75 +108,6 @@ public class DynamicCircle extends BaseEffect {
     @Override
     protected void onClone(BaseEffect cloned) {
 
-    }
-
-
-    /**
-     * sets starting radius of a sphere
-     */
-    public void setRadius(double value) {
-        radius.setValue(value);
-    }
-
-    /**
-     * sets multiplier of radius for every onTick() call
-     */
-    public void setRadiusMultiplier(double value) {
-        radiusMultiply.setValue(value);
-    }
-
-    /**
-     * sets incrementer of a radius for every onTick() call (increments after multiplying)
-     */
-    public void setRadiusIncrementer(double value) {
-        radiusAdd.setValue(value);
-    }
-
-    /**
-     * sets incrementer of a height for every onTick() call
-     */
-    public void setHeightIncrementer(double value) {
-        YAdd.setValue(value);
-    }
-
-
-    /**
-     * sets multiplier of noise amplitude. formula: (noise*multiplier)+incrementer
-     */
-    public void setNoiseAmplitudeMultiply(double value) {
-        noiseAmplitudeMultiply = value;
-    }
-
-    /**
-     * sets adder of noise amplitude. formula: (noise*multiplier)+adder
-     */
-    public void setNoiseAmplitudeAdder(double value) {
-        noiseAmplitudeAdd = value;
-    }
-
-    /**
-     * that setting affects work of noise. Less value - smoother noise effect will be.  Default: 0.5
-     */
-    public void setNoisePointMultiplier(double value) {
-        noisePointMultiplier = value;
-    }
-
-    public void setNoiseSpeed(double value) {
-        noiseSpeed = value;
-    }
-
-
-    /**
-     * sets rotation of a circle
-     * <p></p>
-     * default: 0;0;0
-     */
-    public void setRotation(Vector value) {
-        rotation.setValue(value);
-    }
-
-    public void setNoiseEnabled(boolean value) {
-        noise = value;
     }
 
 }

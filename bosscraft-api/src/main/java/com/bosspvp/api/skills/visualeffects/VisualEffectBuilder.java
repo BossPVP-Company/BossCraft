@@ -3,27 +3,29 @@ package com.bosspvp.api.skills.visualeffects;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface VisualEffectBuilder {
 
-    @NotNull <T> VisualEffectBuilder setOrigin(@NotNull VisualEffectLocation origin);
-    @NotNull  <T> VisualEffectBuilder setTarget(@NotNull VisualEffectLocation target);
+    @NotNull VisualEffectBuilder setOrigin(@NotNull VisualEffectLocation origin);
+    @NotNull VisualEffectBuilder setTarget(@NotNull VisualEffectLocation target);
 
-    @NotNull  <T> VisualEffectBuilder setDelay(int value);
-    @NotNull  <T> VisualEffectBuilder setPeriod(int value);
-    @NotNull  <T> VisualEffectBuilder setIterations(int value);
+    @NotNull VisualEffectBuilder setDelay(long value);
+    @NotNull VisualEffectBuilder setPeriod(long value);
+    @NotNull VisualEffectBuilder setIterations(int value);
 
-    @NotNull  <T> VisualEffectBuilder setRepeats(int value);
-    @NotNull  <T> VisualEffectBuilder setRepeatDelay(int value);
+    @NotNull VisualEffectBuilder setRepeats(int value);
+    @NotNull VisualEffectBuilder setRepeatDelay(int value);
 
-    @NotNull  <T> VisualEffectBuilder setDisplayRange(int value);
+    @NotNull VisualEffectBuilder setDisplayRange(int value);
 
-    @NotNull  <T> VisualEffectBuilder runManually(boolean flag);
-    @NotNull  <T> VisualEffectBuilder runAsync(boolean flag);
+    @NotNull VisualEffectBuilder runManually(boolean flag);
+    @NotNull VisualEffectBuilder runAsync(boolean flag);
 
-    @NotNull <T> VisualEffectBuilder setVariable(@NotNull String key,@NotNull  T value);
-    @NotNull HashMap<String, VisualEffectVariable<?>> getVariables();
+    @NotNull VisualEffectBuilder setVariable(@NotNull String key, @NotNull String value);
+    @NotNull <T> VisualEffectBuilder setVariableAsObject(@NotNull String key, @NotNull T value);
+    @NotNull List<String> getExistingVariables();
 
     @NotNull String getId();
-    @NotNull VisualEffect build(@NotNull VisualEffectsManager manager);
+    @NotNull VisualEffect build();
 }
