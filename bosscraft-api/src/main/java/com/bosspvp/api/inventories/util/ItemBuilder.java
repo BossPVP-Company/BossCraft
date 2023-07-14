@@ -5,15 +5,19 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +71,24 @@ public class ItemBuilder {
      */
     public ItemBuilder clone(){
         return new ItemBuilder(is);
+    }
+
+
+    public <A, B> ItemBuilder writeMetaKey(@NotNull final NamespacedKey key,
+                                 @NotNull final PersistentDataType<A, B> type,
+                                 @NotNull final B value) {
+        if(!is.hasItemMeta()) return this;
+        ItemMeta meta = is.getItemMeta();
+        meta.getPersistentDataContainer().set(key, type, value);
+
+        return this;
+    }
+
+
+    public <A, B> ItemBuilder writeMetaKey(@NotNull final Supplier<NamespacedKey> key,
+                                 @NotNull final Supplier<PersistentDataType<A, B>> type,
+                                 @NotNull final Supplier<B> value) {
+        return writeMetaKey(key.get(), type.get(), value.get());
     }
 
     /**

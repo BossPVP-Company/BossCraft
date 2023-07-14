@@ -5,6 +5,7 @@ import com.bosspvp.api.placeholders.context.PlaceholderContext;
 import com.bosspvp.api.tuples.PairRecord;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
@@ -48,6 +49,14 @@ public class StringUtils {
             .useUnusualXRepeatedCharacterHexFormat()
             .hexColors()
             .build();
+
+    /**
+     * Regex map for splitting values.
+     */
+    private static final LoadingCache<String, Pattern> SPACE_AROUND_CHARACTER = Caffeine.newBuilder()
+            .build(
+                    character -> Pattern.compile("( " + Pattern.quote(character) + " )")
+            );
     static {
         try {
             ChatColor.class.getDeclaredMethod("of", String.class);
@@ -185,6 +194,22 @@ public class StringUtils {
         return result.toString();
     }
     /**
+     * Split input string around separator surrounded by spaces.
+     * <p>
+     * e.g. {@code splitAround("hello ? how are you", "?")} will split, but
+     * {@code splitAround("hello? how are you", "?")} will not.
+     *
+     * @param input     Input string.
+     * @param separator Separator.
+     * @return The split string.
+     */
+    @NotNull
+    public static String[] splitAround(@NotNull final String input,
+                                       @NotNull final String separator) {
+        return SPACE_AROUND_CHARACTER.get(separator).split(input);
+    }
+
+    /**
      * Line wrap a list of strings while preserving formatting.
      *
      * @param input      The input list.
@@ -293,6 +318,52 @@ public class StringUtils {
         // Convert back to legacy strings.
         return lines.stream().map(StringUtils::toLegacy)
                 .collect(Collectors.toList());
+    }
+    /**
+     * Parse string into tokens.
+     * <p>
+     * Handles quoted strings for names.
+     *
+     * @param lookup The lookup string.
+     * @return An array of tokens to be processed.
+     * @author Shawn (<a href="https://stackoverflow.com/questions/70606170/split-a-list-on-spaces-and-group-quoted-characters/70606653#70606653">...</a>)
+     */
+    @NotNull
+    public static String[] parseTokens(@NotNull final String lookup) {
+        char[] chars = lookup.toCharArray();
+        List<String> tokens = new ArrayList<>();
+        StringBuilder tokenBuilder = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == ' ') {
+                /*
+                Take the current value of the argument builder, append it to the
+                list of found tokens, and then clear it for the next argument.
+                 */
+                tokens.add(tokenBuilder.toString());
+                tokenBuilder.setLength(0);
+            } else if (chars[i] == '"') {
+                /*
+                Work until the next unescaped quote to handle quotes with
+                spaces in them - assumes the input string is well-formatted
+                 */
+                for (i++; chars[i] != '"'; i++) {
+                    /*
+                    If the found quote is escaped, ignore it in the parsing
+                     */
+                    if (chars[i] == '\\') {
+                        i++;
+                    }
+                    tokenBuilder.append(chars[i]);
+                }
+            } else {
+                /*
+                If it's a regular character, just append it to the current argument.
+                 */
+                tokenBuilder.append(chars[i]);
+            }
+        }
+        tokens.add(tokenBuilder.toString()); // Adds the last argument to the tokens.
+        return tokens.toArray(new String[0]);
     }
 
     /**
