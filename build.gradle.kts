@@ -47,6 +47,15 @@ allprojects{
         annotationProcessor("org.jetbrains:annotations:24.0.1")
 
 
+        //redis
+        implementation("redis.clients:jedis:2.7.2")
+        implementation("org.redisson:redisson:3.20.1")
+        implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
+        //gson
+        implementation("com.google.code.gson:gson:2.10.1")
+        //appache
+        implementation("org.apache.commons:commons-pool2:2.6.0")
+
         //okaeri config
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:5.0.0-beta.5")
         implementation("eu.okaeri:okaeri-configs-validator-okaeri:5.0.0-beta.5")
